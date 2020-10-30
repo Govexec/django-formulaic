@@ -2,7 +2,7 @@ import json
 
 from django import forms
 from django.conf import settings
-from django.core.context_processors import csrf
+from django.template.context_processors import csrf
 from django.template.loader import render_to_string
 from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
