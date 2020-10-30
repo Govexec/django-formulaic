@@ -98,7 +98,9 @@ class CustomForm(forms.Form):
         return self.render()
 
     class Media:
-        js = ("formulaic/js/custom_form.js?v=1", )
+        # TODO: handle caching; can't currently use querystring because of
+        # django internals
+        js = ("formulaic/js/custom_form.js", )
         css = {
             "all": ("formulaic/css/custom_form.css", ),
         }
