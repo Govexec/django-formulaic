@@ -1,7 +1,6 @@
 import json
 
 from django import forms
-from django.conf import settings
 from django.template.context_processors import csrf
 from django.template.loader import render_to_string
 from django.utils.functional import cached_property
@@ -23,7 +22,6 @@ class CustomForm(forms.Form):
         fields = form.field_set.all()
         self.field_slugs_by_id = {}
         self.privacy_policy = form.privacy_policy
-        self.shared_site_full_url = settings.SHARED_SITE_URL
 
         super(CustomForm, self).__init__(data, *args, **kwargs)
 

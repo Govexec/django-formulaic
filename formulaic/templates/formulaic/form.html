@@ -21,7 +21,7 @@
     (function() {
       var instanceId = "{{ form.instance_id }}";
       var rulesData = {{ form.rules_json|safe }};
-      var sharedSiteUrl = "{{ form.shared_site_full_url }}";
+      var sharedSiteUrl = "";
       Formulaic.forms.add(instanceId, rulesData, sharedSiteUrl);
     })();
   </script>
