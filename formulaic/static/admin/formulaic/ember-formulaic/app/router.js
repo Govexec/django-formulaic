@@ -7,8 +7,8 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-    this.route('form', { 
-        path: '/:form_id/'
+    this.route('form', {
+        path: '/:form_id/change/'
     }, function() {
         this.route('fields', function() {
             //this.route('field', { path: '/fields/:field_id' });
@@ -35,7 +35,7 @@ Router.map(function() {
 
 //         });
 //     });
-    
+
 // });
 
 export default Router;

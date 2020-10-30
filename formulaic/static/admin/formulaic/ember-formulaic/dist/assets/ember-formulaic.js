@@ -1463,7 +1463,7 @@ define('ember-formulaic/router', ['exports', 'ember', 'ember-formulaic/config/en
 
     Router.map(function () {
         this.route('form', {
-            path: '/:form_id/'
+            path: '/:form_id/change/'
         }, function () {
             this.route('fields', function () {
                 //this.route('field', { path: '/fields/:field_id' });
@@ -2586,6 +2586,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("ember-formulaic/app")["default"].create({"API_HOST":"","API_NAMESPACE":"formulaic/api","name":"ember-formulaic","version":"0.0.0+72788558","API_ADD_TRAILING_SLASHES":true});
+  require("ember-formulaic/app")["default"].create({"API_HOST":"","API_NAMESPACE":"formulaic/api","name":"ember-formulaic","version":"0.0.0+8ed03a93","API_ADD_TRAILING_SLASHES":true});
 }
 //# sourceMappingURL=ember-formulaic.map

@@ -1,20 +1,31 @@
 import json
 
 from django import forms
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.contrib import admin
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse
+try:
+    # django < 1.10
+    from django.core.urlresolvers import reverse
+except Exception:
+    # django >= 1.10
+    from django.urls import reverse
 from django.db import models
 from django.forms import HiddenInput
 from django.http import Http404
-from django.shortcuts import redirect, render_to_response
+from django.shortcuts import redirect, render
 from django.template import RequestContext
-from django.utils.encoding import force_unicode
+from django.template.response import TemplateResponse
+try:
+    # django < 1.11
+    from django.utils.encoding import force_unicode
+except Exception:
+    # django >= 1.11
+    from django.utils.encoding import force_text as force_unicode
 from django.utils.translation import ugettext as _
 
 from formulaic import models as formulaic_models
-from handl import media as handl_media
+# from handl import media as handl_media
 
 
 def archive_forms(modeladmin, request, queryset):
@@ -115,20 +126,27 @@ class FormAdmin(admin.ModelAdmin):
             )
         )
 
-        return super_media + handl_media.HandlMedia + form_media
+        # return super_media + handl_media.HandlMedia + form_media
+        return super_media + form_media
 
     def get_urls(self):
         url_patterns = super(FormAdmin, self).get_urls()
 
-        return patterns(
-            '',
+        return [
             url(r'^([0-9]+)/archive/$', self.archive_view, name="formulaic_form_archive"),
             url(r'^([0-9]+)/unarchive/$', self.unarchive_view, name="formulaic_form_unarchive"),
             url(r'^([0-9]+)/.+$', self.change_view),
-        ) + url_patterns
+        ] + url_patterns
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         return self.ember_form_view(request, object_id=object_id)
+
+    def get_right_queryset(self, request):
+        if hasattr(self, 'get_queryset'):
+            return self.get_queryset(request)
+        else:
+            # django < 1.6
+            return self.queryset(request)
 
     def changelist_view(self, request, extra_context=None):
         forms_data = [
@@ -136,7 +154,7 @@ class FormAdmin(admin.ModelAdmin):
                 'pk': obj.pk,
                 'task_data': json.dumps({'form_pk': obj.pk}),
             }
-            for obj in self.queryset(request)
+            for obj in self.get_right_queryset(request)
         ]
         context = {
             'handl_task_forms_data': forms_data
@@ -177,6 +195,37 @@ class FormAdmin(admin.ModelAdmin):
         if form is None:
             raise Http404("Form does not exist")
 
+        environment_config = {
+            'modulePrefix': 'ember-formulaic',
+            'environment': 'production',
+            'rootURL': '/admin/formulaic/form/',  # TODO: make configurable for athena
+            'locationType': 'auto',
+            'tinyMCE': {
+                'version': 4,  # default 4.4,
+                'load': True
+            },
+            'EmberENV': {
+                'FEATURES': {
+                    # Here you can enable experimental features on an ember canary build
+                    # e.g. 'with-controller': true
+                },
+                'EXTEND_PROTOTYPES': {
+                    # Prevent Ember Data from overriding Date.parse.
+                    'Date': False
+                }
+            },
+            'APP': {
+                # Here you can pass flags/options to your application instance
+                # when it is created
+                'API_HOST': '',
+                'API_NAMESPACE': 'formulaic/api',
+                "name": "ember-formulaic",
+                "version": "0.0.0+a30ae212",
+                "API_ADD_TRAILING_SLASHES": True,
+            },
+            "exportApplicationGlobal": True,
+        }
+
         context_variables = {
             "title": _('Change %s') % force_unicode(self.opts.verbose_name),
             "form_id": object_id,
@@ -186,12 +235,13 @@ class FormAdmin(admin.ModelAdmin):
             "original": form,
             "task_data": json.dumps({'form_pk': object_id}),
             "media": self.media,
+            "environment_config": json.dumps(environment_config),
         }
 
-        return render_to_response(
+        return TemplateResponse(
+            request,
             "admin/formulaic/form/index.html",
-            context_variables,
-            RequestContext(request)
+            context_variables
         )
 
     def get_actions(self, request):

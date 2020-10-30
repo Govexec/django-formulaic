@@ -1,7 +1,9 @@
 import os
+from wsgiref.util import FileWrapper
 
-from django.core.servers.basehttp import FileWrapper
 from django.http import HttpResponse
+from pyzipcode import ZipCodeDatabase
+import us
 
 
 def batch_qs(qs, batch_size=1000):
@@ -43,3 +45,26 @@ def send_file(request, filename, full_path):
     response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
     response.set_cookie("fileDownload", value="true", max_age=60*60, path="/")
     return response
+
+
+def state_from_zip(zipcode):
+    try:
+        zip_info = ZipCodeDatabase()[zipcode]
+    except IndexError:
+        return None
+
+    if zip_info.city in ('APO', 'FPO', 'DPO'):
+        # we cannot lookup state names for APO/FPO/DPO zipcodes;
+        # probably we need better handling in audb for military PO addresses
+        return zip_info.state
+
+    state = us.states.lookup(zip_info.state)
+    return state.name if state else None
+
+
+def city_from_zip(zipcode):
+    try:
+        zip_info = ZipCodeDatabase()[zipcode]
+        return zip_info.city
+    except IndexError:
+        return None

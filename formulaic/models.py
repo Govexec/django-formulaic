@@ -10,7 +10,7 @@ from django.utils.functional import cached_property
 from formulaic import fields as custom_fields
 from formulaic.auto_populate import attempt_kv_auto_populate
 from formulaic.signals import submission_complete
-from post_manager.validators import validate_mixed_content
+from formulaic.validators import validate_mixed_content
 
 
 class Form(models.Model):
@@ -18,7 +18,9 @@ class Form(models.Model):
     name = models.CharField(max_length=500)
     slug = models.SlugField(max_length=200)
     success_message = models.TextField(null=True, blank=True)
-    privacy_policy = models.ForeignKey('PrivacyPolicy', null=True, blank=True)
+    privacy_policy = models.ForeignKey(
+        'PrivacyPolicy', on_delete=models.PROTECT, null=True, blank=True
+    )
 
     archived = models.BooleanField()
 
@@ -151,7 +153,7 @@ class Option(models.Model):
     value = models.CharField(max_length=250)
     position = models.PositiveIntegerField("Position")
 
-    list = models.ForeignKey(OptionList)
+    list = models.ForeignKey(OptionList, on_delete=models.CASCADE)
 
     def __unicode__(self):
         return self.name
@@ -171,7 +173,9 @@ class OptionGroup(models.Model):
     position = models.PositiveIntegerField("Position")
 
     options = models.ManyToManyField(Option, related_name="groups")
-    list = models.ForeignKey(OptionList, related_name="groups")
+    list = models.ForeignKey(
+        OptionList, on_delete=models.CASCADE, related_name="groups"
+    )
 
     @cached_property
     def cached_options(self):
@@ -204,14 +208,14 @@ class Field(models.Model):
     # bookkeeping attributes
     model_class = models.CharField(max_length=100)
     position = models.PositiveIntegerField("Position")
-    form = models.ForeignKey(Form)
-    enabled = models.BooleanField()
+    form = models.ForeignKey(Form, on_delete=models.CASCADE)
+    enabled = models.BooleanField(default=True)
 
     # styling attributes
     css_class = models.CharField(max_length=120, blank=True, null=True)
 
     # TODO: marked for removal
-    content_type = models.ForeignKey(ContentType)
+    content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT)
 
     def subtype_is(self, subtype):
         return self.subtype == subtype
@@ -379,8 +383,10 @@ class ChoiceField(Field):
     minimum_selections = models.PositiveIntegerField(blank=True, null=True)
     maximum_selections = models.PositiveIntegerField(blank=True, null=True)
 
-    option_list = models.ForeignKey(OptionList)
-    option_group = models.ForeignKey(OptionGroup, blank=True, null=True)
+    option_list = models.ForeignKey(OptionList, on_delete=models.PROTECT)
+    option_group = models.ForeignKey(
+        OptionGroup, on_delete=models.PROTECT, blank=True, null=True
+    )
     default_options_string = models.CharField(max_length=200, blank=True, null=True)
     default_text = models.CharField(max_length=200, blank=True, null=True)
 
@@ -516,9 +522,13 @@ class RuleResult(models.Model):
     )
 
     action = models.CharField(max_length=50, choices=ACTION_CHOICES)
-    field = models.ForeignKey(Field)
-    rule = models.ForeignKey('Rule', related_name='results', blank=True, null=True)
-    option_group = models.ForeignKey('OptionGroup', blank=True, null=True)
+    field = models.ForeignKey(Field, on_delete=models.PROTECT)
+    rule = models.ForeignKey(
+        'Rule', on_delete=models.CASCADE, related_name='results', blank=True, null=True
+    )
+    option_group = models.ForeignKey(
+        'OptionGroup', on_delete=models.PROTECT, blank=True, null=True
+    )
 
     def __unicode__(self):
         return unicode("{}: '{}' field '{}' if rule '{}' is true".format(
@@ -537,7 +547,7 @@ class Rule(models.Model):
         (OPERATOR_OR, 'Or')
     )
 
-    form = models.ForeignKey(Form)
+    form = models.ForeignKey(Form, on_delete=models.CASCADE)
     # rule_set
     operator = models.CharField(max_length=3, choices=OPERATOR_CHOICES)
     position = models.IntegerField()
@@ -575,9 +585,11 @@ class RuleCondition(models.Model):
     )
 
     position = models.PositiveIntegerField()
-    rule = models.ForeignKey(Rule, related_name="conditions", blank=True, null=True)
+    rule = models.ForeignKey(
+        Rule, on_delete=models.CASCADE, related_name="conditions", blank=True, null=True
+    )
 
-    field = models.ForeignKey(Field)
+    field = models.ForeignKey(Field, on_delete=models.PROTECT)
     operator = models.CharField(max_length=30, choices=OPERATOR_CHOICES)
 
     value_string = models.TextField()
@@ -613,13 +625,15 @@ class DisplayCondition(models.Model):
     values = models.TextField()
     value_option = models.CharField(max_length=15, choices=VALUE_OPTIONS)
 
-    affected_field = models.ForeignKey(Field, related_name="affecting_conditions")
-    watched_field = models.ForeignKey(Field, related_name="watching_conditions")
+    affected_field = models.ForeignKey(
+        Field, on_delete=models.PROTECT, related_name="affecting_conditions"
+    )
+    watched_field = models.ForeignKey(
+        Field, on_delete=models.PROTECT, related_name="watching_conditions"
+    )
 
     def is_met_by_default(self):
         specific_watched_field = self.watched_field.get_specific_field()
-
-        print "%s displays if %s %s %s" % (self.affected_field.slug, self.watched_field.slug, self.value_option, self.values)
 
         value_is = self.value_option == DisplayCondition.IS
         if specific_watched_field.field_type == Field.TYPE_SELECT:
@@ -630,11 +644,16 @@ class DisplayCondition(models.Model):
             return False
 
     def __unicode__(self):
-        return "Display field #%s if field #%s %s %s" % (self.affected_field_id, self.watched_field_id, self.value_option, self.values)
+        return "Display field #{} if field #{} {} {}".format(
+            self.affected_field_id,
+            self.watched_field_id,
+            self.value_option,
+            self.values
+        )
 
 
 class Submission(models.Model):
-    form = models.ForeignKey(Form)
+    form = models.ForeignKey(Form, on_delete=models.PROTECT)
     date_created = models.DateTimeField()
 
     source = models.CharField(
@@ -672,11 +691,13 @@ class Submission(models.Model):
 
 
 class SubmissionKeyValue(models.Model):
-    submission = models.ForeignKey(Submission, related_name="values")
+    submission = models.ForeignKey(
+        Submission, on_delete=models.CASCADE, related_name="values"
+    )
     key = models.CharField(max_length=200, db_index=True)
     value_charfield = models.CharField(max_length=500, null=True, blank=True)
     value_textfield = models.TextField(null=True, blank=True)
-    field = models.ForeignKey(Field, null=True, blank=True)
+    field = models.ForeignKey(Field, on_delete=models.SET_NULL, null=True, blank=True)
 
     # TODO: cache output_value in database to speed up reports.  problem, option values can change...hmmm....
 

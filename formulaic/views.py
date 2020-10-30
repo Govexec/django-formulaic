@@ -83,7 +83,12 @@ class SubmissionViewset(viewsets.ReadOnlyModelViewSet):
         CustomDjangoModelPermissions,
     )
 
-    queryset = (models.Submission.objects.all().order_by('-date_created').select_related('values'))
+    queryset = (
+        models.Submission.objects
+        .all()
+        .order_by('-date_created')
+        .prefetch_related('values')
+    )
 
     serializer_class = serializers.SubmissionSerializer
     pagination_class = StandardResultsSetPagination

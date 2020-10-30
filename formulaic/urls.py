@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url, include
 from rest_framework import routers
 
 from formulaic import views
@@ -19,9 +19,8 @@ router.register(r'rules', views.RuleViewset)
 router.register(r'ruleresults', views.RuleResultViewset)
 router.register(r'submissions', views.SubmissionViewset)
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^api/submissionsources/$', views.SubmissionSourceView.as_view()),
     url(r'^api/', include(router.urls)),
-    url(r'^download/submissions/$', 'formulaic.views.download_submissions'),
-)
+    url(r'^download/submissions/$', views.download_submissions),
+]

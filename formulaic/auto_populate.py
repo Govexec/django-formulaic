@@ -1,5 +1,6 @@
-from websites.base.utils.logging import sentry_client
-from websites.base.utils.state_and_zip import state_from_zip, city_from_zip
+from raven.contrib.django.raven_compat.models import client as raven_client
+
+from formulaic.utils import state_from_zip, city_from_zip
 
 
 """
@@ -42,7 +43,7 @@ def _attempt_state_or_city_from_zipcode(submission_kv, field_val, form_data):
         try:
             zipcode = value.strip()[:5]
         except AttributeError:
-            sentry_client().captureException()
+            raven_client.captureException()
             zipcode = unicode(value).strip()[:5]
         break
 

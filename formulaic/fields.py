@@ -2,7 +2,7 @@ import json
 
 from django.core.exceptions import ValidationError
 from django.forms.fields import CharField, ChoiceField, HiddenInput, MultiValueField, Select
-from django.forms.util import ErrorList
+from django.forms.utils import ErrorList
 from nameparser import HumanName
 
 from formulaic.widgets import GroupedChoiceWidget
@@ -96,7 +96,7 @@ class GroupedChoiceField(MultiValueField):
 
             try:
                 clean_data.append(field.clean(field_value))
-            except ValidationError, e:
+            except ValidationError as e:
                 errors.extend(e.messages)
 
         """

@@ -8,7 +8,6 @@ from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 
 from formulaic.rules import RuleAssessor
-from websites import STATIC_VERSION_NAME
 
 
 class CustomForm(forms.Form):
@@ -43,7 +42,6 @@ class CustomForm(forms.Form):
 
     def _clean_fields(self):
         super(CustomForm, self)._clean_fields()
-
 
         rule_assessor = RuleAssessor(self.rules_data, self.fields, self.cleaned_data)
 
@@ -102,7 +100,7 @@ class CustomForm(forms.Form):
         return self.render()
 
     class Media:
-        js = ("formulaic/js/custom_form.js?v=" + STATIC_VERSION_NAME, )
+        js = ("formulaic/js/custom_form.js?v=1", )
         css = {
             "all": ("formulaic/css/custom_form.css", ),
         }
