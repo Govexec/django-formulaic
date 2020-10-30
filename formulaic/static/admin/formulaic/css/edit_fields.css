@@ -1,0 +1,166 @@
+body, html { margin:0; padding:0; font-family:Helvetica, Arial, sans-serif; font-size:14px; }
+html { margin:10px 0;}
+ul, li { list-style-type:none; margin:0; padding:0; }
+
+.loading { background:url("../images/loading.gif") no-repeat center !important; min-height:30px; }
+.loading * { display:none !important; }
+#container.loading { min-height:400px; }
+
+#templates { display:none; }
+
+.textbox input {
+    margin:5px 0;
+    width:200px;
+}
+.checkbox input {
+    margin:5px 0;
+}
+.select select {
+    margin:5px 0;
+    width:200px;
+}
+
+#container {
+    padding:0 0 45px;
+}
+#container > div {
+    border:1px solid #aaa;
+    margin:0 0 10px;
+    position: relative;
+}
+#container > div > h2 {
+    padding:8px 10px 5px;
+    margin:0;
+    font-size:14px;
+    background-color:#ccc;
+    line-height: 18px;
+}
+#container > div > div {
+    padding:0;
+    border-top:1px solid #aaa;
+    overflow:hidden;
+    background:url('../images/label-bg.png') repeat-y;
+    position:relative;
+}
+#container > div > div label {
+    display:inline-block;
+    width:200px;
+    font-size:14px;
+    padding:7px 10px;
+    margin-right:5px;
+    vertical-align: top;
+}
+#container > div > div.child {
+    border-left:10px solid #aaa;
+    background-position:-10px 0;
+}
+#container > div > div.child label {
+    width:190px;
+    /*border-left:10px solid #aaa;*/
+}
+
+#container > div > div.display-conditions ul {
+    display:inline-block;
+    width:500px;
+    padding:10px 0;
+}
+#container > div > div.display-conditions ul li {
+    margin:0 0 3px;
+}
+#container > div > div .tools {
+    position:absolute;
+    top:10px;
+    right:10px;
+}
+#container > div > div .tools li {
+    display:inline-block;
+}
+a.tool {
+    display:inline-block;
+    width:16px;
+    height:16px;
+    text-indent: -9999px;
+}
+a.tool.move {
+    background:url("../images/arrow-move.png") no-repeat 0px 0px;
+}
+a.tool.move:hover { background-position: 0px -16px; }
+a.tool.add {
+    background:url("../images/plus.png") no-repeat 0px 0px;
+}
+a.tool.add:hover { background-position: 0px -16px; }
+a.tool.delete {
+    background:url("../images/minus.png") no-repeat 0px 0px;
+}
+a.tool.delete:hover { background-position: 0px -16px; }
+a.tool.edit {
+    background:url("../images/pencil.png") no-repeat 0px 0px;
+}
+a.tool.edit:hover { background-position: 0px -16px; }
+a.tool.arrow-up {
+    background:url("../images/arrow-090.png") no-repeat 0px 0px;
+}
+a.tool.arrow-up:hover { background-position: 0px -16px; }
+a.tool.arrow-down {
+    background:url("../images/arrow-270.png") no-repeat 0px 0px;
+}
+a.tool.arrow-down:hover { background-position: 0px -16px; }
+a.tool.done {
+    background:url("../images/tick.png") no-repeat;
+}
+#container > div > .tools {
+    position: absolute;
+    top:5px;
+    right:5px;
+}
+#container > div > .tools li {
+    display: inline-block;
+    margin-left:10px;
+}
+#main-controls {
+    position: fixed;
+    right:0;
+    bottom:0;
+    left:0;
+    background-color:#545454;
+    display: block;
+    width:auto;
+    padding:10px 20px;
+}
+#main-controls ul {
+    display: inline-block;
+}
+#main-controls ul li {
+    display: inline-block;
+    position:relative;
+}
+#main-controls ul.right {
+    float:right;
+}
+#main-controls ul li .menu {
+    display:none;
+    width:150px;
+    border:1px solid #aaaaaa;
+    background-color:#eeeeee;
+    position:absolute;
+    bottom:16px;
+}
+#main-controls ul li .menu li {
+    display:block;
+}
+#main-controls ul li .menu li + li {
+    border-top:1px solid #aaaaaa;
+}
+#main-controls ul li .menu li a {
+    display:block;
+    padding:7px 10px 5px;
+    color:#309BBF;
+    font-weight:bold;
+    text-decoration: none;
+}
+#main-controls ul li .menu li a:hover {
+    background-color:#cccccc;
+}
+#main-controls ul li:hover .menu {
+    display:block;
+}

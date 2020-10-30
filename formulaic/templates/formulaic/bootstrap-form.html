@@ -1,0 +1,89 @@
+{% load static form %}
+
+<!-- TODO: temporary; make more modular; DRY -->
+<link type="text/css" media="all" rel="stylesheet" href="{% static 'formulaic/css/bootstrap.min.css' %}"/>
+<div class="bootstrap-gemg-forms">
+  {% if form.errors.items %}
+    <div class="form-errors-summary alert alert-danger" role="alert">
+      This form contains {{ form.errors.items|length }}
+      error{% if form.errors.items|length > 1 %}s{% endif %}.
+    </div>
+  {% endif %}
+
+  <form id="{{ form.instance_id }}" class="gate-form" action="{{ gate.get_absolute_url }}{% if querystring %}?{{ querystring }}{% endif %}" method="post">
+
+    {% csrf_token %}
+
+    {% for hidden in form.hidden_fields %}
+      {{ hidden|safe }}
+    {% endfor %}
+
+    {% for field in form.visible_fields %}
+      {% with field_type=field|widget_type %}
+
+        <div class="form-group field-wrapper {{ field.field.widget|formulaic_field_classes }}
+                                        {% if field.errors %} has-error {% endif %}">
+
+          <label for="{{ field.name }}" class="control-label">
+            {% if field_type == "checkboxinput" %}
+              {{ field|safe }}
+            {% endif %}
+            {{ field.label|safe }} {% if field.field.required %} * {% endif %}
+          </label>
+
+          {% if field_type == "textinput" or field_type == "select" or field_type == "selectmultiple" or field_type == "textarea" %}
+            {{ field|formulaic_extra_attributes|formulaic_extra_widget_classes:"form-control"|safe }}
+          {% endif %}
+
+          {% if field_type == "checkboxselectmultiple" %}
+            <div class="checkbox">{{ field|safe }}</div>
+          {% endif %}
+
+          {% if field_type == "radioselect" %}
+            <div class="radio">{{ field|safe }}</div>
+          {% endif %}
+
+          {% for field_error in field.errors %}
+            <div class="form-field-error-msg control-label">
+              {{ field_error }}
+            </div>
+          {% endfor %}
+
+        </div>
+
+      {% endwith %}
+    {% endfor %}
+
+    {% if form.privacy_policy %}
+      <div class="form-specific-privacy-policy">{{ form.privacy_policy.text|safe }}</div>
+    {% endif %}
+
+    <div class="form-group form-autofill">
+      <label class="control-label" for="form-input-autofill">
+        <input type="checkbox" id="id_form-input-autofill" name="form-input-autofill" checked> Please save my information for future visits
+      </label>
+    </div>
+
+    <div class="submit-button-container">
+      <input type="submit" class="btn btn-primary btn-md visible-xs" value="Submit"/>
+      <input type="submit" class="btn btn-primary btn-lg hidden-xs" value="Submit"/>
+    </div>
+
+    {{ form.media|safe }}
+    <script type="text/javascript">
+      (function () {
+        var instanceId = "{{ form.instance_id }}";
+        var rulesData = {{ form.rules_json|safe }};
+        var sharedSiteUrl = "{{ form.shared_site_full_url }}";
+        Formulaic.forms.add(instanceId, rulesData, sharedSiteUrl);
+
+        // TODO: refactor; generalize
+        /* if there are errors scroll to the error message */
+        if ($(".form-errors-summary").length) {
+          $(".form-errors-summary").get(0).scrollIntoView();
+        }
+      })();
+    </script>
+
+  </form>
+</div>

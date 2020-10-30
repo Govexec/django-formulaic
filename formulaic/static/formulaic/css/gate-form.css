@@ -1,0 +1,78 @@
+.gate-form {
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+}
+
+.gate-form .form-group {
+    margin-bottom: 2rem;
+}
+
+.gate-form .control-label {
+    font-weight: 400;
+    font-size: 1.6rem;
+}
+
+.gate-form .has-error .control-label {
+    color: #a94442;
+}
+
+.gate-form .form-control {
+    font-size: 1.6rem;
+    font-weight: 400;
+    position: relative;
+    z-index: 1;
+    background: none;
+    height: 4rem;
+    border-radius: 0;
+    -webkit-appearance: none;
+}
+
+.gate-form .has-error .form-control {
+    border: 1px solid #a94442;
+}
+
+.gate-form .form-field-error-msg,
+.form-errors-summary {
+    font-size: 1.2rem;
+}
+
+.gate-form .submit-button-container {
+    margin-top: 2rem;
+}
+
+.gate-form .submit-button {
+    border-radius: 0;
+    text-transform: uppercase;
+    color: #fff;
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    background-color: #0095d5;
+    border: 1px solid transparent;
+}
+
+.gate-form .submit-button:active,
+.gate-form .submit-button:focus,
+.gate-form .submit-button:hover {
+    opacity: 0.8;
+    outline: 0;
+}
+
+@media (min-width: 576px) {
+    .gate-form .submit-button {
+        width: 150px;
+    }
+}
+
+@media (max-width: 575px) {
+    .gate-form .submit-button {
+        width: 100%;
+    }
+}

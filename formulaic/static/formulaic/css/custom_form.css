@@ -1,0 +1,10 @@
+/*
+Hiding extra fields in GroupedChoiceFields.
+TODO: change render HTML to include CSS class instead
+*/
+.formulaic-fields .field-wrapper ul + ul {
+    display:none;
+}
+.formulaic-fields .field-wrapper select + select {
+    display: none;
+}

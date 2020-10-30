@@ -1,0 +1,28 @@
+<!-- TODO: temporary; make more modular; DRY -->
+<link type="text/css" media="all" rel="stylesheet" href="{% static 'formulaic/css/bootstrap.css' %}"/>
+
+<form id="{{ form.instance_id }}" action="" method="post" class="bootstrap-gemg-forms">
+  {% csrf_token %}
+
+  {% for hidden in form.hidden_fields() %}
+    {{ hidden|safe }}
+  {% endfor %}
+  <ul class="formulaic-fields">
+    {% for field in form.visible_fields() %}
+      <li data-id="{{ field.field.id }}" class="field-wrapper form-group {{ field.field.widget|formulaic_field_classes }}{% if field.errors %} formulaic-error{% endif %}{% if field.field.required %} required{% endif %}{% if field.field.hidden %} hidden{% endif %}">
+        {{ field.errors|safe }}
+        <span class="label-wrapper">{{ field.label_tag()|safe }}</span> {{ field|safe }}
+      </li>
+    {% endfor %}
+  </ul>
+  <input type="submit" value="Submit">
+  {{ form.media|safe }}
+  <script type="text/javascript">
+    (function() {
+      var instanceId = "{{ form.instance_id }}";
+      var rulesData = {{ form.rules_json|safe }};
+      var sharedSiteUrl = "{{ form.shared_site_full_url }}";
+      Formulaic.forms.add(instanceId, rulesData, sharedSiteUrl);
+    })();
+  </script>
+</form>

@@ -1,0 +1,18 @@
+{% extends "admin/change_list.html" %}
+
+{% block content %}
+  {{ block.super }}
+  <div class="handl-task-forms">
+    {% for data in handl_task_forms_data %}
+      <form
+        id="ld-submissions-dl-{{ data.pk }}"
+        class="handl-task-start-form"
+        action="/athena/handl/task/start/"
+        method="POST"
+      >
+        <input type="hidden" name="task_name" value="formulaic.create_submission_csv"/>
+        <input type="hidden" name="task_data" value='{{ data.task_data }}'/>
+      </form>
+    {% endfor %}
+  </div>
+{% endblock %}
