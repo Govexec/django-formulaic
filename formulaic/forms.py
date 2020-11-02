@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import json
 
 from django import forms
@@ -5,10 +7,12 @@ from django.template.context_processors import csrf
 from django.template.loader import render_to_string
 from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
+from six import python_2_unicode_compatible
 
 from formulaic.rules import RuleAssessor
 
 
+@python_2_unicode_compatible
 class CustomForm(forms.Form):
     required_css_class = "required"
 
@@ -94,7 +98,7 @@ class CustomForm(forms.Form):
 
         return mark_safe(render_to_string(self.template, c))
 
-    def __unicode__(self):
+    def __str__(self):
         return self.render()
 
     class Media:
