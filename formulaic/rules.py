@@ -1,3 +1,5 @@
+from six import iteritems
+
 from formulaic import exceptions
 
 
@@ -21,7 +23,7 @@ class RuleAssessor(object):
 
         self.visible_fields = []
         self.invisible_fields = []
-        for slug, field in self.fields.iteritems():
+        for slug, field in iteritems(self.fields):
             field.evaluate_observed_rules()
 
             if field.visible:

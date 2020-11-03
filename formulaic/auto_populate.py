@@ -1,4 +1,5 @@
 from raven.contrib.django.raven_compat.models import client as raven_client
+from six import iteritems
 
 from formulaic.utils import state_from_zip, city_from_zip
 
@@ -37,7 +38,7 @@ def _attempt_state_or_city_from_zipcode(submission_kv, field_val, form_data):
     is_hidden_field = submission_kv.field.subtype_is(submission_kv.field.TYPE_HIDDEN)
 
     zipcode = None
-    for key, value in form_data.iteritems():
+    for key, value in iteritems(form_data):
         if key.lower() not in ('zipcode', 'zip-code'):
             continue
         try:

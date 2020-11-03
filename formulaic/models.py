@@ -6,6 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models, transaction
 from django.forms import fields, widgets
 from django.utils.functional import cached_property
+from six import iteritems
 
 from formulaic import fields as custom_fields
 from formulaic.auto_populate import attempt_kv_auto_populate
@@ -37,11 +38,11 @@ class Form(models.Model):
 
             # key value pairs
             key_value_pairs = []
-            for key, value in cleaned_data.iteritems():
+            for key, value in iteritems(cleaned_data):
                 if isinstance(value, dict):
                     # handle multi-value fields
                     # todo: DRY
-                    for sub_key, sub_value in value.iteritems():
+                    for sub_key, sub_value in iteritems(value):
                         # if None, use regular key
                         if sub_key:
                             final_sub_key = "{}[{}]".format(key, sub_key)

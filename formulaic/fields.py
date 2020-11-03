@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.forms.fields import CharField, ChoiceField, HiddenInput, MultiValueField, Select
 from django.forms.utils import ErrorList
 from nameparser import HumanName
+from six import iteritems
 
 from formulaic.widgets import GroupedChoiceWidget
 
@@ -35,7 +36,7 @@ class GroupedChoiceField(MultiValueField):
         initial_values = [group_id_field.initial]
         self.group_field_mapping = {}
         field_index = 1
-        for key, options in groups.iteritems():
+        for key, options in iteritems(groups):
             attrs = {
                 "data-group-id": json.dumps(key)
             }
