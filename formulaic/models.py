@@ -27,7 +27,7 @@ class Form(models.Model):
 
     def create_submission(self, cleaned_data, source=None, metadata=None):
 
-        with transaction.commit_on_success():
+        with transaction.atomic():
             # case submission
             submission = Submission()
             submission.form = self
