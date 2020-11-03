@@ -371,11 +371,14 @@ class RuleSerializer(serializers.ModelSerializer):
         return rule
 
 
-class CustomDataTimeField(serializers.DateTimeField):
+class CustomDateTimeField(serializers.DateTimeField):
 
     def to_representation(self, obj):
-        local_tz = get_localzone()
-        obj_aware = pytz.timezone(local_tz.zone).localize(obj)
+        try:
+            local_tz = get_localzone()
+            obj_aware = pytz.timezone(local_tz.zone).localize(obj)
+        except ValueError:
+            obj_aware = obj
 
         return obj_aware.strftime('%m/%d/%Y %H:%M %Z')
 
@@ -384,7 +387,7 @@ class SubmissionSerializer(serializers.ModelSerializer):
     # values: handle property (not a Django field)
     custom_data = serializers.ReadOnlyField()
 
-    date_created = CustomDataTimeField()
+    date_created = CustomDateTimeField()
 
     class Meta:
         model = models.Submission
