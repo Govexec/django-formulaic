@@ -181,7 +181,14 @@ class FormAdmin(admin.ModelAdmin):
         try:
             return redirect(request.META["HTTP_REFERER"])
         except KeyError:
-            return redirect("admin:formulaic_form_changelist")
+            return redirect(self.root_url)
+
+    @property
+    def root_url(self):
+        for admin_url in self.urls:
+            if admin_url.name and admin_url.name.endswith('_changelist'):
+                return reverse('admin:%s' % admin_url.name)
+        raise Exception('Could not identify a root URL')
 
     def ember_form_view(self, request, object_id=None):
         try:
@@ -198,7 +205,7 @@ class FormAdmin(admin.ModelAdmin):
         environment_config = {
             'modulePrefix': 'ember-formulaic',
             'environment': 'production',
-            'rootURL': '/admin/formulaic/form/',  # TODO: make configurable for athena
+            'rootURL': self.root_url,
             'locationType': 'auto',
             'tinyMCE': {
                 'version': 4,  # default 4.4,
