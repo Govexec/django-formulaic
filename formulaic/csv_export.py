@@ -1,5 +1,6 @@
 import csv
 import pytz
+from six import u
 from tzlocal import get_localzone
 
 from formulaic import models, utils
@@ -27,5 +28,5 @@ def export_submissions_to_file(form, output_file):
             )
             row["date"] = date_created_aware.strftime('%m/%d/%Y %H:%M')
             row["source"] = submission.source
-            row_batch.append({k: unicode(v).encode('utf-8') for (k, v) in row.items()})
+            row_batch.append({k: u(v).encode('utf-8') for (k, v) in row.items()})
         writer.writerows(row_batch)

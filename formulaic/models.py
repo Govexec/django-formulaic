@@ -6,7 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models, transaction
 from django.forms import fields, widgets
 from django.utils.functional import cached_property
-from six import iteritems
+from six import iteritems, python_2_unicode_compatible, u
 
 from formulaic import fields as custom_fields
 from formulaic.auto_populate import attempt_kv_auto_populate
@@ -14,6 +14,7 @@ from formulaic.signals import submission_complete
 from formulaic.validators import validate_mixed_content
 
 
+@python_2_unicode_compatible
 class Form(models.Model):
     BASE_COLUMN_HEADERS = ['date', 'source']
     name = models.CharField(max_length=500)
@@ -89,9 +90,9 @@ class Form(models.Model):
     def autocomplete_search_fields():
         return ("id__iexact", "name__icontains", "slug__icontains", )
 
-    def __unicode__(self):
+    def __str__(self):
         if self.archived:
-            return u"{} (archived)".format(self.name)
+            return u("{} (archived)".format(self.name))
         else:
             return self.name
 
@@ -99,6 +100,7 @@ class Form(models.Model):
         ordering = ('archived', 'name',)
 
 
+@python_2_unicode_compatible
 class PrivacyPolicy(models.Model):
     """
     Provides an editable list of privacy policies which can be selected
@@ -115,10 +117,11 @@ class PrivacyPolicy(models.Model):
     class Meta:
         verbose_name_plural = "Privacy policies"
 
-    def __unicode__(self):
-        return unicode(self.name)
+    def __str__(self):
+        return self.name
 
 
+@python_2_unicode_compatible
 class OptionList(models.Model):
     """
     Collection of options for use in selects, checkbox lists,
@@ -140,10 +143,11 @@ class OptionList(models.Model):
         """
         return len(self.cached_groups) > 0
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class Option(models.Model):
     """
     An individual selectable option, represented as a member
@@ -156,13 +160,14 @@ class Option(models.Model):
 
     list = models.ForeignKey(OptionList, on_delete=models.CASCADE)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
         ordering = ('position',)
 
 
+@python_2_unicode_compatible
 class OptionGroup(models.Model):
     """
     A group of Options in an OptionList.  OptionGroups provide
@@ -182,13 +187,14 @@ class OptionGroup(models.Model):
     def cached_options(self):
         return self.options.all()
 
-    def __unicode__(self):
+    def __str__(self):
         return "{}:{}".format(self.list.name, self.name)
 
     class Meta:
         ordering = ('position',)
 
 
+@python_2_unicode_compatible
 class Field(models.Model):
     # TODO: look into changing these
     TYPE_SELECT = "select"
@@ -240,7 +246,7 @@ class Field(models.Model):
         # might need to support duplicates across multiple pages
         unique_together = ("form", "slug")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.data_name
 
     def save(self, **kwargs):
@@ -507,6 +513,7 @@ class ChoiceField(Field):
         super(ChoiceField, self).save(**kwargs)
 
 
+@python_2_unicode_compatible
 class RuleResult(models.Model):
     ACTION_SHOW = 'show'
     ACTION_HIDE = 'hide'
@@ -531,8 +538,8 @@ class RuleResult(models.Model):
         'OptionGroup', on_delete=models.PROTECT, blank=True, null=True
     )
 
-    def __unicode__(self):
-        return unicode("{}: '{}' field '{}' if rule '{}' is true".format(
+    def __str__(self):
+        return u("{}: '{}' field '{}' if rule '{}' is true".format(
             self.id,
             self.action,
             self.field_id,
@@ -540,6 +547,7 @@ class RuleResult(models.Model):
         ))
 
 
+@python_2_unicode_compatible
 class Rule(models.Model):
     OPERATOR_AND = 'and'
     OPERATOR_OR = 'or'
@@ -553,13 +561,14 @@ class Rule(models.Model):
     operator = models.CharField(max_length=3, choices=OPERATOR_CHOICES)
     position = models.IntegerField()
 
-    def __unicode__(self):
-        return unicode('{}: position "{}"'.format(self.id, self.position))
+    def __str__(self):
+        return u('{}: position "{}"'.format(self.id, self.position))
 
     class Meta:
         ordering = ('position',)
 
 
+@python_2_unicode_compatible
 class RuleCondition(models.Model):
     OPERATOR_IS = 'is'
     OPERATOR_IS_NOT = 'is_not'
@@ -603,8 +612,8 @@ class RuleCondition(models.Model):
     def value(self, value):
         self.value_string = json.dumps(value)
 
-    def __unicode__(self):
-        return unicode('{}: field "{}" {} ______'.format(
+    def __str__(self):
+        return u('{}: field "{}" {} ______'.format(
             self.id,
             self.field_id,
             self.operator
@@ -614,6 +623,7 @@ class RuleCondition(models.Model):
         ordering = ('position',)
 
 
+@python_2_unicode_compatible
 class DisplayCondition(models.Model):
     IS = "is"
     IS_NOT = "is_not"
@@ -644,7 +654,7 @@ class DisplayCondition(models.Model):
             # TODO: setup default values which could match the DisplayCondition values
             return False
 
-    def __unicode__(self):
+    def __str__(self):
         return "Display field #{} if field #{} {} {}".format(
             self.affected_field_id,
             self.watched_field_id,
@@ -691,6 +701,7 @@ class Submission(models.Model):
         self.metadata_serialized = json.dumps(value)
 
 
+@python_2_unicode_compatible
 class SubmissionKeyValue(models.Model):
     submission = models.ForeignKey(
         Submission, on_delete=models.CASCADE, related_name="values"
@@ -734,5 +745,5 @@ class SubmissionKeyValue(models.Model):
 
         return value
 
-    def __unicode__(self):
+    def __str__(self):
         return "{}:{}".format(self.key, self.value)
