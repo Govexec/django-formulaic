@@ -1,7 +1,10 @@
 import json
 
 from django import forms
-from django.conf.urls import url
+try:
+    from django.urls import re_path
+except ImportError:
+    from django.conf.urls import url as re_path
 from django.contrib import admin
 from django.core.exceptions import PermissionDenied
 try:
@@ -133,9 +136,9 @@ class FormAdmin(admin.ModelAdmin):
         url_patterns = super(FormAdmin, self).get_urls()
 
         return [
-            url(r'^([0-9]+)/archive/$', self.archive_view, name="formulaic_form_archive"),
-            url(r'^([0-9]+)/unarchive/$', self.unarchive_view, name="formulaic_form_unarchive"),
-            url(r'^([0-9]+)/.+$', self.change_view),
+            re_path(r'^([0-9]+)/archive/$', self.archive_view, name="formulaic_form_archive"),
+            re_path(r'^([0-9]+)/unarchive/$', self.unarchive_view, name="formulaic_form_unarchive"),
+            re_path(r'^([0-9]+)/.+$', self.change_view),
         ] + url_patterns
 
     def change_view(self, request, object_id, form_url='', extra_context=None):

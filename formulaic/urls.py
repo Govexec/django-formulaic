@@ -1,6 +1,11 @@
-from django.conf.urls import url, include
-from rest_framework import routers
+try:
+    # django 3+
+    from django.urls import include, re_path
+except ImportError:
+    # django 1 and 2
+    from django.conf.urls import include, url as re_path
 
+from rest_framework import routers
 from formulaic import views
 
 router = routers.SimpleRouter()
@@ -20,7 +25,7 @@ router.register(r'ruleresults', views.RuleResultViewset)
 router.register(r'submissions', views.SubmissionViewset)
 
 urlpatterns = [
-    url(r'^api/submissionsources/$', views.SubmissionSourceView.as_view()),
-    url(r'^api/', include(router.urls)),
-    url(r'^download/submissions/$', views.download_submissions),
+    re_path(r'^api/submissionsources/$', views.SubmissionSourceView.as_view()),
+    re_path(r'^api/', include(router.urls)),
+    re_path(r'^download/submissions/$', views.download_submissions),
 ]
