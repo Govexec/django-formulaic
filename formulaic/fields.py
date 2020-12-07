@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.forms.fields import CharField, ChoiceField, HiddenInput, MultiValueField, Select
 from django.forms.utils import ErrorList
 from nameparser import HumanName
-from six import iteritems
+from six import iteritems, text_type
 
 from formulaic.widgets import GroupedChoiceWidget
 
@@ -28,7 +28,7 @@ class FullNameField(CharField):
 class GroupedChoiceField(MultiValueField):
     def __init__(self, groups={}, initial=None, field_class=ChoiceField, widget_class=Select, widget_attrs={}, *args, **kwargs):
         # create hidden_field for tracking selected field
-        data_initial = initial if isinstance(initial, unicode) else json.dumps(initial)
+        data_initial = initial if isinstance(initial, text_type) else json.dumps(initial)
         group_id_field = CharField(widget=HiddenInput(attrs={"data-initial": data_initial}), initial=None)
 
         fields = [group_id_field]

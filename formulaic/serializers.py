@@ -1,4 +1,5 @@
 import pytz
+import six
 from tzlocal import get_localzone
 
 from formulaic import models
@@ -46,7 +47,7 @@ class HiddenFieldSerializer(serializers.ModelSerializer):
 class JsonField(serializers.Field):
 
     def to_internal_value(self, data):
-        if isinstance(data, basestring) or isinstance(data, dict) or isinstance(data, list):
+        if isinstance(data, six.text_type) or isinstance(data, dict) or isinstance(data, list):
             return data
         else:
             msg = self.error_messages['invalid']
@@ -59,7 +60,7 @@ class JsonField(serializers.Field):
 class DefaultOptionField(serializers.Field):
 
     def to_internal_value(self, data):
-        if isinstance(data, basestring):
+        if isinstance(data, six.text_type):
             return data
         else:
             msg = self.error_messages['invalid']
