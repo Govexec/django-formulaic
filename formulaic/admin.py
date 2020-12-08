@@ -20,6 +20,7 @@ from django.http import Http404
 from django.shortcuts import redirect, render
 from django.template import RequestContext
 from django.template.response import TemplateResponse
+from django.utils.safestring import mark_safe
 try:
     # django < 1.11
     from django.utils.encoding import force_unicode
@@ -47,9 +48,9 @@ def form_status(form):
     List Column: display static, currently Active/Archived
     """
     if form.archived:
-        return "Archived"
+        return mark_safe("Archived")
     else:
-        return "<strong>Active</strong>"
+        return mark_safe("<strong>Active</strong>")
 
 
 form_status.short_description = "Status"
@@ -69,9 +70,9 @@ def form_submissions(form):
         </a>
       </div>
     """
-    return template.format(
+    return mark_safe(template.format(
         pk=form.pk
-    )
+    ))
 
 
 form_submissions.short_description = u'Submissions'
@@ -84,10 +85,10 @@ def form_actions(form):
     """
     if form.archived:
         url = reverse("admin:formulaic_form_unarchive", args=(form.pk,))
-        return '<a href="{}">Un-archive</a>'.format(url)
+        return mark_safe('<a href="{}">Un-archive</a>'.format(url))
     else:
         url = reverse("admin:formulaic_form_archive", args=(form.pk,))
-        return '<a href="{}">Archive</a>'.format(url)
+        return mark_safe('<a href="{}">Archive</a>'.format(url))
 
 
 form_actions.short_description = ""
