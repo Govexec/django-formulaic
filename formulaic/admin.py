@@ -145,11 +145,66 @@ class FormAdmin(admin.ModelAdmin):
         return [
             re_path(r'^([0-9]+)/archive/$', wrap(self.archive_view), name="formulaic_form_archive"),
             re_path(r'^([0-9]+)/unarchive/$', wrap(self.unarchive_view), name="formulaic_form_unarchive"),
-            re_path(r'^([0-9]+)/.+$', wrap(self.change_view)),
+            # re_path(r'^([0-9]+)/.+$', wrap(self.change_view)),
         ] + url_patterns
 
-    def change_view(self, request, object_id, form_url='', extra_context=None):
-        return self.ember_form_view(request, object_id=object_id)
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        try:
+            form = formulaic_models.Form.objects.get(pk=object_id)
+        except formulaic_models.Form.DoesNotExist:
+            form = None
+
+        if not self.has_change_permission(request, form):
+            raise PermissionDenied
+
+        if form is None:
+            raise Http404("Form does not exist")
+
+        environment_config = {
+            'modulePrefix': 'ember-formulaic',
+            'environment': 'production',
+            'rootURL': self.root_url,
+            'locationType': 'auto',
+            'tinyMCE': {
+                'version': 4,  # default 4.4,
+                'load': True
+            },
+            'EmberENV': {
+                'FEATURES': {
+                    # Here you can enable experimental features on an ember canary build
+                    # e.g. 'with-controller': true
+                },
+                'EXTEND_PROTOTYPES': {
+                    # Prevent Ember Data from overriding Date.parse.
+                    'Date': False
+                }
+            },
+            'APP': {
+                # Here you can pass flags/options to your application instance
+                # when it is created
+                'API_HOST': '',
+                'API_NAMESPACE': 'formulaic/api',
+                "name": "ember-formulaic",
+                "version": "0.0.0+a30ae212",
+                "API_ADD_TRAILING_SLASHES": True,
+            },
+            "exportApplicationGlobal": True,
+        }
+
+        extra_context = extra_context or {}
+        extra_context.update({
+            "title": _('Change %s') % force_unicode(self.opts.verbose_name),
+            "form_id": object_id,
+            "opts": self.opts,
+            "app_label": self.opts.app_label,
+            "has_change_permission": self.has_change_permission(request, form),
+            "original": form,
+            "task_data": json.dumps({'form_pk': object_id}),
+            "media": self.media,
+            "environment_config": json.dumps(environment_config),
+        })
+
+        return super(FormAdmin, self).changeform_view(request, object_id=object_id, form_url=form_url, extra_context=extra_context)
 
     def get_right_queryset(self, request):
         if hasattr(self, 'get_queryset'):
@@ -199,68 +254,6 @@ class FormAdmin(admin.ModelAdmin):
             if admin_url.name and admin_url.name.endswith('_changelist'):
                 return reverse('admin:%s' % admin_url.name)
         raise Exception('Could not identify a root URL')
-
-    def ember_form_view(self, request, object_id=None):
-        try:
-            form = formulaic_models.Form.objects.get(pk=object_id)
-        except formulaic_models.Form.DoesNotExist:
-            form = None
-
-        if not self.has_change_permission(request, form):
-            raise PermissionDenied
-
-        if form is None:
-            raise Http404("Form does not exist")
-
-        environment_config = {
-            'modulePrefix': 'ember-formulaic',
-            'environment': 'production',
-            'rootURL': self.root_url,
-            'locationType': 'auto',
-            'tinyMCE': {
-                'version': 4,  # default 4.4,
-                'load': True
-            },
-            'EmberENV': {
-                'FEATURES': {
-                    # Here you can enable experimental features on an ember canary build
-                    # e.g. 'with-controller': true
-                },
-                'EXTEND_PROTOTYPES': {
-                    # Prevent Ember Data from overriding Date.parse.
-                    'Date': False
-                }
-            },
-            'APP': {
-                # Here you can pass flags/options to your application instance
-                # when it is created
-                'API_HOST': '',
-                'API_NAMESPACE': 'formulaic/api',
-                "name": "ember-formulaic",
-                "version": "0.0.0+a30ae212",
-                "API_ADD_TRAILING_SLASHES": True,
-            },
-            "exportApplicationGlobal": True,
-        }
-
-        context_variables = self.admin_site.each_context(request)
-        context_variables.update({
-            "title": _('Change %s') % force_unicode(self.opts.verbose_name),
-            "form_id": object_id,
-            "opts": self.opts,
-            "app_label": self.opts.app_label,
-            "has_change_permission": self.has_change_permission(request, form),
-            "original": form,
-            "task_data": json.dumps({'form_pk': object_id}),
-            "media": self.media,
-            "environment_config": json.dumps(environment_config),
-        })
-
-        return TemplateResponse(
-            request,
-            "admin/formulaic/form/index.html",
-            context_variables
-        )
 
     def get_actions(self, request):
         actions = super(FormAdmin, self).get_actions(request)
