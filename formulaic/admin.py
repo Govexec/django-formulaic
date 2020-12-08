@@ -1,4 +1,5 @@
 import json
+from functools import update_wrapper
 
 from django import forms
 try:
@@ -133,12 +134,18 @@ class FormAdmin(admin.ModelAdmin):
         return super_media + form_media
 
     def get_urls(self):
+        def wrap(view):
+            def wrapper(*args, **kwargs):
+                return self.admin_site.admin_view(view)(*args, **kwargs)
+            wrapper.model_admin = self
+            return update_wrapper(wrapper, view)
+
         url_patterns = super(FormAdmin, self).get_urls()
 
         return [
-            re_path(r'^([0-9]+)/archive/$', self.archive_view, name="formulaic_form_archive"),
-            re_path(r'^([0-9]+)/unarchive/$', self.unarchive_view, name="formulaic_form_unarchive"),
-            re_path(r'^([0-9]+)/.+$', self.change_view),
+            re_path(r'^([0-9]+)/archive/$', wrap(self.archive_view), name="formulaic_form_archive"),
+            re_path(r'^([0-9]+)/unarchive/$', wrap(self.unarchive_view), name="formulaic_form_unarchive"),
+            re_path(r'^([0-9]+)/.+$', wrap(self.change_view)),
         ] + url_patterns
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
@@ -236,7 +243,8 @@ class FormAdmin(admin.ModelAdmin):
             "exportApplicationGlobal": True,
         }
 
-        context_variables = {
+        context_variables = self.admin_site.each_context(request)
+        context_variables.update({
             "title": _('Change %s') % force_unicode(self.opts.verbose_name),
             "form_id": object_id,
             "opts": self.opts,
@@ -246,7 +254,7 @@ class FormAdmin(admin.ModelAdmin):
             "task_data": json.dumps({'form_pk': object_id}),
             "media": self.media,
             "environment_config": json.dumps(environment_config),
-        }
+        })
 
         return TemplateResponse(
             request,
