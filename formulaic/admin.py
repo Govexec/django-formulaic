@@ -17,9 +17,7 @@ except Exception:
 from django.db import models
 from django.forms import HiddenInput
 from django.http import Http404
-from django.shortcuts import redirect, render
-from django.template import RequestContext
-from django.template.response import TemplateResponse
+from django.shortcuts import redirect
 from django.utils.safestring import mark_safe
 try:
     # django < 1.11
