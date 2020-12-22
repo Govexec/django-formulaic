@@ -144,7 +144,8 @@ class FormAdmin(admin.ModelAdmin):
         return [
             re_path(r'^([0-9]+)/archive/$', wrap(self.archive_view), name="formulaic_form_archive"),
             re_path(r'^([0-9]+)/unarchive/$', wrap(self.unarchive_view), name="formulaic_form_unarchive"),
-            # re_path(r'^([0-9]+)/.+$', wrap(self.change_view)),
+            # pattern eats remaining URL path used by `ember-formulaic`
+            re_path(r'^([0-9]+)/.+$', wrap(self.changeform_view)),
         ] + url_patterns
 
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
