@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import permission_required
 from django.db.models import Count
 from django.http import Http404
 from django.views.decorators.cache import never_cache
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, viewsets, pagination, views as rf_views
 from rest_framework.response import Response
 
@@ -93,7 +94,8 @@ class SubmissionViewset(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.SubmissionSerializer
     pagination_class = StandardResultsSetPagination
 
-    filter_fields = ('form', 'source',)
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ('form', 'source',)
 
 
 class RuleConditionViewset(viewsets.ModelViewSet):
@@ -115,7 +117,8 @@ class RuleViewset(viewsets.ModelViewSet):
 
     serializer_class = serializers.RuleSerializer
 
-    filter_fields = ('form', 'position',)  # todo:remove position
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ('form', 'position',)  # todo:remove position
 
 
 class RuleResultViewset(viewsets.ModelViewSet):
@@ -158,7 +161,8 @@ class FieldViewset(viewsets.ModelViewSet):
     )
     serializer_class = serializers.FieldSerializer
 
-    filter_fields = ('form',)
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ('form',)
 
 
 class TextFieldViewset(viewsets.ModelViewSet):
@@ -171,7 +175,8 @@ class TextFieldViewset(viewsets.ModelViewSet):
     )
     serializer_class = serializers.TextFieldSerializer
 
-    filter_fields = ('form',)
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ('form',)
 
 
 class ChoiceFieldViewset(viewsets.ModelViewSet):
@@ -184,7 +189,8 @@ class ChoiceFieldViewset(viewsets.ModelViewSet):
     )
     serializer_class = serializers.ChoiceFieldSerializer
 
-    filter_fields = ('form',)
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ('form',)
 
 
 class BooleanFieldViewset(viewsets.ModelViewSet):
@@ -197,7 +203,8 @@ class BooleanFieldViewset(viewsets.ModelViewSet):
     )
     serializer_class = serializers.BooleanFieldSerializer
 
-    filter_fields = ('form',)
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ('form',)
 
 
 class HiddenFieldViewset(viewsets.ModelViewSet):
@@ -210,7 +217,8 @@ class HiddenFieldViewset(viewsets.ModelViewSet):
     )
     serializer_class = serializers.HiddenFieldSerializer
 
-    filter_fields = ('form',)
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ('form',)
 
 
 class OptionListViewset(viewsets.ModelViewSet):
@@ -234,7 +242,8 @@ class OptionGroupViewset(viewsets.ModelViewSet):
     )
     serializer_class = serializers.OptionGroupSerializer
 
-    filter_fields = ('list',)
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ('list',)
 
 
 class OptionViewset(viewsets.ModelViewSet):
