@@ -151,6 +151,7 @@ def test_formulaic_form_complete(request):
 - Django 3.1 [wip: expanding to a wider range]
 - Python 3.8 [wip: expanding to a wider range]
 - django-rest-framework 3.11.2 [wip: any breaking changes in 4.x?]
+- django-filter 0.9.2
 - nameparser 0.3.16
 - pyzipcode 2.0.0
 - us 0.9.1
