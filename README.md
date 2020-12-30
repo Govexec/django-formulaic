@@ -12,6 +12,18 @@ but it definitely lacks polish at this point in its development._
 ### Configuration
 
 ```python
+# settings.py
+INSTALLED_APPS = [
+    # ...
+    'django_filters',
+    'rest_framework',
+    'formulaic',
+    'admin_ordering',
+    # ...
+]
+```
+
+```python
 # urls.py
 urlpatterns = [
     # ...
