@@ -1,6 +1,7 @@
 import json
 from functools import update_wrapper
 
+from admin_ordering.admin import OrderableAdmin
 from django import forms
 try:
     from django.urls import re_path
@@ -14,8 +15,6 @@ try:
 except Exception:
     # django >= 1.10
     from django.urls import reverse
-from django.db import models
-from django.forms import HiddenInput
 from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.safestring import mark_safe
@@ -265,29 +264,30 @@ class FormAdmin(admin.ModelAdmin):
         return False
 
 
-class OptionInline(admin.TabularInline):
+class OptionInline(OrderableAdmin, admin.TabularInline):
     model = formulaic_models.Option
-    sortable_field_name = "position"
-    formfield_overrides = {
-        models.PositiveIntegerField: {
-            "widget": HiddenInput,
-            "label": "",
-        }
-    }
+    ordering_field = "position"
+    ordering_field_hide_input = True
     prepopulated_fields = {'value': ('name',)}
 
+    fields = (
+        'position',
+        'name',
+        'value',
+    )
 
-class OptionGroupInline(admin.TabularInline):
+
+class OptionGroupInline(OrderableAdmin, admin.TabularInline):
     model = formulaic_models.OptionGroup
-    sortable_field_name = "position"
-    formfield_overrides = {
-        models.PositiveIntegerField: {
-            "widget": HiddenInput,
-            "label": "",
-        }
-    }
-
+    ordering_field = "position"
+    ordering_field_hide_input = True
     filter_horizontal = ('options',)
+
+    fields = (
+        'position',
+        'name',
+        'options',
+    )
 
     def formfield_for_manytomany(self, db_field, request=None, **kwargs):
         """

@@ -4,6 +4,7 @@ import json
 from ckeditor.fields import RichTextField
 from django.contrib.contenttypes.models import ContentType
 from django.db import models, transaction
+from django.db.models import Max
 from django.forms import fields, widgets
 from django.utils.functional import cached_property
 from six import iteritems, python_2_unicode_compatible, u
@@ -156,7 +157,7 @@ class Option(models.Model):
 
     name = models.CharField(max_length=250)
     value = models.CharField(max_length=250)
-    position = models.PositiveIntegerField("Position")
+    position = models.PositiveIntegerField("Position", default=0)
 
     list = models.ForeignKey(OptionList, on_delete=models.CASCADE)
 
@@ -165,6 +166,12 @@ class Option(models.Model):
 
     class Meta:
         ordering = ('position',)
+
+    def save(self, *args, **kwargs):
+        if not self.position:
+            max = self.objects.aggregate(m=Max("position"))["m"]
+            self.position = 10 + (max or 0)
+        super(Option, self).save(*args, **kwargs)
 
 
 @python_2_unicode_compatible
@@ -176,7 +183,7 @@ class OptionGroup(models.Model):
     """
 
     name = models.CharField(max_length=250)
-    position = models.PositiveIntegerField("Position")
+    position = models.PositiveIntegerField("Position", default=0)
 
     options = models.ManyToManyField(Option, related_name="groups")
     list = models.ForeignKey(
@@ -192,6 +199,12 @@ class OptionGroup(models.Model):
 
     class Meta:
         ordering = ('position',)
+
+    def save(self, *args, **kwargs):
+        if not self.position:
+            max = self.objects.aggregate(m=Max("position"))["m"]
+            self.position = 10 + (max or 0)
+        super(OptionGroup, self).save(*args, **kwargs)
 
 
 @python_2_unicode_compatible
