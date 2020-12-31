@@ -410,7 +410,7 @@ window.Formulaic = (function($) {
             this.resetValue();
             this.$wrapper.hide();
             this.$element.attr("disabled", "disabled");
-            this.$element.removeProp("required");
+            this.$element.prop("required", false);
         }
     };
 
@@ -552,7 +552,7 @@ window.Formulaic = (function($) {
                     }
                 } else {
                     $(this).hide();
-                    $(this).removeProp("required");
+                    $(this).prop('required', false);
                 }
             });
         }
