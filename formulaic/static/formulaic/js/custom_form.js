@@ -42,80 +42,80 @@ window.Formulaic = (function($) {
         this.evaluateFields();
 
         // form fill via shared site
-        var receiveMessage = function(event) {
-            // restrict to sharedSiteUrl
-            if (event.origin !== sharedSiteUrl) return;
-            // restrict to session_form_data.js
-            if (!event.data.sessionFormData) return;
+        // var receiveMessage = function(event) {
+        //     // restrict to sharedSiteUrl
+        //     if (event.origin !== sharedSiteUrl) return;
+        //     // restrict to session_form_data.js
+        //     if (!event.data.sessionFormData) return;
 
-            if (event.data.formData && !formDataFound) {
-                formDataFound = true;
-                formData = JSON.parse(event.data.formData);
-                self.fillFormData(self.$element, formData);
-            }
-        };
+        //     if (event.data.formData && !formDataFound) {
+        //         formDataFound = true;
+        //         formData = JSON.parse(event.data.formData);
+        //         self.fillFormData(self.$element, formData);
+        //     }
+        // };
 
-        window.addEventListener("message", receiveMessage, false);
+        // window.addEventListener("message", receiveMessage, false);
 
-        $('<iframe>', {
-            id: 'session-form-data',
-            src: sharedSiteUrl + '/session/form-data',
-            frameborder: 0,
-            scrolling: 'no',
-            style: 'display:none;'
-        }).appendTo('body');
+        // $('<iframe>', {
+        //     id: 'session-form-data',
+        //     src: sharedSiteUrl + '/session/form-data',
+        //     frameborder: 0,
+        //     scrolling: 'no',
+        //     style: 'display:none;'
+        // }).appendTo('body');
 
-        iframe = document.getElementById("session-form-data");
-        message.action = "GET";
+        // iframe = document.getElementById("session-form-data");
+        // message.action = "GET";
 
-        // shared domain
-        iframe.addEventListener("load", function() {
-            iframe.contentWindow.postMessage(message, sharedSiteUrl);
-        });
+        // // shared domain
+        // iframe.addEventListener("load", function() {
+        //     iframe.contentWindow.postMessage(message, sharedSiteUrl);
+        // });
 
-        formInputAutofill = this.$element.find('#id_form-input-autofill');
+        // formInputAutofill = this.$element.find('#id_form-input-autofill');
 
         // form save event listener
-        formInputAutofill.click(function() {
-            if (!this.checked) {
-                message.action = "DELETE";
+        // formInputAutofill.click(function() {
+        //     if (!this.checked) {
+        //         message.action = "DELETE";
 
-                try {
-                    localStorage.removeItem(formLocalStorage);
-                } catch(e) {}
+        //         try {
+        //             localStorage.removeItem(formLocalStorage);
+        //         } catch(e) {}
 
-                // shared domain
-                iframe.contentWindow.postMessage(message, sharedSiteUrl);
-            }
-        });
+        //         // shared domain
+        //         iframe.contentWindow.postMessage(message, sharedSiteUrl);
+        //     }
+        // });
 
-        // on form submit
-        this.$element.submit(function() {
-            if (formInputAutofill.is(":checked")) {
-                message.action = "SAVE";
-                message.formData = self.collectFormData(self.$element, formData);
+        // // on form submit
+        // this.$element.submit(function() {
+        //     if (formInputAutofill.is(":checked")) {
+        //         message.action = "SAVE";
+        //         message.formData = self.collectFormData(self.$element, formData);
 
-                try {
-                    localStorage.setItem(formLocalStorage, JSON.stringify(message.formData));
-                } catch(e) {}
+        //         try {
+        //             localStorage.setItem(formLocalStorage, JSON.stringify(message.formData));
+        //         } catch(e) {}
 
-                // shared domain
-                iframe.contentWindow.postMessage(message, sharedSiteUrl);
-            }
-        });
+        //         // shared domain
+        //         iframe.contentWindow.postMessage(message, sharedSiteUrl);
+        //     }
+        // });
 
-        // fill form data
-        $(function() {
-            try {
-                formDataInitial = JSON.parse(localStorage.getItem(formLocalStorage));
-            } catch(e) {}
+        // // fill form data
+        // $(function() {
+        //     try {
+        //         formDataInitial = JSON.parse(localStorage.getItem(formLocalStorage));
+        //     } catch(e) {}
 
-            if (formDataInitial && !formDataFound) {
-                formDataFound = true;
-                formData = formDataInitial;
-                self.fillFormData(self.$element, formData);
-            }
-        });
+        //     if (formDataInitial && !formDataFound) {
+        //         formDataFound = true;
+        //         formData = formDataInitial;
+        //         self.fillFormData(self.$element, formData);
+        //     }
+        // });
     };
 
     Form.prototype.evaluateFields = function() {
@@ -135,62 +135,62 @@ window.Formulaic = (function($) {
 
     /*********** Form Autofill ***********/
     // treat similar fields equivalently
-    Form.nameMappings = {
-        "fullname": "name",
-        "phonenumber": "phone",
-        "postalcode": "zipcode"
-    };
+    // Form.nameMappings = {
+    //     "fullname": "name",
+    //     "phonenumber": "phone",
+    //     "postalcode": "zipcode"
+    // };
 
-    Form.prototype.normalizeName = function(name) {
-        var simpleName = name.replace(/[-_]/g, '').toLowerCase();
-        if (simpleName in Form.nameMappings) {
-            return Form.nameMappings[simpleName];
-        }
-        return simpleName;
-    };
+    // Form.prototype.normalizeName = function(name) {
+    //     var simpleName = name.replace(/[-_]/g, '').toLowerCase();
+    //     if (simpleName in Form.nameMappings) {
+    //         return Form.nameMappings[simpleName];
+    //     }
+    //     return simpleName;
+    // };
 
-    Form.prototype.collectFormData = function(formElement, formData) {
-        var self = this;
-        var elements = formElement.find("input[type='text'], select, textarea");
+    // Form.prototype.collectFormData = function(formElement, formData) {
+    //     var self = this;
+    //     var elements = formElement.find("input[type='text'], select, textarea");
 
-        elements.each(function() {
-            var key = self.normalizeName($(this).prop("name"));
+    //     elements.each(function() {
+    //         var key = self.normalizeName($(this).prop("name"));
 
-            if ($(this).is(":hidden")) {
-                // remove hidden elements
-                delete formData[key];
-            } else if ($(this).prop("nodeName") === "SELECT") {
-                // save visible selects
-                formData[key] = $(this).find("option:selected").text();
-            } else {
-                // save visible texts
-                formData[key] = $(this).val();
-            }
-        });
+    //         if ($(this).is(":hidden")) {
+    //             // remove hidden elements
+    //             delete formData[key];
+    //         } else if ($(this).prop("nodeName") === "SELECT") {
+    //             // save visible selects
+    //             formData[key] = $(this).find("option:selected").text();
+    //         } else {
+    //             // save visible texts
+    //             formData[key] = $(this).val();
+    //         }
+    //     });
 
-        return formData;
-    };
+    //     return formData;
+    // };
 
-    Form.prototype.fillFormData = function(formElement, formData) {
-        var self = this;
-        var elements = formElement.find("input[type='text'], select, textarea");
+    // Form.prototype.fillFormData = function(formElement, formData) {
+    //     var self = this;
+    //     var elements = formElement.find("input[type='text'], select, textarea");
 
-        elements.each(function() {
-            var key = self.normalizeName($(this).prop("name"));
+    //     elements.each(function() {
+    //         var key = self.normalizeName($(this).prop("name"));
 
-            if (key in formData) {
-                if ($(this).prop("nodeName") === "SELECT") {
-                    // autofill selects
-                    $(this).find("option:contains(" + formData[key] + ")").prop("selected", true);
-                    // trigger field change
-                    $(this).trigger("change.formulaic");
-                } else {
-                    // autofill texts
-                    $(this).val(formData[key]);
-                }
-            }
-        });
-    };
+    //         if (key in formData) {
+    //             if ($(this).prop("nodeName") === "SELECT") {
+    //                 // autofill selects
+    //                 $(this).find("option:contains(" + formData[key] + ")").prop("selected", true);
+    //                 // trigger field change
+    //                 $(this).trigger("change.formulaic");
+    //             } else {
+    //                 // autofill texts
+    //                 $(this).val(formData[key]);
+    //             }
+    //         }
+    //     });
+    // };
 
 
     /*********** Rule Condition ***********/
