@@ -1,4 +1,3 @@
-import datetime
 import json
 
 from ckeditor.fields import RichTextField
@@ -6,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models, transaction
 from django.db.models import Max
 from django.forms import fields, widgets
+from django.utils import timezone
 from django.utils.functional import cached_property
 from six import iteritems, python_2_unicode_compatible, u
 
@@ -33,7 +33,7 @@ class Form(models.Model):
             # case submission
             submission = Submission()
             submission.form = self
-            submission.date_created = datetime.datetime.now()
+            submission.date_created = timezone.now()
             submission.source = source
             submission.metadata = metadata or {}
             submission.save()
