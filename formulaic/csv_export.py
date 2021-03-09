@@ -14,8 +14,8 @@ def export_submissions_to_file(form, output_file):
     submission_qs = (
         models.Submission.objects
         .filter(form=form)
-        .select_related('values')
         .order_by('id')
+        .prefetch_related('values')
     )
 
     for _, _, _, submission_batch in utils.batch_qs(submission_qs):
