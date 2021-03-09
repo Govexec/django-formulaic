@@ -36,6 +36,7 @@ class Form(models.Model):
             submission.date_created = timezone.now()
             submission.source = source
             submission.metadata = metadata or {}
+            submission.promo_source = submission.metadata.get('promo_source')
             submission.save()
 
             # key value pairs
@@ -685,6 +686,13 @@ class Submission(models.Model):
         null=True,
         blank=True,
         help_text="Name of the specific form placement the user filled out (e.g. sidebar-subscribe)"
+    )
+
+    promo_source = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        help_text="Source passed through metadata variable promo_source"
     )
 
     @cached_property
