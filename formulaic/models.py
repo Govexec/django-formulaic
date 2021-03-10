@@ -17,7 +17,7 @@ from formulaic.validators import validate_mixed_content
 
 @python_2_unicode_compatible
 class Form(models.Model):
-    BASE_COLUMN_HEADERS = ['date', 'source']
+    BASE_COLUMN_HEADERS = ['date', 'source', 'promo_source']
     name = models.CharField(max_length=500)
     slug = models.SlugField(max_length=200)
     success_message = models.TextField(null=True, blank=True)

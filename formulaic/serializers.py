@@ -398,4 +398,5 @@ class SubmissionSerializer(serializers.ModelSerializer):
             'form',
             'custom_data',
             'source',
+            'promo_source',
         )
