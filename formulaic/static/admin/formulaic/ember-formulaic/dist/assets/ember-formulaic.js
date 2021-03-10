@@ -908,7 +908,7 @@ define('ember-formulaic/controllers/form/submissions', ['exports', 'ember'], fun
 
         columnHeaders: (function () {
             // base column headers
-            var headers = ['Date/Time', 'Source'];
+            var headers = ['Date/Time', 'Source', 'Promo Source'];
 
             if (this.get('fields.isFulfilled')) {
                 this.get('fields').forEach(function (field) {
@@ -938,7 +938,7 @@ define('ember-formulaic/controllers/form/submissions', ['exports', 'ember'], fun
             var submissions = this.get('model');
 
             submissions.forEach(function (submission) {
-                var row = [submission.get('date_created'), submission.get('source')];
+                var row = [submission.get('date_created'), submission.get('source'), submission.get('promo_source')];
                 for (var j = 0; j < slugs.length; j++) {
                     var slug = slugs[j];
                     row.push(submission.get('custom_data')[slug]);
@@ -1429,6 +1429,7 @@ define('ember-formulaic/models/submission', ['exports', 'ember-data'], function 
     exports['default'] = _emberData['default'].Model.extend({
         date_created: _emberData['default'].attr('string'),
         source: _emberData['default'].attr('string'),
+        promo_source: _emberData['default'].attr('string'),
         form: _emberData['default'].belongsTo('form', { async: true }),
         custom_data: _emberData['default'].attr('json')
     });
@@ -2586,6 +2587,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("ember-formulaic/app")["default"].create({"API_HOST":"","API_NAMESPACE":"formulaic/api","name":"ember-formulaic","version":"0.0.0+8ed03a93","API_ADD_TRAILING_SLASHES":true});
+  require("ember-formulaic/app")["default"].create({"API_HOST":"","API_NAMESPACE":"formulaic/api","name":"ember-formulaic","version":"0.0.0+335f6991","API_ADD_TRAILING_SLASHES":true});
 }
 //# sourceMappingURL=ember-formulaic.map
