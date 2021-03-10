@@ -15,7 +15,7 @@ export default Ember.Controller.extend({
 
     columnHeaders: function() {
         // base column headers
-        var headers = ['Date/Time', 'Source'];
+        var headers = ['Date/Time', 'Source', 'Promo Source'];
 
         if (this.get('fields.isFulfilled')) {
             this.get('fields').forEach(function(field) {
@@ -47,7 +47,8 @@ export default Ember.Controller.extend({
         submissions.forEach(function(submission) {
             let row = [
                 submission.get('date_created'),
-                submission.get('source')
+                submission.get('source'),
+                submission.get('promo_source')
             ];
             for (var j = 0; j < slugs.length; j++) {
                 var slug = slugs[j];
