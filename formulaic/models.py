@@ -27,7 +27,7 @@ class Form(models.Model):
 
     archived = models.BooleanField()
 
-    def create_submission(self, cleaned_data, source=None, metadata=None):
+    def create_submission(self, cleaned_data, source=None, metadata=None, promo_source=None):
 
         with transaction.atomic():
             # case submission
@@ -36,7 +36,7 @@ class Form(models.Model):
             submission.date_created = timezone.now()
             submission.source = source
             submission.metadata = metadata or {}
-            submission.promo_source = submission.metadata.get('promo_source')
+            submission.promo_source = promo_source
             submission.save()
 
             # key value pairs

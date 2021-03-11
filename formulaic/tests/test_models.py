@@ -42,7 +42,7 @@ class SubmissionTestCase(TestCase):
             obj = form.create_submission(
                 custom_form.cleaned_data,
                 source=custom_form.instance_id,
-                metadata={"promo_source":"testing_promo_source"}
+                promo_source="testing_promo_source"
             )
 
             submission = models.Submission.objects.get(pk=obj.pk)
