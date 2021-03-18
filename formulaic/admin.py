@@ -58,10 +58,7 @@ def form_submissions(form):
     template = """
       <div style="line-height: 20px;">
         <a
-          class="handl-dl-start-task-btn"
-          href="javascript:void(0);"
-          onclick="document.getElementById('ld-submissions-dl-{pk}').submit();"
-          data-for="ld-submissions-dl-{pk}"
+          href="/formulaic/download/submissions/?form={pk}"
         >
             Download Submissions CSV
         </a>

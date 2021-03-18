@@ -7,10 +7,9 @@
       <form
         id="ld-submissions-dl-{{ data.pk }}"
         class="handl-task-start-form"
-        action="/download/submissions/"
+        action="/athena/handl/task/start/"
         method="POST"
       >
-        {% csrf_token %}
         <input type="hidden" name="task_name" value="formulaic.create_submission_csv"/>
         <input type="hidden" name="task_data" value='{{ data.task_data }}'/>
       </form>
