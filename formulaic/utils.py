@@ -39,7 +39,7 @@ def send_file(request, filename, full_path):
     jcrocholl
     https://djangosnippets.org/snippets/365/
     """
-    wrapper = FileWrapper(file(full_path))
+    wrapper = FileWrapper(open(full_path))
     response = HttpResponse(wrapper, content_type='text/csv')
     response['Content-Length'] = os.path.getsize(full_path)
     response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
