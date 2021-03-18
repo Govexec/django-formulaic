@@ -32,8 +32,9 @@ def export_submissions_to_file(form, output_file):
                 date_created_aware = submission.date_created
             row["date"] = date_created_aware.strftime('%m/%d/%Y %H:%M')
             row["source"] = submission.source
-            row_batch.append(
-                {k: u(str(v)) if isinstance(v, bool) else v
-                 for (k, v) in row.items()}
-            )
+            # row_batch.append(
+            #     {k: u(str(v)) if isinstance(v, bool) else v
+            #      for (k, v) in row.items()}
+            # )
+            row_batch.append({k: u(v) for (k, v) in row.items()})
         writer.writerows(row_batch)
