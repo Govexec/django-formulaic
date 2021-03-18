@@ -1,7 +1,7 @@
 import os
 from wsgiref.util import FileWrapper
 
-from django.http import HttpResponse
+from django.http import StreamingHttpResponse
 from pyzipcode import ZipCodeDatabase
 import us
 
@@ -40,7 +40,7 @@ def send_file(request, filename, full_path):
     https://djangosnippets.org/snippets/365/
     """
     wrapper = FileWrapper(open(full_path))
-    response = HttpResponse(wrapper, content_type='text/csv')
+    response = StreamingHttpResponse(wrapper, content_type='text/csv')
     response['Content-Length'] = os.path.getsize(full_path)
     response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
     response.set_cookie("fileDownload", value="true", max_age=60*60, path="/")
