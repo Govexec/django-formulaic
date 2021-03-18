@@ -23,6 +23,7 @@ def export_submissions_to_file(form, output_file):
         for submission in submission_batch:
             row = submission.custom_data
             local_tz = get_localzone()
+            d = submission.date_created
             if d.tzinfo is None or d.tzinfo.utcoffset(d) is None:
                 date_created_aware = (
                     pytz.timezone(local_tz.zone).localize(submission.date_created)
