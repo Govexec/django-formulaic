@@ -33,7 +33,7 @@ def export_submissions_to_file(form, output_file):
             row["date"] = date_created_aware.strftime('%m/%d/%Y %H:%M')
             row["source"] = submission.source
             row_batch.append(
-                {k: u(str(v)).encode('utf-8') if isinstance(v, bool) else v
+                {k: u(str(v)) if isinstance(v, bool) else v
                  for (k, v) in row.items()}
             )
         writer.writerows(row_batch)
