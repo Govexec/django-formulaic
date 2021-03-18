@@ -60,7 +60,7 @@ def form_submissions(form):
         <a
           class="handl-dl-start-task-btn"
           href="javascript:void(0);"
-          onclick="$('#ld-submissions-dl-{pk}').submit();"
+          onclick="document.getElementById('ld-submissions-dl-{pk}').submit();"
           data-for="ld-submissions-dl-{pk}"
         >
             Download Submissions CSV
