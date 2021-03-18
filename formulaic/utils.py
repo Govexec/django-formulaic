@@ -39,12 +39,13 @@ def send_file(request, filename, full_path):
     jcrocholl
     https://djangosnippets.org/snippets/365/
     """
-    wrapper = FileWrapper(open(full_path))
-    response = HttpResponse(wrapper, content_type='text/csv')
-    response['Content-Length'] = os.path.getsize(full_path)
-    response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
-    response.set_cookie("fileDownload", value="true", max_age=60*60, path="/")
-    return response
+
+    with FileWrapper(open(full_path)) as wrapper:
+        response = HttpResponse(wrapper, content_type='text/csv')
+        response['Content-Length'] = os.path.getsize(full_path)
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
+        response.set_cookie("fileDownload", value="true", max_age=60*60, path="/")
+        return response
 
 
 def state_from_zip(zipcode):
