@@ -23,10 +23,18 @@ def export_submissions_to_file(form, output_file):
         for submission in submission_batch:
             row = submission.custom_data
             local_tz = get_localzone()
-            date_created_aware = (
-                pytz.timezone(local_tz.zone).localize(submission.date_created)
-            )
+            d = submission.date_created
+            if d.tzinfo is None or d.tzinfo.utcoffset(d) is None:
+                date_created_aware = (
+                    pytz.timezone(local_tz.zone).localize(submission.date_created)
+                )
+            else:
+                date_created_aware = submission.date_created
             row["date"] = date_created_aware.strftime('%m/%d/%Y %H:%M')
             row["source"] = submission.source
-            row_batch.append({k: u(v).encode('utf-8') for (k, v) in row.items()})
+            # row_batch.append(
+            #     {k: u(str(v)) if isinstance(v, bool) else v
+            #      for (k, v) in row.items()}
+            # )
+            row_batch.append({k: u(v) for (k, v) in row.items()})
         writer.writerows(row_batch)
