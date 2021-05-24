@@ -1,6 +1,7 @@
 import os
 from wsgiref.util import FileWrapper
 
+from celery import shared_task
 from django.http import StreamingHttpResponse
 from pyzipcode import ZipCodeDatabase
 import us
@@ -28,7 +29,7 @@ def batch_qs(qs, batch_size=1000):
         end = min(start + batch_size, total)
         yield (start, end, total, qs[start:end])
 
-
+@shared_task
 def send_file(request, filename, full_path):
     """
     Send a file through Django without loading the whole file into
