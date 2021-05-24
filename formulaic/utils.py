@@ -30,8 +30,7 @@ def batch_qs(qs, batch_size=1000):
         yield (start, end, total, qs[start:end])
 
 
-@shared_task
-def send_file(request, filename, full_path):
+async def send_file(request, filename, full_path):
     """
     Send a file through Django without loading the whole file into
     memory at once. The FileWrapper will turn the file object into an

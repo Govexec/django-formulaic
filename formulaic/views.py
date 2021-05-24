@@ -45,8 +45,8 @@ def download_submissions(request):
 
     with open(full_path, 'w') as csvfile:
         export_submissions_to_file(form, csvfile)
-
-    return utils.send_file.delay(request, filename, full_path)
+    result = await utils.send_file(request, filename, full_path)
+    return result
 
 
 class SubmissionSourceView(rf_views.APIView):
