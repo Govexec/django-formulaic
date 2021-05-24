@@ -52,7 +52,7 @@ def download_submission_method(request):
 def download_submissions(request):
     # TODO: auto-cleanup files
 
-    return download_submission_method.delay(request)
+    download_submission_method.delay(request)
 
 
 class SubmissionSourceView(rf_views.APIView):
