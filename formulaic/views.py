@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from celery import shared_task
 from django.contrib.auth.decorators import permission_required
 from django.db.models import Count
 from django.http import Http404
@@ -25,8 +24,11 @@ class CustomDjangoModelPermissions(permissions.DjangoModelPermissions):
     }
 
 
-@shared_task(bind=True)
-def download_submission_method(request=None):
+@permission_required("formulaic.change_submission")
+@never_cache
+def download_submissions(request):
+    # TODO: auto-cleanup files
+
     form_id = request.GET.get('form', None)
 
     if not form_id:
@@ -44,15 +46,7 @@ def download_submission_method(request=None):
     with open(full_path, 'w') as csvfile:
         export_submissions_to_file(form, csvfile)
 
-    return utils.send_file(request, filename, full_path)
-
-
-@permission_required("formulaic.change_submission")
-@never_cache
-def download_submissions(request):
-    # TODO: auto-cleanup files
-
-    download_submission_method.delay(request=request)
+    return utils.send_file.delay(request, filename, full_path)
 
 
 class SubmissionSourceView(rf_views.APIView):
