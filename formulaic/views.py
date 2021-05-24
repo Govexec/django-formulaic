@@ -26,7 +26,7 @@ class CustomDjangoModelPermissions(permissions.DjangoModelPermissions):
 
 
 @shared_task(bind=True)
-def download_submission_method(request):
+def download_submission_method(request=None):
     form_id = request.GET.get('form', None)
 
     if not form_id:
@@ -52,7 +52,7 @@ def download_submission_method(request):
 def download_submissions(request):
     # TODO: auto-cleanup files
 
-    download_submission_method.delay(request)
+    download_submission_method.delay(request=request)
 
 
 class SubmissionSourceView(rf_views.APIView):
