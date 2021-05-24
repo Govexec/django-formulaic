@@ -30,7 +30,7 @@ def batch_qs(qs, batch_size=1000):
         yield (start, end, total, qs[start:end])
 
 
-async def send_file(request, filename, full_path):
+def send_file(request, filename, full_path):
     """
     Send a file through Django without loading the whole file into
     memory at once. The FileWrapper will turn the file object into an
@@ -45,7 +45,7 @@ async def send_file(request, filename, full_path):
     # response['Content-Length'] = os.path.getsize(full_path)
     response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
     response.set_cookie("fileDownload", value="true", max_age=60*60, path="/")
-    return await response
+    return response
 
 
 def state_from_zip(zipcode):
