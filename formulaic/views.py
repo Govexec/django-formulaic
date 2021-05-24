@@ -52,7 +52,24 @@ def download_submission_method(request):
 def download_submissions(request):
     # TODO: auto-cleanup files
 
-    download_submission_method.delay(request)
+    form_id = request.GET.get('form', None)
+
+    if not form_id:
+        raise Http404()
+
+    try:
+        form = models.Form.objects.get(pk=form_id)
+    except models.Form.DoesNotExist:
+        raise Http404()
+
+    datetime_slug = datetime.now().strftime("%Y%m%d-%H:%M:%S-%f")
+    filename = '{}-submissions-{}.csv'.format(form.slug, datetime_slug)
+    full_path = '{}/{}'.format(settings.FORMULAIC_EXPORT_STORAGE_LOCATION, filename)
+
+    with open(full_path, 'w') as csvfile:
+        export_submissions_to_file(form, csvfile)
+
+    return utils.send_file(request, filename, full_path)
 
 
 class SubmissionSourceView(rf_views.APIView):

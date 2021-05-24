@@ -44,7 +44,7 @@ def send_file(request, filename, full_path):
     # response['Content-Length'] = os.path.getsize(full_path)
     response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
     # response.set_cookie("fileDownload", value="true", max_age=60*60, path="/")
-    return response
+    yield response
 
 
 def state_from_zip(zipcode):
