@@ -45,6 +45,7 @@ def download_submissions(request):
 
     with open(full_path, 'w') as csvfile:
         export_submissions_to_file(form, csvfile)
+      
     return utils.send_file(request, filename, full_path)
 
 
