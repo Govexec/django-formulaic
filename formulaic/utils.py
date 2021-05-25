@@ -1,7 +1,6 @@
 import os
 from wsgiref.util import FileWrapper
 
-from celery import shared_task
 from django.http import StreamingHttpResponse
 from pyzipcode import ZipCodeDatabase
 import us
