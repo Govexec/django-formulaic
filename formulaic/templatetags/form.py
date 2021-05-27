@@ -1,5 +1,5 @@
 from django import template
-
+from django.conf import settings
 
 register = template.Library()
 
@@ -72,6 +72,12 @@ def formulaic_field_classes(widget):
         classes.append("disabled")
 
     return " ".join(classes)
+
+
+@register.filter(is_safe=True)
+def formulaic_tinymce_key():
+    return settings.FORMULAIC_TINYMCE_KEY
+
 
 
 register.filter('formulaic_extra_attributes', add_attributes_to_field)
