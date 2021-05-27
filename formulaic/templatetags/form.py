@@ -74,12 +74,6 @@ def formulaic_field_classes(widget):
     return " ".join(classes)
 
 
-@register.filter(is_safe=True)
-def formulaic_tinymce_key():
-    return settings.FORMULAIC_TINYMCE_KEY
-
-
-
 register.filter('formulaic_extra_attributes', add_attributes_to_field)
 register.filter('formulaic_extra_widget_classes', add_classes_to_field)
 register.filter('formulaic_field_classes', formulaic_field_classes)
