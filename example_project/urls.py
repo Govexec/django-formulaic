@@ -18,9 +18,9 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('form-test/', views.test_formulaic_form),
+    path('', views.test_formulaic_form),
     path(
-        'form-test/completed/',
+        'completed/',
         views.test_formulaic_form_complete,
         name='form-complete'
     ),
