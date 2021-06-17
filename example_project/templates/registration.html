@@ -1,0 +1,76 @@
+<section class="">
+    <div class="container">
+        <form id="{{ form.instance_id }}" class="form" method="post" enctype="multipart/form-data" action="./{% if querystring %}?{{ querystring }}{% endif %}">
+            {% if form.errors %}
+            <div class="form-error-message">
+              <div class="error-message">Please correct the error{{ form.errors|length|pluralize }} below.</div>
+              {% if form.non_field_errors %}
+              <ul style="margin-left: 0px;">
+              {% for error in form.non_field_errors %}
+                <li class="error-message">{{ error }}</li>
+              {% endfor %}
+              </ul>
+              {% endif %}
+            </div>
+            {% endif %}
+            <div class="forms-field-container">
+              {% csrf_token %}
+              {% for hidden in form.hidden_fields %}
+                {{ hidden|safe }}
+              {% endfor %}
+            
+              {% for field in form.visible_fields %}
+                {% with field_type=field|widget_type %}
+            
+                <div class="forms-field field-wrapper form-group {{ field.field.widget|formulaic_field_classes }}
+                            {% if field.errors %} field-error formulaic-error {% endif %}">
+                  <label class="forms-field-label" for="{{ field.id_for_label }}">
+                    {{ field.label|safe }} {% if field.field.required %}<span class="forms-required-label">*</span>{% endif %}
+                  </label>
+            
+                  {% if field_type == "textinput" or field_type == "select" or field_type == "selectmultiple" or field_type == "textarea" %}
+            
+                    {{ field|formulaic_extra_attributes|safe }}
+            
+                  {% elif field_type == "checkboxselectmultiple" %}
+            
+                    <div class="checkbox">{{ field|safe }}</div>
+            
+                  {% elif field_type == "radioselect" %}
+            
+                    <div class="radio">{{ field|safe }}</div>
+            
+                  {% else %}
+            
+                    {{ field|formulaic_extra_attributes|safe }}
+            
+                  {% endif %}
+            
+                  {% if field.errors %}<span class="error-message">{{ field.errors.0 }}</span>{% endif %}
+                </div>
+            
+                {% endwith %}
+              {% endfor %}
+            </div>
+            
+            <div class="forms-submit-container">
+              <button type="submit" name="submit" class="forms-submit">SUBMIT</button>
+            </div>
+        </form>
+    </div>
+    </section>
+
+    <section class="seperator center">
+    <div class="container">
+        <hr />
+    </div>
+</section>
+
+<script type="text/javascript">
+  (function() {
+    var instanceId = "{{ form.instance_id }}";
+    var rulesData = {{ form.rules_json|safe }};
+    var sharedSiteUrl = "";
+    Formulaic.forms.add(instanceId, rulesData, sharedSiteUrl);
+  })();
+</script>
