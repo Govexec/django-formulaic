@@ -29,10 +29,7 @@ services:
         command: >
             sh -c "
                 python manage.py makemigrations formulaic &&
-                python manage.py makemigrations example_project &&
+                python manage.py makemigrations example_project
                 python manage.py migrate
                 python manage.py runserver 0.0.0.0:8000
             "
-            # 
-            # python manage.py migrate
-
