@@ -786,7 +786,7 @@ class AsyncResults(models.Model):
   # the tasks's result - represented as a JSON blob
   result = models.TextField(
       blank=False,
-      verbose_name=_("task result"))
+      verbose_name="task result")
   created_on = CreationDateTimeField(
       db_index=True,
       editable=False,
