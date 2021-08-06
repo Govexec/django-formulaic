@@ -1,34 +1,15 @@
 import json
-from datetime import datetime
 
-from celery import shared_task
-from django.conf import settings
 from django.http import StreamingHttpResponse
 from pyzipcode import ZipCodeDatabase
 import us
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from formulaic.csv_export import export_submissions_to_file
 from formulaic import models
 
 
 class PollAsyncResultsView(APIView):
-    """
-    API endpoint that returns whether an Async job is finished, and
-    what to do with the job.
-    Once a related Async task finishes, it saves a JSON blob to
-    AsyncResults table. PollAsyncResultsView looks for a JSON blob
-    associated with the given task id and returns 202 Accepted
-    until it finds one.
-
-    The JSON blob looks like the below
-    { status_code: 200,
-      location: download url,
-      filename: download file name }
-    or if there was an error processing the task,
-    { status_code: 500, error_message: error message}
-    """
 
     def get(self, request, *args, **kwargs):
         task_id = self.kwargs.get("task_id", None)
@@ -47,16 +28,6 @@ class PollAsyncResultsView(APIView):
                 return Response(status=200, data=load_body)
         else:
             return Response(status=202)
-
-@shared_task
-def download_submission_task(form_id):
-    form = models.Form.objects.get(pk=form_id)
-    datetime_slug = datetime.now().strftime("%Y%m%d-%H:%M:%S-%f")
-    filename = '{}-submissions-{}.csv'.format(form.slug, datetime_slug)
-    full_path = '{}/{}'.format(settings.FORMULAIC_EXPORT_STORAGE_LOCATION, filename)
-
-    with open(full_path, 'w') as csvfile:
-        return export_submissions_to_file(form, csvfile)
 
 
 def batch_qs(qs, batch_size=1000):

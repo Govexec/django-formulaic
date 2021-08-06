@@ -1,21 +1,28 @@
 import csv
 import json
 import sys
+from datetime import datetime
 
 import pytz
 from celery import shared_task
+from django.conf import settings
 from six import u
 from tzlocal import get_localzone
 
 from formulaic import models, utils
 
 
-# bind the task to itself to ensure that task results get associated # with the correct task id
-from formulaic.models import AsyncResults
+@shared_task
+def download_submission_task(form_id):
+    form = models.Form.objects.get(pk=form_id)
+    datetime_slug = datetime.now().strftime("%Y%m%d-%H:%M:%S-%f")
+    filename = '{}-submissions-{}.csv'.format(form.slug, datetime_slug)
+    full_path = '{}/{}'.format(settings.FORMULAIC_EXPORT_STORAGE_LOCATION, filename)
 
+    with open(full_path, 'w') as csvfile:
+        return export_submissions_to_file(form, csvfile)
 
 @shared_task(bind=True)
-# for bound celery tasks, you need to pass in self as the first argument
 def generate_report(self, **kwargs):
   """
     Task: Generate a data report, store for download, and save the
@@ -33,13 +40,15 @@ def generate_report(self, **kwargs):
               # "location": download_url,
               "filename": filename}
     json_result = json.dumps(result)
-    AsyncResults.objects.create(task_id=task_id,result=json_result)
+    models.AsyncResults.objects.create(task_id=task_id, result=json_result)
   except:
     # save error messages with status code 500
     result = {"status_code": 500,
               "error_message": str(sys.exc_info()[0])}
     json_result = json.dumps(result)
-    AsyncResults.objects.create(task_id=task_id, result=json_result)
+    models.AsyncResults.objects.create(task_id=task_id, result=json_result)
+
+    return json_result
 
 
 def export_submissions_to_file(form, output_file):

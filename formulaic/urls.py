@@ -1,4 +1,4 @@
-from formulaic.views import PollAsyncResultsView
+from formulaic.utils import PollAsyncResultsView
 
 try:
     # django 3+
