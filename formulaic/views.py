@@ -12,6 +12,7 @@ from rest_framework.views import APIView
 from formulaic import models, utils, serializers, settings
 from formulaic.csv_export import export_submissions_to_file
 from formulaic.models import AsyncResults
+from formulaic.utils import download_submission_task
 
 
 class CustomDjangoModelPermissions(permissions.DjangoModelPermissions):
@@ -37,16 +38,11 @@ def download_submissions(request):
         raise Http404()
 
     try:
-        form = models.Form.objects.get(pk=form_id)
+        models.Form.objects.get(pk=form_id)
     except models.Form.DoesNotExist:
         raise Http404()
 
-    datetime_slug = datetime.now().strftime("%Y%m%d-%H:%M:%S-%f")
-    filename = '{}-submissions-{}.csv'.format(form.slug, datetime_slug)
-    full_path = '{}/{}'.format(settings.FORMULAIC_EXPORT_STORAGE_LOCATION, filename)
-
-    with open(full_path, 'w') as csvfile:
-        task = export_submissions_to_file.delay(form, csvfile)
+    task = download_submission_task.delay(form_id)
 
     return Response({'task': task.task_id}, status=202)
 

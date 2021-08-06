@@ -42,7 +42,6 @@ def generate_report(self, **kwargs):
     AsyncResults.objects.create(task_id=task_id, result=json_result)
 
 
-@shared_task
 def export_submissions_to_file(form, output_file):
     field_names = form.column_headers
     writer = csv.DictWriter(output_file, fieldnames=field_names)

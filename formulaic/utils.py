@@ -1,6 +1,23 @@
+from datetime import datetime
+
+from celery import shared_task
+from django.conf import settings
 from django.http import StreamingHttpResponse
 from pyzipcode import ZipCodeDatabase
 import us
+
+from formulaic.csv_export import export_submissions_to_file
+from formulaic import models
+
+@shared_task
+def download_submission_task(form_id):
+    form = models.Form.objects.get(pk=form_id)
+    datetime_slug = datetime.now().strftime("%Y%m%d-%H:%M:%S-%f")
+    filename = '{}-submissions-{}.csv'.format(form.slug, datetime_slug)
+    full_path = '{}/{}'.format(settings.FORMULAIC_EXPORT_STORAGE_LOCATION, filename)
+
+    with open(full_path, 'w') as csvfile:
+        return export_submissions_to_file(form, csvfile)
 
 
 def batch_qs(qs, batch_size=1000):
