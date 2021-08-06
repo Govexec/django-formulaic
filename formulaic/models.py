@@ -790,4 +790,4 @@ class AsyncResults(models.Model):
   created_on = CreationDateTimeField(
       db_index=True,
       editable=False,
-      verbose_name=_("created_on"))
+      verbose_name="created_on")
