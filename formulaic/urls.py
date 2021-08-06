@@ -1,3 +1,5 @@
+from formulaic.views import PollAsyncResultsView
+
 try:
     # django 3+
     from django.urls import include, re_path
@@ -28,4 +30,6 @@ urlpatterns = [
     re_path(r'^api/submissionsources/$', views.SubmissionSourceView.as_view()),
     re_path(r'^api/', include(router.urls)),
     re_path(r'^download/submissions/$', views.download_submissions),
+    re_path(r'api/poll_async_results/(?P<task_id>[0-9A-Za-z_\-]+)/?$',
+            PollAsyncResultsView.as_view()),
 ]

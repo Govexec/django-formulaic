@@ -7,6 +7,7 @@ from django.db.models import Max
 from django.forms import fields, widgets
 from django.utils import timezone
 from django.utils.functional import cached_property
+from django_extensions.db.fields import CreationDateTimeField
 from six import iteritems, python_2_unicode_compatible, u
 
 from formulaic import fields as custom_fields
@@ -768,3 +769,25 @@ class SubmissionKeyValue(models.Model):
 
     def __str__(self):
         return "{}:{}".format(self.key, self.value)
+
+class AsyncResults(models.Model):
+  """
+  Temporary records of async task_id, the results as a JSON blob
+  with a status code,
+  and the user who requested the task.
+  """
+  # the id of the celery task that generated the result
+  task_id = models.CharField(
+      blank=False,
+      max_length=255,
+      null=False,
+      verbose_name=_("task id"),
+      db_index=True)
+  # the tasks's result - represented as a JSON blob
+  result = models.TextField(
+      blank=False,
+      verbose_name=_("task result"))
+  created_on = CreationDateTimeField(
+      db_index=True,
+      editable=False,
+      verbose_name=_("created_on"))
