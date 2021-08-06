@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from django.contrib.auth.decorators import permission_required
@@ -11,7 +12,6 @@ from rest_framework.views import APIView
 
 from formulaic import models, utils, serializers, settings
 from formulaic.csv_export import export_submissions_to_file
-from formulaic.models import AsyncResults
 from formulaic.utils import download_submission_task
 
 
@@ -276,7 +276,7 @@ class PollAsyncResultsView(APIView):
         task_id = self.kwargs.get("task_id", None)
         # there should only be one async_result with the task_id, user
         # combination
-        async_result = AsyncResults.objects.get(task_id=task_id,
+        async_result = models.AsyncResults.objects.get(task_id=task_id,
                                                 user=self.request.user)
         if async_result:
             load_body = json.loads(async_result.result)
