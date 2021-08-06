@@ -6,8 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, viewsets, pagination, views as rf_views
 from rest_framework.response import Response
 
-from formulaic import models, serializers
-from formulaic.utils import download_submission_task
+from formulaic import models, serializers, csv_export
 
 
 class CustomDjangoModelPermissions(permissions.DjangoModelPermissions):
@@ -37,7 +36,7 @@ def download_submissions(request):
     except models.Form.DoesNotExist:
         raise Http404()
 
-    task = download_submission_task.delay(form_id)
+    task = csv_export.download_submission_task.delay(form_id)
 
     return Response({'task': task.task_id}, status=202)
 
