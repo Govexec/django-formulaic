@@ -29,13 +29,17 @@ def generate_report(self, **kwargs):
     download URL to AsyncResults model once task finishes running
   """
   try:
+    form_id = kwargs.get('form_id')
+    datetime_slug = datetime.now().strftime("%Y%m%d-%H:%M:%S-%f")
     # function to generate, upload a report to AWS S3 then return
     # the report's s3 url
     # download_url = execute_generate_report()
     # get the celery task's task id
+
+    form = models.Form.objects.get(pk=form_id)
     task_id = self.request.id
     # generate a file name
-    filename = f"export.csv"
+    filename = '{}-submissions-{}.csv'.format(form.slug, datetime_slug)
     result = {"status_code": 200,
               # "location": download_url,
               "filename": filename}

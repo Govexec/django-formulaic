@@ -31,12 +31,7 @@ def download_submissions(request):
     if not form_id:
         raise Http404()
 
-    try:
-        models.Form.objects.get(pk=form_id)
-    except models.Form.DoesNotExist:
-        raise Http404()
-
-    task = csv_export.download_submission_task.delay(form_id)
+    task = csv_export.generate_report.delay(form_id)
 
     return Response({'task': task.task_id}, status=202)
 
