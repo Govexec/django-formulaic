@@ -23,7 +23,7 @@ def download_submission_task(form_id):
         return export_submissions_to_file(form, csvfile)
 
 @shared_task(bind=True)
-def generate_report(self, **kwargs):
+def generate_report(request, **kwargs):
   """
     Task: Generate a data report, store for download, and save the
     download URL to AsyncResults model once task finishes running
@@ -37,7 +37,7 @@ def generate_report(self, **kwargs):
     # get the celery task's task id
 
     form = models.Form.objects.get(pk=form_id)
-    task_id = self.request.id
+    task_id = request.id
     # generate a file name
     filename = '{}-submissions-{}.csv'.format(form.slug, datetime_slug)
     result = {"status_code": 200,
