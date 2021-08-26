@@ -58,7 +58,7 @@ def form_submissions(form):
     template = """
       <div style="line-height: 20px;">
         <a
-          href="/formulaic/download/submissions/?form={pk}"
+          href="/formulaic/download/submissions/?form={pk}" data-target-id={pk} class='form-download-tag'
         >
             Download Submissions CSV
         </a>

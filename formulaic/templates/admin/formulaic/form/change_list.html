@@ -9,7 +9,7 @@
         class="handl-task-start-form"
         method="POST"
       >
-        <input type="hidden" name="task_name" value="formulaic.create_submission_csv" id="download-report-button"/>
+        <input type="hidden" name="task_name" value="formulaic.create_submission_csv" />
         <input type="hidden" name="task_data" value='{{ data.task_data }}'/>
       </form>
     {% endfor %}
@@ -17,9 +17,13 @@
 {% endblock %}
 
 <script>
-  $('#download-reports-button').on('click', function(e) {
+
+  const allTags = document.getElementsByClassName('form-download-tag')
+  allTags.map(item => {
+    (item).on('click', function(e) {
+      const attribute = item.getAttribute('data-target-id')
       e.preventDefault();
-      const url = '/download/submissions/';
+      const url = `/download/submissions/?form=${attribute}`;
       $.get(url)
         .done(function pollAsyncResults(data) {
           context: this
@@ -54,4 +58,7 @@
 
         })
     })
+  })
+
+
 </script>
