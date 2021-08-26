@@ -54,10 +54,8 @@ var content_changed = false;
                 a.download=asyncData.filename;
                 a.click();
 
-                $('#download-reports-button').text('Download Report(CSV)')
               }
               else {
-                $('#download-reports-button').text('Loading...')
 
                 setTimeout(function() { pollAsyncResults(data) }, 500);
               }
