@@ -7,7 +7,6 @@ from django.db.models import Max
 from django.forms import fields, widgets
 from django.utils import timezone
 from django.utils.functional import cached_property
-from django_extensions.db.fields import CreationDateTimeField
 from six import iteritems, python_2_unicode_compatible, u
 
 from formulaic import fields as custom_fields
