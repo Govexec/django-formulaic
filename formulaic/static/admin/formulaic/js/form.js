@@ -27,8 +27,12 @@ var content_changed = false;
 	});
  }(django.jQuery));
 
-
-  const allTags = document.getElementsByClassName('form-download-tag')
+    let allTags = document.getElementsByClassName('form-download-tag')
+    let count = 0
+    while(!allTags.length || count < 20 ){
+          let allTags = document.getElementsByClassName('form-download-tag')
+            count++
+    }
   allTags.map(item => {
     (item).on('click', function(e) {
       const attribute = item.getAttribute('data-target-id')
