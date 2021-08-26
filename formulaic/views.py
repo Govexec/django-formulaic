@@ -1,10 +1,14 @@
+import json
+
+from django.conf import settings
 from django.contrib.auth.decorators import permission_required
 from django.db.models import Count
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseForbidden
 from django.views.decorators.cache import never_cache
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, viewsets, pagination, views as rf_views
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from . import csv_export, models, serializers
 
@@ -243,3 +247,23 @@ class OptionViewset(viewsets.ModelViewSet):
     serializer_class = serializers.OptionSerializer
 
 
+class PollAsyncResultsView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        task_id = request.GET.get("task_id")
+        filename = request.GET.get("filename")
+
+        if request.is_ajax():
+            result = download_submissions.AsyncResult(task_id)
+            if result.ready():
+                return HttpResponse(json.dumps({"filename": result.get()}))
+            return HttpResponse(json.dumps({"filename": None}))
+
+        try:
+            f = open('{}/{}'.format(settings.FORMULAIC_EXPORT_STORAGE_LOCATION, filename))
+        except:
+            return HttpResponseForbidden()
+        else:
+            response = HttpResponse(f, mimetype='text/csv')
+            response['Content-Disposition'] = 'attachment; filename=%s' % filename
+        return response

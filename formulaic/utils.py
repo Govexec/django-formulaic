@@ -5,30 +5,6 @@ from rest_framework.views import APIView
 from django.http import StreamingHttpResponse, HttpResponse, HttpResponseForbidden
 from pyzipcode import ZipCodeDatabase
 
-from .views import download_submissions
-
-
-class PollAsyncResultsView(APIView):
-
-    def get(self, request, *args, **kwargs):
-        task_id = request.GET.get("task_id")
-        filename = request.GET.get("filename")
-
-        if request.is_ajax():
-            result = download_submissions.AsyncResult(task_id)
-            if result.ready():
-                return HttpResponse(json.dumps({"filename": result.get()}))
-            return HttpResponse(json.dumps({"filename": None}))
-
-        try:
-            f = open('{}/{}'.format(settings.FORMULAIC_EXPORT_STORAGE_LOCATION, filename))
-        except:
-            return HttpResponseForbidden()
-        else:
-            response = HttpResponse(f, mimetype='text/csv')
-            response['Content-Disposition'] = 'attachment; filename=%s' % filename
-        return response
-
 
 def batch_qs(qs, batch_size=1000):
     """
