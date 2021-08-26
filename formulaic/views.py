@@ -6,8 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, viewsets, pagination, views as rf_views
 from rest_framework.response import Response
 
-from formulaic import models, serializers, csv_export
-
+from . import csv_export, models, serializers
 
 class CustomDjangoModelPermissions(permissions.DjangoModelPermissions):
     perms_map = {

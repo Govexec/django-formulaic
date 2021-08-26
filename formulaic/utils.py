@@ -1,5 +1,6 @@
 import json
 import us
+from django.conf import settings
 from rest_framework.views import APIView
 from django.http import StreamingHttpResponse, HttpResponse, HttpResponseForbidden
 from pyzipcode import ZipCodeDatabase
@@ -20,11 +21,11 @@ class PollAsyncResultsView(APIView):
             return HttpResponse(json.dumps({"filename": None}))
 
         try:
-            f = open("/path/to/export/" + filename)
+            f = open('{}/{}'.format(settings.FORMULAIC_EXPORT_STORAGE_LOCATION, filename))
         except:
             return HttpResponseForbidden()
         else:
-            response = HttpResponse(file, mimetype='text/csv')
+            response = HttpResponse(f, mimetype='text/csv')
             response['Content-Disposition'] = 'attachment; filename=%s' % filename
         return response
 
