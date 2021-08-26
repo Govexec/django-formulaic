@@ -1,33 +1,32 @@
 import json
-
-from django.http import StreamingHttpResponse
-from pyzipcode import ZipCodeDatabase
 import us
-from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.http import StreamingHttpResponse, HttpResponse, HttpResponseForbidden
+from pyzipcode import ZipCodeDatabase
 
-from formulaic import models
+from .views import download_submissions
 
 
 class PollAsyncResultsView(APIView):
 
     def get(self, request, *args, **kwargs):
-        task_id = self.kwargs.get("task_id", None)
-        # there should only be one async_result with the task_id, user
-        # combination
-        async_result = models.AsyncResults.objects.get(task_id=task_id,
-                                                user=self.request.user)
-        if async_result:
-            load_body = json.loads(async_result.result)
-            status_code = load_body.get("status_code", None)
-            # if the task produced an error code
-            if status_code == 500:
-                return Response(
-                    status=500)
-            else:
-                return Response(status=200, data=load_body)
+        task_id = request.GET.get("task_id")
+        filename = request.GET.get("filename")
+
+        if request.is_ajax():
+            result = download_submissions.AsyncResult(task_id)
+            if result.ready():
+                return HttpResponse(json.dumps({"filename": result.get()}))
+            return HttpResponse(json.dumps({"filename": None}))
+
+        try:
+            f = open("/path/to/export/" + filename)
+        except:
+            return HttpResponseForbidden()
         else:
-            return Response(status=202)
+            response = HttpResponse(file, mimetype='text/csv')
+            response['Content-Disposition'] = 'attachment; filename=%s' % filename
+        return response
 
 
 def batch_qs(qs, batch_size=1000):

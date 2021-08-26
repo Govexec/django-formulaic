@@ -7,7 +7,6 @@
       <form
         id="ld-submissions-dl-{{ data.pk }}"
         class="handl-task-start-form"
-<!--        action="/athena/handl/task/start/"-->
         method="POST"
       >
         <input type="hidden" name="task_name" value="formulaic.create_submission_csv" id="download-report-button"/>
@@ -20,61 +19,39 @@
 <script>
   $('#download-reports-button').on('click', function(e) {
       e.preventDefault();
-      // see the URL Setup for where this url came from
       const url = '/download/submissions/';
       $.get(url)
         .done(function pollAsyncResults(data) {
-          // bind pollAsyncResults to itself to avoid clashing with
-          // the prior get request
           context: this
-          // see the URL setup for where this url came from
           const pollAsyncUrl = `/api/poll_async_results/${data.task_id}`
           $.get(pollAsyncUrl)
             .done(function(asyncData, status, xhr) {
               context: this
-              // if the status doesn't respond with 202, that means
-              // that the task finished successfully
               if (xhr.status !== 202) {
-                // stop making get requests to pollAsyncResults
                 clearTimeout(pollAsyncResults);
-                // to download - create an anchor element and
-                // simulate a click
                 const a = document.createElement('a');
                 document.body.appendChild(a);
                 a.style='display: none';
                 a.href=asyncData.location;
                 a.download=asyncData.filename;
                 a.click();
-                // change the button back to normal and hide the
-                // overlay
+
                 $('#download-reports-button').text('Download Report(CSV)')
               }
-              // async task still processing
               else {
                 $('#download-reports-button').text('Loading...')
-                // Call the function pollAsyncResults again after
-                // waiting 0.5 seconds.
+
                 setTimeout(function() { pollAsyncResults(data) }, 500);
               }
             })
-            // see PollAsyncResultsView in View Setup. If the celery
-            // task fails, and returns a JSON blob with status_code
-            // 500, PollAsyncResultsView returns a 500 response,
-            // which would indicate that the task failed
+
             .fail(function(xhr, status, error) {
-              // stop making get requests to pollAsyncResults
               clearTimeout(pollAsyncResults);
-              // add a message, modal, or something to show the user
-              // that there was an error the error in this case
-              // would be related to the asynchronous task's
-              // error message
+
             })
         })
         .fail(function(xhr, status, error) {
-          // add a message, modal, or something to show the user
-          // that there was an error
-          // The error in this case would be related to the main
-          // function that makes a request to start the async task
+
         })
     })
 </script>

@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import permission_required
 from django.db.models import Count
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.views.decorators.cache import never_cache
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, viewsets, pagination, views as rf_views
@@ -31,9 +31,9 @@ def download_submissions(request):
     if not form_id:
         raise Http404()
 
-    task = csv_export.generate_report.delay(form_id=form_id)
+    task = csv_export.download_submission_task.delay(form_id=form_id)
 
-    return Response({'task': task.task_id}, status=202)
+    return HttpResponse({'task': task.task_id}, status=202)
 
 
 class SubmissionSourceView(rf_views.APIView):
