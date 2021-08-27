@@ -28,8 +28,8 @@ var content_changed = false;
  }(django.jQuery));
     setTimeout(() => {
         let allTags = document.getElementsByClassName('form-download-tag')
-        allTags.map(item => {
-        (item).on('click', function(e) {
+        for( let item of allTags){
+          (item).on('click', function(e) {
           const attribute = item.getAttribute('data-target-id')
           e.preventDefault();
           const url = `/download/submissions/?form=${attribute}`;
@@ -65,7 +65,8 @@ var content_changed = false;
 
             })
         })
-    }, 100)
+        }
+        , 100)
     })
 
 
