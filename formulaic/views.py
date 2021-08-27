@@ -35,9 +35,30 @@ def download_submissions(request):
         raise Http404()
 
     task = csv_export.download_submission_task.delay(form_id=form_id)
-
+    print(vars(task))
     return HttpResponse({'task': task.task_id}, status=202)
 
+
+class PollAsyncResultsView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        task_id = request.GET.get("task_id")
+        filename = request.GET.get("filename")
+
+        if request.is_ajax():
+            result = csv_export.download_submission_task.AsyncResult(task_id)
+            if result.ready():
+                return HttpResponse(json.dumps({"filename": result.get()}))
+            return HttpResponse(json.dumps({"filename": None}))
+
+        try:
+            f = open('{}/{}'.format(settings.FORMULAIC_EXPORT_STORAGE_LOCATION, filename))
+        except:
+            return HttpResponseForbidden()
+        else:
+            response = HttpResponse(f, mimetype='text/csv')
+            response['Content-Disposition'] = 'attachment; filename=%s' % filename
+        return response
 
 class SubmissionSourceView(rf_views.APIView):
     permission_classes = (CustomDjangoModelPermissions,)
@@ -247,23 +268,4 @@ class OptionViewset(viewsets.ModelViewSet):
     serializer_class = serializers.OptionSerializer
 
 
-class PollAsyncResultsView(APIView):
 
-    def get(self, request, *args, **kwargs):
-        task_id = request.GET.get("task_id")
-        filename = request.GET.get("filename")
-
-        if request.is_ajax():
-            result = csv_export.download_submission_task.AsyncResult(task_id)
-            if result.ready():
-                return HttpResponse(json.dumps({"filename": result.get()}))
-            return HttpResponse(json.dumps({"filename": None}))
-
-        try:
-            f = open('{}/{}'.format(settings.FORMULAIC_EXPORT_STORAGE_LOCATION, filename))
-        except:
-            return HttpResponseForbidden()
-        else:
-            response = HttpResponse(f, mimetype='text/csv')
-            response['Content-Disposition'] = 'attachment; filename=%s' % filename
-        return response
