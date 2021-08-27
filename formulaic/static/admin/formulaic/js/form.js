@@ -35,7 +35,7 @@ setTimeout(handleDownloadTags, 100)
 function handleDownloadTags(){
     let allTags = document.getElementsByClassName('form-download-tag')
         for( let item of allTags){
-          item.on('click', function(e) {
+          item.addEventListener('click', function(e) {
           const attribute = item.getAttribute('data-target-id')
           e.preventDefault();
           const url = `/download/submissions/?form=${attribute}`;
