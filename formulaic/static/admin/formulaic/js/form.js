@@ -24,14 +24,14 @@ var content_changed = false;
             });
         }
     setTimeout(handleDownloadTags, 100)
-        
+
     function handleDownloadTags(){
         let allTags = document.getElementsByClassName('form-download-tag')
             for( let item of allTags){
               item.addEventListener('click', function(e) {
               const attribute = item.getAttribute('data-target-id')
               e.preventDefault();
-              const url = `/download/submissions/?form=${attribute}`;
+              const url = `/formulaic/download/submissions/?form=${attribute}`;
               $.get(url)
                 .done(function pollAsyncResults(data) {
                   context: this
