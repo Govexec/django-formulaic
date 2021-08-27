@@ -30,12 +30,12 @@ var content_changed = false;
             for( let item of allTags){
               item.addEventListener('click', function(e) {
               const attribute = item.getAttribute('data-target-id')
-                  console.log(item)
               e.preventDefault();
               const url = `/formulaic/download/submissions/?form=${attribute}`;
               $.get(url)
                 .done(function pollAsyncResults(data) {
                   context: this
+                    console.log(data)
                   const pollAsyncUrl = `/formulaic/api/poll_async_results/${data.task_id}`
                   $.get(pollAsyncUrl)
                     .done(function(asyncData, status, xhr) {
