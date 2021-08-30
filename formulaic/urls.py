@@ -28,7 +28,7 @@ router.register(r'submissions', views.SubmissionViewset)
 urlpatterns = [
     re_path(r'^api/submissionsources/$', views.SubmissionSourceView.as_view()),
     re_path(r'^api/', include(router.urls)),
-    re_path(r'^download/submissions/$', views.download_submissions),
+    re_path(r'^download/submissions/$', views.DownloadSubmissionView.as_view()),
     re_path(r'api/poll_async_results/(?P<task_id>[0-9A-Za-z_\-]+)/?$',
             views.PollAsyncResultsView.as_view()),
 ]

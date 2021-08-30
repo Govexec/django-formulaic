@@ -24,21 +24,20 @@ class CustomDjangoModelPermissions(permissions.DjangoModelPermissions):
     }
 
 
-@permission_required("formulaic.change_submission")
-@never_cache
-def download_submissions(request):
-    # TODO: auto-cleanup files
+class DownloadSubmissionView(APIView):
 
-    form_id = request.GET.get('form', None)
+    def get(self, request):
+        # TODO: auto-cleanup files
 
-    if not form_id:
-        raise Http404()
+        form_id = request.GET.get('form', None)
 
-    task = csv_export.download_submission_task.delay(form_id=form_id)
-    response = {'task': task.id}
-    print(response['task'])
-    print(type(task.id))
-    return HttpResponse(response, status=202)
+        if not form_id:
+            raise Http404()
+
+        task = csv_export.download_submission_task.delay(form_id=form_id)
+        response = {'task': task.id}
+
+        return Response(response, status=202)
 
 
 class PollAsyncResultsView(APIView):
@@ -61,6 +60,7 @@ class PollAsyncResultsView(APIView):
             response = HttpResponse(f, mimetype='text/csv')
             response['Content-Disposition'] = 'attachment; filename=%s' % filename
         return response
+
 
 class SubmissionSourceView(rf_views.APIView):
     permission_classes = (CustomDjangoModelPermissions,)
