@@ -38,7 +38,7 @@ def download_submissions(request):
     response = {'task': task.id}
     print(response)
     print(type(response))
-    return HttpResponse(response, status=202)
+    return Response(response, status=202)
 
 
 class PollAsyncResultsView(APIView):

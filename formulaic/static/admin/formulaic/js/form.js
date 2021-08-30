@@ -36,7 +36,7 @@ var content_changed = false;
                 .done(function pollAsyncResults(data) {
                   context: this
                     console.log(data)
-                  const pollAsyncUrl = `/formulaic/api/poll_async_results/${data.task_id}`
+                  const pollAsyncUrl = `/formulaic/api/poll_async_results/${data.task}`
                   $.get(pollAsyncUrl)
                     .done(function(asyncData, status, xhr) {
                       context: this
