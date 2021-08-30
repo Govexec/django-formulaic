@@ -35,9 +35,10 @@ def download_submissions(request):
         raise Http404()
 
     task = csv_export.download_submission_task.delay(form_id=form_id)
-    data = {'task': task.id}
-    response = json.dumps(data)
-    return Response(response, status=202)
+    response = {'task': task.id}
+    print(response['task'])
+    print(type(task.id))
+    return HttpResponse(response, status=202)
 
 
 class PollAsyncResultsView(APIView):
