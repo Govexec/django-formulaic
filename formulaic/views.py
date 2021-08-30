@@ -35,9 +35,8 @@ def download_submissions(request):
         raise Http404()
 
     task = csv_export.download_submission_task.delay(form_id=form_id)
-    response = {'task': task.id}
-    print(response)
-    print(type(response))
+    data = {'task': task.id}
+    response = json.dumps(data)
     return Response(response, status=202)
 
 
