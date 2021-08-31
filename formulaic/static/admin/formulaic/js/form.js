@@ -26,6 +26,7 @@ var content_changed = false;
     setTimeout(handleDownloadTags, 100)
 
     function pollAsyncResults(data) {
+            $.ajaxSetup({ cache: false, timeout: 360000 });
             context: this
                   const pollAsyncUrl = `/formulaic/api/poll_async_results/${data.task}`
                   $.get(pollAsyncUrl)
