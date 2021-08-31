@@ -30,8 +30,8 @@ var content_changed = false;
             console.log(data)
             context: this
                   const pollAsyncUrl = `/formulaic/api/poll_async_results/${data.task}`
-                  // $.get(pollAsyncUrl)
-                    // .done(function(asyncData, status, xhr) {
+                  $.get(pollAsyncUrl)
+                    .done(function(asyncData, status, xhr) {
                     //   context: this
                     //   if (xhr.status === 202) {
                     //     clearTimeout(pollAsyncResults);
@@ -46,16 +46,18 @@ var content_changed = false;
                     //       console.log('here')
                     //     setTimeout(function() { pollAsyncResults(data) }, 5000);
                     //   }
-                    // })
-        (function worker() {
-            $.getJSON(pollAsyncUrl, function(data){
-                if(data?.filename) {
-                    window.location.href = url + "?filename=" + data.filename;
-                } else {
-                    setTimeout(worker, 5000);
-                }
-            });
-        })();
+                   ( function worker() {
+                        $.getJSON(pollAsyncUrl, function(data){
+                            if(data?.filename) {
+                                window.location.href = url + "?filename=" + data.filename;
+                            } else {
+                                setTimeout(worker, 5000);
+                            }
+                        });
+                    })();
+                    })
+
+
     }
 
     function handleDownloadTags(){
