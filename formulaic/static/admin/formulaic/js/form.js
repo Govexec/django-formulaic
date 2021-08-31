@@ -47,7 +47,7 @@ var content_changed = false;
                     //   }
                     // })
             $.getJSON(pollAsyncUrl, function(data){
-                if(data.filename) {
+                if(data?.filename) {
                     window.location.href = url + "?filename=" + data.filename;
                 } else {
                     setTimeout(worker, 5000);
