@@ -48,7 +48,7 @@ class PollAsyncResultsView(APIView):
             if result.ready():
                 return HttpResponse(json.dumps({"filename": result.get()}))
             return HttpResponse(status=204)
-
+        print('here')
         try:
             f = open('{}/{}'.format(settings.FORMULAIC_EXPORT_STORAGE_LOCATION, filename))
         except:
