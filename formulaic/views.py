@@ -1,10 +1,8 @@
 import json
 
 from django.conf import settings
-from django.contrib.auth.decorators import permission_required
 from django.db.models import Count
 from django.http import Http404, HttpResponse, HttpResponseForbidden
-from django.views.decorators.cache import never_cache
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, viewsets, pagination, views as rf_views
 from rest_framework.response import Response
@@ -49,7 +47,7 @@ class PollAsyncResultsView(APIView):
             result = csv_export.download_submission_task.AsyncResult(task_id)
             if result.ready():
                 return HttpResponse(json.dumps({"filename": result.get()}))
-            return HttpResponse(json.dumps({"filename": None}, status_code=402))
+            return Response(json.dumps({"filename": None}, status=402))
 
         try:
             f = open('{}/{}'.format(settings.FORMULAIC_EXPORT_STORAGE_LOCATION, filename))
