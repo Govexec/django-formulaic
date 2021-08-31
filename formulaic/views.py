@@ -48,7 +48,7 @@ class PollAsyncResultsView(APIView):
             try:
                 f = open('{}/{}'.format(settings.FORMULAIC_EXPORT_STORAGE_LOCATION, filename))
             except:
-                return HttpResponse(status=204)
+                return HttpResponse(status=404)
             else:
                 response = HttpResponse(f, mimetype='text/csv')
                 response['Content-Disposition'] = 'attachment; filename=%s' % filename
