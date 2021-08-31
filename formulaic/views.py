@@ -48,13 +48,13 @@ class PollAsyncResultsView(APIView):
             try:
                 f = open('{}/{}'.format(settings.FORMULAIC_EXPORT_STORAGE_LOCATION, filename))
             except:
-                return HttpResponseForbidden()
+                return HttpResponse(status=204)
             else:
                 response = HttpResponse(f, mimetype='text/csv')
                 response['Content-Disposition'] = 'attachment; filename=%s' % filename
             return response
         else:
-            return HttpResponseForbidden()
+            return HttpResponse(status=204)
 
 
 class SubmissionSourceView(rf_views.APIView):
