@@ -30,9 +30,8 @@ var content_changed = false;
                   const pollAsyncUrl = `/formulaic/api/poll_async_results/${data.task}`
                   $.get(pollAsyncUrl)
                     .done(function(asyncData, status, xhr) {
-                        console.log(asyncData)
                       context: this
-                      if (xhr.status !== 202) {
+                      if (xhr.status === 202) {
                         clearTimeout(pollAsyncResults);
                         const a = document.createElement('a');
                         document.body.appendChild(a);
