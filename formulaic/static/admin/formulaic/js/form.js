@@ -46,13 +46,15 @@ var content_changed = false;
                     //     setTimeout(function() { pollAsyncResults(data) }, 5000);
                     //   }
                     // })
+        (function worker() {
             $.getJSON(pollAsyncUrl, function(data){
-                if(data?.filename) {
+                if(data.filename) {
                     window.location.href = url + "?filename=" + data.filename;
                 } else {
                     setTimeout(worker, 5000);
                 }
             });
+        })();
     }
 
     function handleDownloadTags(){
