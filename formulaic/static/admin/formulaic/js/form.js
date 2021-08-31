@@ -46,8 +46,7 @@ var content_changed = false;
                     //     setTimeout(function() { pollAsyncResults(data) }, 5000);
                     //   }
                     // })
-        function worker() {
-                context: this
+        (function worker() {
             $.getJSON(pollAsyncUrl, function(data){
                 if(data.filename) {
                     window.location.href = url + "?filename=" + data.filename;
@@ -55,8 +54,7 @@ var content_changed = false;
                     setTimeout(worker, 5000);
                 }
             });
-        }
-        worker()
+        })();
     }
 
     function handleDownloadTags(){
