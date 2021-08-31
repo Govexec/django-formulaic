@@ -40,10 +40,9 @@ var content_changed = false;
                         a.href=asyncData.location;
                         a.download=asyncData.filename;
                         a.click();
-
                       }
                       else {
-
+                          console.log('here')
                         setTimeout(function() { pollAsyncResults(data) }, 500);
                       }
                     })
