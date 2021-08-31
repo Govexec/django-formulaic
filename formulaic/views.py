@@ -47,8 +47,6 @@ class PollAsyncResultsView(APIView):
         filename = 'download.csv'
         if request.is_ajax():
             result = csv_export.download_submission_task.AsyncResult(task_id)
-            print(vars(result))
-            print(dict(result))
             if result.ready():
                 return HttpResponse(json.dumps({"filename": result.get()}))
             return HttpResponse(json.dumps({"filename": None}))
