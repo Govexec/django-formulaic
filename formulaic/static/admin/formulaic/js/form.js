@@ -25,19 +25,12 @@ var content_changed = false;
         }
     setTimeout(handleDownloadTags, 100)
 
-    function handleDownloadTags(){
-        let allTags = document.getElementsByClassName('form-download-tag')
-            for( let item of allTags){
-              item.addEventListener('click', function(e) {
-              const attribute = item.getAttribute('data-target-id')
-              e.preventDefault();
-              const url = `/formulaic/download/submissions/?form=${attribute}`;
-              $.get(url)
-                .done(function pollAsyncResults(data) {
-                  context: this
+    function pollAsyncResults(data) {
+            context: this
                   const pollAsyncUrl = `/formulaic/api/poll_async_results/${data.task}`
                   $.get(pollAsyncUrl)
                     .done(function(asyncData, status, xhr) {
+                        console.log(asyncData)
                       context: this
                       if (xhr.status !== 202) {
                         clearTimeout(pollAsyncResults);
@@ -59,10 +52,17 @@ var content_changed = false;
                       clearTimeout(pollAsyncResults);
 
                     })
-                })
-                .fail(function(xhr, status, error) {
+    }
 
-                })
+    function handleDownloadTags(){
+        let allTags = document.getElementsByClassName('form-download-tag')
+            for( let item of allTags){
+              item.addEventListener('click', function(e) {
+              const attribute = item.getAttribute('data-target-id')
+              e.preventDefault();
+              const url = `/formulaic/download/submissions/?form=${attribute}`;
+              $.get(url)
+                .done(data => pollAsyncResults(data))
             })
             }
     }
