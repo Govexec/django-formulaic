@@ -43,20 +43,18 @@ class PollAsyncResultsView(APIView):
     def get(self, request, *args, **kwargs):
         task_id = kwargs.get("task_id")
         filename = 'download.csv'
-        if request.is_ajax():
-            result = csv_export.download_submission_task.AsyncResult(task_id)
-            if result.ready():
-                return HttpResponse(json.dumps({"filename": result.get()}))
-            return HttpResponse(status=204)
-        print('here')
-        try:
-            f = open('{}/{}'.format(settings.FORMULAIC_EXPORT_STORAGE_LOCATION, filename))
-        except:
-            return HttpResponseForbidden()
+        result = csv_export.download_submission_task.AsyncResult(task_id)
+        if result.ready():
+            try:
+                f = open('{}/{}'.format(settings.FORMULAIC_EXPORT_STORAGE_LOCATION, filename))
+            except:
+                return HttpResponseForbidden()
+            else:
+                response = HttpResponse(f, mimetype='text/csv')
+                response['Content-Disposition'] = 'attachment; filename=%s' % filename
+            return response
         else:
-            response = HttpResponse(f, mimetype='text/csv')
-            response['Content-Disposition'] = 'attachment; filename=%s' % filename
-        return response
+            return HttpResponseForbidden()
 
 
 class SubmissionSourceView(rf_views.APIView):
