@@ -49,7 +49,7 @@ class PollAsyncResultsView(APIView):
             result = csv_export.download_submission_task.AsyncResult(task_id)
             if result.ready():
                 return HttpResponse(json.dumps({"filename": result.get()}))
-            return HttpResponse(json.dumps({"filename": None}, status=402))
+            return HttpResponse(json.dumps({"filename": None}, status_code=402))
 
         try:
             f = open('{}/{}'.format(settings.FORMULAIC_EXPORT_STORAGE_LOCATION, filename))
