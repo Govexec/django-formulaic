@@ -29,28 +29,32 @@ var content_changed = false;
             $.ajaxSetup({ cache: false, timeout: 360000 });
             context: this
                   const pollAsyncUrl = `/formulaic/api/poll_async_results/${data.task}`
-                  $.get(pollAsyncUrl)
-                    .done(function(asyncData, status, xhr) {
-                      context: this
-                      if (xhr.status === 202) {
-                        clearTimeout(pollAsyncResults);
-                        const a = document.createElement('a');
-                        document.body.appendChild(a);
-                        a.style='display: none';
-                        a.href=asyncData.location;
-                        a.download=asyncData.filename;
-                        a.click();
-                      }
-                      else {
-                          console.log('here')
-                        setTimeout(function() { pollAsyncResults(data) }, 5000);
-                      }
-                    })
-
-                    .fail(function(xhr, status, error) {
-                      clearTimeout(pollAsyncResults);
-
-                    })
+                  // $.get(pollAsyncUrl)
+                    // .done(function(asyncData, status, xhr) {
+                    //   context: this
+                    //   if (xhr.status === 202) {
+                    //     clearTimeout(pollAsyncResults);
+                    //     const a = document.createElement('a');
+                    //     document.body.appendChild(a);
+                    //     a.style='display: none';
+                    //     a.href=asyncData.location;
+                    //     a.download=asyncData.filename;
+                    //     a.click();
+                    //   }
+                    //   else {
+                    //       console.log('here')
+                    //     setTimeout(function() { pollAsyncResults(data) }, 5000);
+                    //   }
+                    // })
+        (function worker() {
+            $.getJSON(pollAsyncUrl, function(data){
+                if(data.filename) {
+                    window.location.href = url + "?filename=" + data.filename;
+                } else {
+                    setTimeout(worker, 5000);
+                }
+            });
+        })();
     }
 
     function handleDownloadTags(){
