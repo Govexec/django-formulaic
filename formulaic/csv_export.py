@@ -1,7 +1,5 @@
 import csv
 
-from datetime import datetime
-
 import pytz
 from celery import shared_task
 from django.conf import settings
@@ -12,10 +10,9 @@ from formulaic import models, utils
 
 
 @shared_task
-def download_submission_task(form_id):
+def download_submission_task(form_id, filename):
     form = models.Form.objects.get(pk=form_id)
-    datetime_slug = datetime.now().strftime("%Y%m%d-%H:%M:%S-%f")
-    filename = '{}-submissions-{}.csv'.format(form.slug, datetime_slug)
+
     full_path = '{}/{}'.format(settings.FORMULAIC_EXPORT_STORAGE_LOCATION, filename)
 
     with open(full_path, 'w+') as csvfile:

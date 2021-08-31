@@ -28,7 +28,7 @@ var content_changed = false;
     function pollAsyncResults(data) {
             $.ajaxSetup({ cache: false, timeout: 360000 });
             context: this
-                  const pollAsyncUrl = `/formulaic/api/poll_async_results/${data.task}`
+                  const pollAsyncUrl = `/formulaic/api/poll_async_results/${data.task}?filename=${data.filename}`
                   $.get(pollAsyncUrl)
                     .done(function(asyncData, status, xhr) {
                     //   context: this

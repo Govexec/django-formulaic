@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 from django.conf import settings
 from django.db.models import Count
@@ -31,9 +32,13 @@ class DownloadSubmissionView(APIView):
 
         if not form_id:
             raise Http404()
+        form = models.Form.objects.get(pk=form_id)
 
-        task = csv_export.download_submission_task.delay(form_id=form_id)
-        response = {'task': task.id}
+        datetime_slug = datetime.now().strftime("%Y%m%d-%H:%M:%S-%f")
+        filename = '{}-submissions-{}.csv'.format(form.slug, datetime_slug)
+
+        task = csv_export.download_submission_task.delay(form_id=form_id, filename=filename)
+        response = {'task': task.id, 'filename': filename}
 
         return Response(response, status=202)
 
@@ -42,7 +47,7 @@ class PollAsyncResultsView(APIView):
 
     def get(self, request, *args, **kwargs):
         task_id = kwargs.get("task_id")
-        filename = 'download.csv'
+        filename = request.GET.get('filename')
         result = csv_export.download_submission_task.AsyncResult(task_id)
         if result.ready():
             try:
