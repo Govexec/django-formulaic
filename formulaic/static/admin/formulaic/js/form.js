@@ -27,6 +27,7 @@ var content_changed = false;
 
     function pollAsyncResults(data) {
             $.ajaxSetup({ cache: false, timeout: 360000 });
+            console.log(data)
             context: this
                   const pollAsyncUrl = `/formulaic/api/poll_async_results/${data.task}`
                   // $.get(pollAsyncUrl)
@@ -48,7 +49,7 @@ var content_changed = false;
                     // })
         (function worker() {
             $.getJSON(pollAsyncUrl, function(data){
-                if(data.filename) {
+                if(data?.filename) {
                     window.location.href = url + "?filename=" + data.filename;
                 } else {
                     setTimeout(worker, 5000);
