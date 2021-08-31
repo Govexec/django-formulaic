@@ -43,7 +43,7 @@ var content_changed = false;
                       }
                       else {
                           console.log('here')
-                        setTimeout(function() { pollAsyncResults(data) }, 500);
+                        setTimeout(function() { pollAsyncResults(data) }, 5000);
                       }
                     })
 
