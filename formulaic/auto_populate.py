@@ -1,3 +1,4 @@
+import re
 from raven.contrib.django.raven_compat.models import client as raven_client
 from six import iteritems, u
 
@@ -19,8 +20,15 @@ def attempt_kv_auto_populate(submission_kv, field_val, form_data):
     value (which in most cases will be an empty/null of some kind; why would we be auto-
     populating otherwise?) untouched if no auto-population was possible.
     """
-    if submission_kv.key.lower() == 'state' or submission_kv.key.lower() == 'city':
+    if submission_kv.key.lower() == "state" or submission_kv.key.lower() == "city":
         return _attempt_state_or_city_from_zipcode(submission_kv, field_val, form_data)
+
+    if (
+        submission_kv.key.lower() == "phone"
+        or submission_kv.key.lower() == "phonenumber"
+    ):
+        phone = re.findall("\d+", field_val)[0]
+        return phone
 
     # . . . other kinds of auto-populate attempts could be added here
     return field_val
@@ -39,7 +47,7 @@ def _attempt_state_or_city_from_zipcode(submission_kv, field_val, form_data):
 
     zipcode = None
     for key, value in iteritems(form_data):
-        if key.lower() not in ('zipcode', 'zip-code'):
+        if key.lower() not in ("zipcode", "zip-code"):
             continue
         try:
             zipcode = value.strip()[:5]
@@ -49,7 +57,7 @@ def _attempt_state_or_city_from_zipcode(submission_kv, field_val, form_data):
         break
 
     if is_hidden_field and zipcode and not field_val:
-        if(submission_kv.key.lower() == 'state'):
+        if submission_kv.key.lower() == "state":
             return state_from_zip(zipcode)
         else:
             return city_from_zip(zipcode)
