@@ -63,7 +63,7 @@ class CustomForm(forms.Form):
         for rule in self._rules:
             # convert rule's conditions
             when = [
-                When(rule__field_id=k, then=v) for k, v in self.field_slugs_by_id.items()
+                When(field__field_id=k, then=v) for k, v in self.field_slugs_by_id.items()
             ]
             conditions_list = list(rule.conditions.values("field_id", "operator", "value_string")
                 .annotate(field_slug=Case(
