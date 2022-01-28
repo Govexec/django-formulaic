@@ -61,7 +61,7 @@ class CustomForm(forms.Form):
 
         for rule in self._rules:
             # convert rule's conditions
-            conditions_list = list(rule.conditions.values("field_id", "operator", "value").annotate(field_slug=self.field_slugs_by_id[F("field_id")]))
+            conditions_list = list(rule.conditions.values("field_id", "operator", "value_string").annotate(field_slug=self.field_slugs_by_id[F("field_id")]))
             """conditions_list = []
             for condition in rule.conditions.all():
                 conditions_list.append({
