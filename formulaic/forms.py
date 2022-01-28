@@ -3,12 +3,13 @@ from __future__ import unicode_literals
 import json
 
 from django import forms
-from django.db.models import F
+from django.db.models import F, When, Case
 from django.template.context_processors import csrf
 from django.template.loader import render_to_string
 from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from six import python_2_unicode_compatible
+from formulaic.models import TextField
 
 from formulaic.rules import RuleAssessor
 
@@ -61,7 +62,14 @@ class CustomForm(forms.Form):
 
         for rule in self._rules:
             # convert rule's conditions
-            conditions_list = list(rule.conditions.values("field_id", "operator", "value_string").annotate(field_slug=self.field_slugs_by_id[F("field_id")]))
+            when = [
+                When(rule__field_id=k, then=v) for k, v in self.field_slugs_by_id.items()
+            ]
+            conditions_list = list(rule.conditions.values("field_id", "operator", "value_string")
+                .annotate(field_slug=Case(
+                    *when,
+                    output_field=TextField()
+                )))
             """conditions_list = []
             for condition in rule.conditions.all():
                 conditions_list.append({
@@ -72,7 +80,11 @@ class CustomForm(forms.Form):
                 })"""
 
             # convert rule's results
-            results_list = list(rule.results.values("field_id", "action", "option_group_id").annotate(field_slug=self.field_slugs_by_id[F("field_id")]))
+            results_list = list(rule.results.values("field_id", "action", "option_group_id")
+                .annotate(field_slug=Case(
+                    *when,
+                    output_field=TextField()
+                )))
             """results_list = []
             for result in rule.results.all():
                 results_list.append({
