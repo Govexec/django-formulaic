@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import json
 
 from django import forms
+from django.db.models import F
 from django.template.context_processors import csrf
 from django.template.loader import render_to_string
 from django.utils.functional import cached_property
@@ -40,7 +41,7 @@ class CustomForm(forms.Form):
             self.field_slugs_by_id[field.id] = field.slug
 
         # Add rules to form
-        self._rules = form.rule_set.all()
+        self._rules = form.rule_set.select_related().all()
 
     def _clean_fields(self):
         super(CustomForm, self)._clean_fields()
@@ -60,24 +61,26 @@ class CustomForm(forms.Form):
 
         for rule in self._rules:
             # convert rule's conditions
-            conditions_list = []
+            conditions_list = list(rule.conditions.values("field_id", "operator", "value").annotate(field_slug=self.field_slugs_by_id[F("field_id")]))
+            """conditions_list = []
             for condition in rule.conditions.all():
                 conditions_list.append({
                     "field_id": condition.field_id,
-                    "field_slug": self.field_slugs_by_id[condition.field_id],
+                    "field_slug": self.field_slugs_by_id[condition.field_id], 
                     "operator": condition.operator,
                     "value": condition.value,
-                })
+                })"""
 
             # convert rule's results
-            results_list = []
+            results_list = list(rule.results.values("field_id", "action", "option_group_id").annotate(field_slug=self.field_slugs_by_id[F("field_id")]))
+            """results_list = []
             for result in rule.results.all():
                 results_list.append({
                     "field_id": result.field_id,
                     "field_slug": self.field_slugs_by_id[result.field_id],
                     "action": result.action,
                     "option_group_id": result.option_group_id,
-                })
+                })"""
 
             # convert rule
             rules_list.append({
