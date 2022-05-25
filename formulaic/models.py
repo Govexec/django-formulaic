@@ -743,7 +743,7 @@ class SubmissionKeyValue(models.Model):
 
     @value.setter
     def value(self, value):
-        if self.field.subtype_is(TextField.SUBTYPE_TEXTAREA):
+        if self.field and self.field.subtype_is(TextField.SUBTYPE_TEXTAREA):
             self.value_textfield = value
             self.value_charfield = None
         else:
@@ -755,7 +755,7 @@ class SubmissionKeyValue(models.Model):
         value = self.value
 
         # replace ids with text values
-        if value and self.field.subtype_in(ChoiceField.SUBTYPES.keys()):
+        if value and self.field and self.field.subtype_in(ChoiceField.SUBTYPES.keys()):
             # convert to list for query
             if not isinstance(value, list):
                 value = [value]
