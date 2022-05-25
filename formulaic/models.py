@@ -4,7 +4,7 @@ from ckeditor.fields import RichTextField
 import django
 from django.contrib.contenttypes.models import ContentType
 from django.db import models, transaction
-from django.db.models import Max
+from django.db.models import Max, Prefetch
 from django.forms import fields, widgets
 from django.utils import timezone
 from django.utils.functional import cached_property
@@ -708,7 +708,11 @@ class SubmissionQuerySet(models.QuerySet):
         return r
 
     def _execute_prefetch_custom_data(self):
-        """Performs the prefetch on the custom data in bulk"""
+        """Performs the prefetch on the custom data in bulk
+        """
+
+        # First, determine what is the smallest set of options that we need to
+        # create and then generate the options lookup dictionary.
         relevant_choices = (
             SubmissionKeyValue.objects
             .filter(submission__in=self, field__subtype__in=ChoiceField.SUBTYPES.keys())
@@ -717,7 +721,32 @@ class SubmissionQuerySet(models.QuerySet):
         )
 
         relevant_choices = [json.loads(choice) for choice in relevant_choices]
-        options = Option.objects.filter(id__in=relevant_choices).values_list("id", "name")
+        # We need to "flatten" relevant choices, some entries could be lists.
+        cleaned_relevant_choices = []
+        for choice in relevant_choices:
+            # Ignore blanks.
+            if not choice:
+                continue
+
+            # Extend our cleaned list of relevant choices.
+            # Make sure we only count integers.
+            if isinstance(choice, list):
+                cleaned_relevant_choices.extend([int(val) for val in choice if val.isdigit()])
+
+            # These should already be integers. But better to make sure nothing
+            # is slipping through.
+            else:
+                cleaned_relevant_choices.append(int(choice))
+
+        # Remove duplicates
+        cleaned_relevant_choices = set(cleaned_relevant_choices)
+
+        # Create the options lookup dictionary.
+        options = (
+            Option.objects
+            .filter(id__in=cleaned_relevant_choices)
+            .values_list("id", "name")
+        )
         options_lookup = dict(options)
 
         forms_by_id = dict()
@@ -744,7 +773,8 @@ class SubmissionQuerySet(models.QuerySet):
             raise NotImplementedError("Currently only available for django >2.0.0")
 
         self._should_prefetch_custom_data = True
-        return self.select_related("form")
+        prefetch_values_qs = SubmissionKeyValue.objects.select_related("field")
+        return self.select_related("form").prefetch_related(Prefetch("values", queryset=prefetch_values_qs))
 
 
 class SubmissionManager(models.Manager):
