@@ -680,23 +680,8 @@ class DisplayCondition(models.Model):
 
 class SubmissionQuerySet(models.QuerySet):
 
-    def __init__(
-        self,
-        *args,
-        should_prefetch_custom_data=False,
-        **kwargs,
-    ):
-        """Overloading __init__ to allow for lazy prefetching of prefetch_custom_data"""
-        super().__init__(*args, **kwargs)
-        self._should_prefetch_custom_data = should_prefetch_custom_data
-        self._prefetch_custom_data_done = False
-
-    def _clone(self):
-        """Overloading _clone to allow for lazy prefetching of prefetch_custom_data"""
-        clone = super()._clone()
-        clone._should_prefetch_custom_data = self._should_prefetch_custom_data
-
-        return clone
+    _should_prefetch_custom_data = False
+    _prefetch_custom_data_done = False
 
     def _fetch_all(self):
         """Overloading _fetch_all to allow for lazy prefetching of prefetch_custom_data"""
