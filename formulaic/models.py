@@ -683,13 +683,22 @@ class SubmissionQuerySet(models.QuerySet):
     _should_prefetch_custom_data = False
     _prefetch_custom_data_done = False
 
+    def _clone(self):
+        """Overloading _clone to allow for lazy prefetching of prefetch_custom_data
+
+        This is required to make the prefetch_custom_data method commutative
+        """
+        clone = super()._clone()
+        clone._should_prefetch_custom_data = self._should_prefetch_custom_data
+        return clone
+
     def _fetch_all(self):
         """Overloading _fetch_all to allow for lazy prefetching of prefetch_custom_data"""
 
         r = super()._fetch_all()
         if self._should_prefetch_custom_data and not self._prefetch_custom_data_done:
             self._execute_prefetch_custom_data()
-
+            self._prefetch_custom_data_done = True
         return r
 
     def _execute_prefetch_custom_data(self):
@@ -829,9 +838,9 @@ class Submission(models.Model):
                 if key_value.key in column_headers:
                     data[key_value.key] = key_value._output_value_with_options_lookup(options_lookup)
 
-            self._bulk_custom_data_cache = data
+            self._prefetched_custom_data_cache = data
 
-        return self._bulk_custom_data_cache
+        return self._prefetched_custom_data_cache
 
     metadata_serialized = models.TextField(
         help_text="Serialized JSON object storing arbitrary submission-related metadata"
