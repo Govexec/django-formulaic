@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_filters',
     'rest_framework',
     'formulaic',
     'admin_ordering',
@@ -53,6 +52,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# Django 1.8 compatibility.
+MIDDLEWARE_CLASSES = MIDDLEWARE[:]
 
 ADMIN_NAV_MANAGED_APPS = ('formulaic')
 
@@ -128,3 +130,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 BASE_DIR = Path(__file__).resolve().parent
 FORMULAIC_EXPORT_STORAGE_LOCATION = BASE_DIR / 'formulaic'
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"

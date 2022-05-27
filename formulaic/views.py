@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import permission_required
 from django.db.models import Count
 from django.http import Http404
 from django.views.decorators.cache import never_cache
-from django_filters.rest_framework import DjangoFilterBackend
+
 from rest_framework import permissions, viewsets, pagination, views as rf_views
 from rest_framework.response import Response
 
@@ -94,7 +94,6 @@ class SubmissionViewset(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.SubmissionSerializer
     pagination_class = StandardResultsSetPagination
 
-    filter_backends = [DjangoFilterBackend]
     filterset_fields = ('form', 'source',)
 
 
@@ -117,7 +116,6 @@ class RuleViewset(viewsets.ModelViewSet):
 
     serializer_class = serializers.RuleSerializer
 
-    filter_backends = [DjangoFilterBackend]
     filterset_fields = ('form', 'position',)  # todo:remove position
 
 
@@ -161,7 +159,6 @@ class FieldViewset(viewsets.ModelViewSet):
     )
     serializer_class = serializers.FieldSerializer
 
-    filter_backends = [DjangoFilterBackend]
     filterset_fields = ('form',)
 
 
@@ -175,7 +172,6 @@ class TextFieldViewset(viewsets.ModelViewSet):
     )
     serializer_class = serializers.TextFieldSerializer
 
-    filter_backends = [DjangoFilterBackend]
     filterset_fields = ('form',)
 
 
@@ -189,7 +185,6 @@ class ChoiceFieldViewset(viewsets.ModelViewSet):
     )
     serializer_class = serializers.ChoiceFieldSerializer
 
-    filter_backends = [DjangoFilterBackend]
     filterset_fields = ('form',)
 
 
@@ -203,7 +198,6 @@ class BooleanFieldViewset(viewsets.ModelViewSet):
     )
     serializer_class = serializers.BooleanFieldSerializer
 
-    filter_backends = [DjangoFilterBackend]
     filterset_fields = ('form',)
 
 
@@ -217,7 +211,6 @@ class HiddenFieldViewset(viewsets.ModelViewSet):
     )
     serializer_class = serializers.HiddenFieldSerializer
 
-    filter_backends = [DjangoFilterBackend]
     filterset_fields = ('form',)
 
 
@@ -242,7 +235,6 @@ class OptionGroupViewset(viewsets.ModelViewSet):
     )
     serializer_class = serializers.OptionGroupSerializer
 
-    filter_backends = [DjangoFilterBackend]
     filterset_fields = ('list',)
 
 
