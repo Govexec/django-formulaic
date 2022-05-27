@@ -4,7 +4,6 @@ from six import u
 from tzlocal import get_localzone
 
 from formulaic import models, utils
-from django.db.models import Prefetch
 
 
 def export_submissions_to_file(form, output_file):
@@ -13,23 +12,17 @@ def export_submissions_to_file(form, output_file):
     writer.writeheader()
 
     # Prefetch the values, with the field select_related for speed.
-    prefetch_values_qs = (
-        models.SubmissionKeyValue.objects
-        .filter(key__in=field_names)
-        .select_related("field")
-    )
-
     submission_qs = (
         models.Submission.objects
         .filter(form=form)
         .order_by('id')
-        .prefetch_related(Prefetch('values', queryset=prefetch_values_qs))
+        .prefetch_custom_data()
     )
 
     for _, _, _, submission_batch in utils.batch_qs(submission_qs):
         row_batch = []
         for submission in submission_batch:
-            row = submission.custom_data
+            row = submission.prefetched_custom_data
             local_tz = get_localzone()
             d = submission.date_created
             if d.tzinfo is None or d.tzinfo.utcoffset(d) is None:

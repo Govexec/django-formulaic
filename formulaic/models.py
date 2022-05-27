@@ -683,12 +683,17 @@ class SubmissionQuerySet(models.QuerySet):
     _should_prefetch_custom_data = False
     _prefetch_custom_data_done = False
 
-    def _clone(self):
+    def _clone(self, **kwargs):
         """Overloading _clone to allow for lazy prefetching of prefetch_custom_data
 
         This is required to make the prefetch_custom_data method commutative
         """
-        clone = super()._clone()
+
+        # Compatibility
+        if django.get_version() < "2.0.0":
+            clone = super()._clone(**kwargs)
+        else:
+            clone = super()._clone()
         clone._should_prefetch_custom_data = self._should_prefetch_custom_data
         return clone
 
@@ -710,8 +715,8 @@ class SubmissionQuerySet(models.QuerySet):
         relevant_choices = (
             SubmissionKeyValue.objects
             .filter(submission__in=self, field__subtype__in=ChoiceField.SUBTYPES.keys())
-            .distinct("value_charfield")
             .values_list("value_charfield", flat=True)
+            .order_by("value_charfield").distinct()
         )
 
         relevant_choices = [json.loads(choice) for choice in relevant_choices]
@@ -762,9 +767,6 @@ class SubmissionQuerySet(models.QuerySet):
 
     def prefetch_custom_data(self):
         """Returns a list with all of the custom data included."""
-
-        if django.get_version() < "2.0.0":
-            raise NotImplementedError("Currently only available for django >2.0.0")
 
         self._should_prefetch_custom_data = True
         prefetch_values_qs = SubmissionKeyValue.objects.select_related("field")
