@@ -1,9 +1,10 @@
 import json
 
 from ckeditor.fields import RichTextField
+import django
 from django.contrib.contenttypes.models import ContentType
 from django.db import models, transaction
-from django.db.models import Max
+from django.db.models import Max, Prefetch
 from django.forms import fields, widgets
 from django.utils import timezone
 from django.utils.functional import cached_property
@@ -677,7 +678,113 @@ class DisplayCondition(models.Model):
         )
 
 
+class SubmissionQuerySet(models.QuerySet):
+
+    _should_prefetch_custom_data = False
+    _prefetch_custom_data_done = False
+
+    def _clone(self, **kwargs):
+        """Overloading _clone to allow for lazy prefetching of prefetch_custom_data
+
+        This is required to make the prefetch_custom_data method commutative
+        """
+
+        # Compatibility
+        if django.get_version() < "2.0.0":
+            clone = super()._clone(**kwargs)
+        else:
+            clone = super()._clone()
+        clone._should_prefetch_custom_data = self._should_prefetch_custom_data
+        return clone
+
+    def _fetch_all(self):
+        """Overloading _fetch_all to allow for lazy prefetching of prefetch_custom_data"""
+
+        r = super()._fetch_all()
+        if self._should_prefetch_custom_data and not self._prefetch_custom_data_done:
+            self._execute_prefetch_custom_data()
+            self._prefetch_custom_data_done = True
+        return r
+
+    def _execute_prefetch_custom_data(self):
+        """Performs the prefetch on the custom data in bulk
+        """
+
+        # First, determine what is the smallest set of options that we need to
+        # create and then generate the options lookup dictionary.
+        relevant_choices = (
+            SubmissionKeyValue.objects
+            .filter(submission__in=self, field__subtype__in=ChoiceField.SUBTYPES.keys())
+            .values_list("value_charfield", flat=True)
+            .order_by("value_charfield").distinct()
+        )
+
+        relevant_choices = [json.loads(choice) for choice in relevant_choices]
+        # We need to "flatten" relevant choices, some entries could be lists.
+        cleaned_relevant_choices = []
+        for choice in relevant_choices:
+            # Ignore blanks.
+            if not choice:
+                continue
+
+            # Extend our cleaned list of relevant choices.
+            # Make sure we only count integers.
+            if isinstance(choice, list):
+                cleaned_relevant_choices.extend([int(val) for val in choice if val.isdigit()])
+
+            # These should already be integers. But better to make sure nothing
+            # is slipping through.
+            else:
+                cleaned_relevant_choices.append(int(choice))
+
+        # Remove duplicates
+        cleaned_relevant_choices = set(cleaned_relevant_choices)
+
+        # Create the options lookup dictionary.
+        options = (
+            Option.objects
+            .filter(id__in=cleaned_relevant_choices)
+            .values_list("id", "name")
+        )
+        options_lookup = dict(options)
+
+        forms_by_id = dict()
+
+        # We need to assign forms here to the python objects. Without this step,
+        # we would create multiple python objects for the same form contained in
+        # the database. By reassigning the form here we cache results onto a
+        # single python object. It should be noted that in practice, there will
+        # likely only be one form, but this supports submissions across
+        # different forms.
+        for submission in self._result_cache:
+            if submission.form_id in forms_by_id:
+                submission.form = forms_by_id[submission.form_id]
+            else:
+                forms_by_id[submission.form_id] = submission.form
+
+            # Actually constructing the custom data and storing it.
+            submission._get_custom_data_with_option_lookup(options_lookup)
+
+    def prefetch_custom_data(self):
+        """Returns a list with all of the custom data included."""
+
+        self._should_prefetch_custom_data = True
+        prefetch_values_qs = SubmissionKeyValue.objects.select_related("field")
+        return self.select_related("form").prefetch_related(Prefetch("values", queryset=prefetch_values_qs))
+
+
+class SubmissionManager(models.Manager):
+    def get_queryset(self):
+        return SubmissionQuerySet(self.model, using=self._db)
+
+    def prefetch_custom_data(self):
+        return self.get_queryset().prefetch_custom_data()
+
+
 class Submission(models.Model):
+
+    objects = SubmissionManager()
+
     form = models.ForeignKey(Form, on_delete=models.PROTECT)
     date_created = models.DateTimeField()
 
@@ -705,6 +812,37 @@ class Submission(models.Model):
                 data[key_value.key] = key_value.output_value
 
         return data
+
+    _prefetched_custom_data_cache = None
+
+    @property
+    def prefetched_custom_data(self):
+        """Retrieves the custom data that was prefetched by the
+        "prefetch_custom_data" queryset method.
+        """
+
+        if not self._prefetched_custom_data_cache:
+            self._prefetched_custom_data_cache = self.custom_data
+        return self._prefetched_custom_data_cache
+
+    def _get_custom_data_with_option_lookup(self, options_lookup):
+        """Similar output to "custom_data" property, however this allows for an
+        options_lookup and importantly calls the _output_value_with_options_lookup
+        method on the SubmissionKeyValue objects. Calling this with the lookup
+        allows for much more efficient bulk exports.
+         """
+        if not self._prefetched_custom_data_cache:
+
+            column_headers = self.form.column_headers
+            data = {}
+
+            for key_value in self.values.all():
+                if key_value.key in column_headers:
+                    data[key_value.key] = key_value._output_value_with_options_lookup(options_lookup)
+
+            self._prefetched_custom_data_cache = data
+
+        return self._prefetched_custom_data_cache
 
     metadata_serialized = models.TextField(
         help_text="Serialized JSON object storing arbitrary submission-related metadata"
@@ -762,6 +900,27 @@ class SubmissionKeyValue(models.Model):
 
             selected_options = Option.objects.filter(id__in=value).values_list('name', flat=True)
 
+            value = ",".join(selected_options)
+
+        return value
+
+    def _output_value_with_options_lookup(self, options_lookup):
+        """Mirrors "output_value", but with an option_lookup dictionary. This
+        dictionary avoids looking up the options in the database. This is useful for when
+        exporting multiple submissions of the same form, as the Options being
+        looked up are almost always the same.
+
+        options_lookup is a dictionary with "values" as keys and "names" as values
+        """
+        value = self.value
+
+        # replace ids with text values
+        if value and self.field and self.field.subtype_in(ChoiceField.SUBTYPES.keys()):
+            # convert to list for query
+            if not isinstance(value, list):
+                value = [value]
+
+            selected_options = [options_lookup.get(json.loads(v)) for v in value]
             value = ",".join(selected_options)
 
         return value
