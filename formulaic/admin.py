@@ -24,7 +24,13 @@ try:
 except Exception:
     # django >= 1.11
     from django.utils.encoding import force_text as force_unicode
-from django.utils.translation import ugettext as _
+
+try:
+    # django < 4.0
+    from django.utils.translation import ugettext as _
+except Exception:
+    # django >= 4.0
+    from django.utils.translation import gettext_lazy as _
 
 from formulaic import models as formulaic_models
 # from handl import media as handl_media
