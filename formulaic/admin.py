@@ -22,9 +22,12 @@ try:
     # django < 1.11
     from django.utils.encoding import force_unicode
 except Exception:
-    # django >= 1.11
-    from django.utils.encoding import force_text as force_unicode
-
+    try:
+        # django >= 1.11
+        from django.utils.encoding import force_text as force_unicode
+    except ImportError:
+        # Django >= 4.0
+        from django.utils.encoding import force_str as force_unicode
 try:
     # django < 4.0
     from django.utils.translation import ugettext as _
