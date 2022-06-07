@@ -1,8 +1,8 @@
-Django==3.1.3
+Django==4.0.5
 django-admin-ordering==0.13.1
-django-ckeditor==5.9.0
+django-ckeditor==6.4.2
 django-filter==2.4.0
-djangorestframework==3.11.2
+djangorestframework==3.13.1
 nameparser==0.3.16
 raven==6.10.0
 pyzipcode==2.0.0
