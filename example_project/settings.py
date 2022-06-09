@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "django_filters",
     'rest_framework',
     'formulaic',
     'admin_ordering',
@@ -132,3 +133,5 @@ BASE_DIR = Path(__file__).resolve().parent
 FORMULAIC_EXPORT_STORAGE_LOCATION = BASE_DIR / 'formulaic'
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
+FORMULAIC_TINYMCE_KEY = ""

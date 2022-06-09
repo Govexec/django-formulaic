@@ -1,6 +1,7 @@
 Django==1.8
 django-admin-ordering==0.13.1
 django-ckeditor==5.9.0
+django-filter==1.1.0
 djangorestframework==3.6.4
 nameparser==0.3.16
 raven==6.10.0
