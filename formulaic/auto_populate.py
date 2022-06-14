@@ -27,8 +27,8 @@ def attempt_kv_auto_populate(submission_kv, field_val, form_data):
         submission_kv.key.lower() == "phone"
         or submission_kv.key.lower() == "phonenumber"
     ):
-        phone = re.findall("\d+", field_val)[0]
-        return phone
+        # Strip out all non digit characters.
+        return re.sub("[^0-9+]", "", field_val)
 
     # . . . other kinds of auto-populate attempts could be added here
     return field_val
