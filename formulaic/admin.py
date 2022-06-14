@@ -12,31 +12,33 @@ from django.core.exceptions import PermissionDenied
 try:
     # django < 1.10
     from django.core.urlresolvers import reverse
-except Exception:
+except ImportError:
     # django >= 1.10
     from django.urls import reverse
 from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.safestring import mark_safe
+
 try:
-    # django < 1.11
-    from django.utils.encoding import force_unicode
-except Exception:
+    # Django >= 3.2
+    from django.utils.encoding import force_str
+
+except ImportError:
     try:
         # django >= 1.11
-        from django.utils.encoding import force_text as force_unicode
+        from django.utils.encoding import force_text as force_str
     except ImportError:
-        # Django >= 4.0
-        from django.utils.encoding import force_str as force_unicode
+        # django < 1.11
+        from django.utils.encoding import force_unicode as force_str
+
 try:
-    # django < 4.0
-    from django.utils.translation import ugettext as _
-except Exception:
     # django >= 4.0
     from django.utils.translation import gettext_lazy as _
+except ImportError:
+    # django < 4.0
+    from django.utils.translation import ugettext as _
 
 from formulaic import models as formulaic_models
-# from handl import media as handl_media
 
 
 def archive_forms(modeladmin, request, queryset):
@@ -134,7 +136,6 @@ class FormAdmin(admin.ModelAdmin):
             )
         )
 
-        # return super_media + handl_media.HandlMedia + form_media
         return super_media + form_media
 
     def get_urls(self):
@@ -154,6 +155,12 @@ class FormAdmin(admin.ModelAdmin):
         ] + url_patterns
 
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+
+        # Quick redirect to /change. This is only applicable for django 1.8,
+        # and can be removed after dropping support.
+        if request.path.strip("/").endswith(str(object_id)):
+            return redirect(request.path + "change")
+
         try:
             form = formulaic_models.Form.objects.get(pk=object_id)
         except formulaic_models.Form.DoesNotExist:
@@ -198,7 +205,7 @@ class FormAdmin(admin.ModelAdmin):
 
         extra_context = extra_context or {}
         extra_context.update({
-            "title": _('Change %s') % force_unicode(self.opts.verbose_name),
+            "title": _('Change %s') % force_str(self.opts.verbose_name),
             "form_id": object_id,
             "opts": self.opts,
             "app_label": self.opts.app_label,
