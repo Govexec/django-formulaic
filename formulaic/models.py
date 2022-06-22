@@ -2,6 +2,7 @@ import json
 
 from ckeditor.fields import RichTextField
 import django
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.db import models, transaction
 from django.db.models import Max, Prefetch
@@ -14,6 +15,7 @@ from formulaic import fields as custom_fields
 from formulaic.auto_populate import attempt_kv_auto_populate
 from formulaic.signals import submission_complete
 from formulaic.validators import validate_mixed_content
+from formulaic.widgets import PhoneInput
 
 
 @python_2_unicode_compatible
@@ -295,7 +297,7 @@ class TextField(Field):
         },
         SUBTYPE_PHONE_NUMBER: {
             u"field_class": fields.CharField,
-            u"widget_class": widgets.TextInput
+            u"widget_class": PhoneInput
         },
         SUBTYPE_INTEGER: {
             u"field_class": fields.IntegerField,
