@@ -56,6 +56,16 @@ $(document).ready(function () {
             iti.setCountry("us");
         }
 
+
+         phoneElement.addEventListener('blur', function() {
+            // If blank, return early.
+            if (phoneElement.value.trim().length === 0) return;
+
+            // Nicely format the number if it is valid.
+            if (iti.isValidNumber()) iti.setNumber(iti.getNumber());
+        });
+
+
         // Not sure we want to do this, as it does not generalize too well...
 
         // // On blur, check if it seems like it is a valid phone number.
