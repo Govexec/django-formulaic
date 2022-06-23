@@ -25,7 +25,6 @@ except:
 from . import views
 
 urlpatterns = [
-    path('', views.test_formulaic_form),
     path(
         'completed/',
         views.test_formulaic_form_complete,
@@ -34,4 +33,5 @@ urlpatterns = [
 
     path('formulaic/', include('formulaic.urls')),
     path('admin/', admin.site.urls),
+    path('', views.test_formulaic_form),
 ]

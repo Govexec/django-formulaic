@@ -324,7 +324,7 @@ class TextField(Field):
 
         field_class = subtype_options[u"field_class"]
 
-        validators = subtype_options.get(u"validators", ())
+        validators = subtype_options.get(u"validators", [])
 
         return field_class(
             label=self.display_name,
