@@ -2,7 +2,6 @@ import json
 
 from ckeditor.fields import RichTextField
 import django
-from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.db import models, transaction
 from django.db.models import Max, Prefetch
@@ -14,7 +13,7 @@ from six import iteritems, python_2_unicode_compatible, u
 from formulaic import fields as custom_fields
 from formulaic.auto_populate import attempt_kv_auto_populate
 from formulaic.signals import submission_complete
-from formulaic.validators import validate_mixed_content
+from formulaic.validators import validate_mixed_content, validate_phone_number
 from formulaic.widgets import PhoneInput
 
 
@@ -28,7 +27,7 @@ class Form(models.Model):
         'PrivacyPolicy', on_delete=models.PROTECT, null=True, blank=True
     )
 
-    archived = models.BooleanField()
+    archived = models.BooleanField(default=False)
 
     def create_submission(self, cleaned_data, source=None, metadata=None, promo_source=None):
 
@@ -297,7 +296,8 @@ class TextField(Field):
         },
         SUBTYPE_PHONE_NUMBER: {
             u"field_class": fields.CharField,
-            u"widget_class": PhoneInput
+            u"widget_class": PhoneInput,
+            u"validators": [validate_phone_number],
         },
         SUBTYPE_INTEGER: {
             u"field_class": fields.IntegerField,
@@ -324,7 +324,14 @@ class TextField(Field):
 
         field_class = subtype_options[u"field_class"]
 
-        return field_class(label=self.display_name, required=self.required, widget=widget)
+        validators = subtype_options.get(u"validators", ())
+
+        return field_class(
+            label=self.display_name,
+            required=self.required,
+            widget=widget,
+            validators=validators
+        )
 
     def save(self, **kwargs):
         self.content_type = ContentType.objects.get_for_model(type(self))

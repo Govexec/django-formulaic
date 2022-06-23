@@ -22,6 +22,17 @@ class PhoneInput(TextInput):
     def __init__(self, attrs=None):
         super().__init__(attrs=attrs)
         self.attrs["utilsScript"] = settings.STATIC_URL.rstrip("/") + "/formulaic/js/intTelInput_utils.js"
+        self.attrs["autocomplete"] = "tel"
+        self.attrs.setdefault("full_suffix", "_full")
+
+    def value_from_datadict(self, data, files, name):
+        """
+        Instead of getting the "name" value, we want to get the "full" version.
+        This version of the phone number has the country code and preformatted
+        by the front end for our convenvience.
+        """
+        suffix = self.attrs["full_suffix"]
+        return data.get(name + suffix)
 
     class Media:
         js = (

@@ -1,5 +1,4 @@
 from django import template
-from django.conf import settings
 
 register = template.Library()
 
@@ -38,7 +37,7 @@ def add_attributes_to_field(field):
     if field.field.required:
         field.field.widget.attrs["data-required"] = "true"
 
-    if widget_type(field) in ("textinput", "phoneinput") and field.name:
+    if widget_type(field) == "textinput" and field.name:
         field.field.widget.attrs.update({
             "autocomplete": autocomplete_attribute(field.name)
         })

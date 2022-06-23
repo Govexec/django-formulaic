@@ -31,17 +31,15 @@
             {{ field.label|safe }} {% if field.field.required %} * {% endif %}
           </label>
 
-          {% if field_type == "textinput" or field_type == "select" or field_type == "selectmultiple" or field_type == "textarea" %}
-            {{ field|formulaic_extra_attributes|formulaic_extra_widget_classes:"form-control"|safe }}
-          {% endif %}
-
           {% if field_type == "checkboxselectmultiple" %}
             <div class="checkbox">{{ field|safe }}</div>
-          {% endif %}
 
-          {% if field_type == "radioselect" %}
+          {% elif field_type == "radioselect" %}
             <div class="radio">{{ field|safe }}</div>
-          {% endif %}
+
+          {%  else %}
+            {{ field|formulaic_extra_attributes|formulaic_extra_widget_classes:"form-control"|safe }}
+          {%  endif %}
 
           {% for field_error in field.errors %}
             <div class="form-field-error-msg control-label">
