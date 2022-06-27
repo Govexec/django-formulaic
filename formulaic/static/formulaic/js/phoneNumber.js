@@ -7,8 +7,11 @@ $(document).ready(function () {
         let phoneElement = phoneElements[i]
         let iti = window.intlTelInput(phoneElement, {
             utilsScript: phoneElement.getAttribute("utilsScript"),
-            hiddenInput: phoneElement.getAttribute("name") + phoneElement.getAttribute("full_suffix"),
-            preferredCountries: ["us"]
+            hiddenInput: phoneElement.getAttribute("name") + phoneElement.getAttribute("fullSuffix"),
+            preferredCountries: ["us"],
+            customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
+    return selectedCountryPlaceholder + " ext. 4";
+  },
         })
 
         // If intl-tel-input has troubles parsing the number then it does not
@@ -20,13 +23,22 @@ $(document).ready(function () {
             iti.setCountry("us");
         }
 
-
+        // On clicking away, try and reformat the number.
          phoneElement.addEventListener('blur', function() {
             // If blank, return early.
             if (phoneElement.value.trim().length === 0) return;
 
-            // Nicely format the number if it is valid.
-            if (iti.isValidNumber()) iti.setNumber(iti.getNumber());
+
+             if (iti.isValidNumber()) {
+                 let extension = iti.getExtension()
+                 if (extension){
+                     let formattedNumber = iti.getNumber() + phoneElement.getAttribute("extensionPrefix") + iti.getExtension();
+                     iti.setNumber(formattedNumber);
+                 }
+                 else {
+                     iti.setNumber(iti.getNumber());
+                 }
+             }
         });
     }
 });

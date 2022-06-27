@@ -8,6 +8,7 @@ from django.db.models import Max, Prefetch
 from django.forms import fields, widgets
 from django.utils import timezone
 from django.utils.functional import cached_property
+import phonenumbers
 from six import iteritems, python_2_unicode_compatible, u
 
 from formulaic import fields as custom_fields
@@ -311,7 +312,10 @@ class TextField(Field):
 
     textarea_rows = models.PositiveIntegerField(blank=True, null=True)
 
-    def get_implementation(self, widget_attrs={}):
+    def get_implementation(self, widget_attrs=None):
+
+        widget_attrs = widget_attrs or dict()
+
         subtype_options = TextField.SUBTYPES[self.subtype]
 
         widget_attrs[u"data-id"] = self.id
@@ -883,6 +887,7 @@ class SubmissionKeyValue(models.Model):
 
     @property
     def value(self):
+        # print("THIS ONE AT LEAST?")
         if self.value_charfield is not None:
             return json.loads(self.value_charfield)
         else:
@@ -900,6 +905,19 @@ class SubmissionKeyValue(models.Model):
     @property
     def output_value(self):
         value = self.value
+
+        # Special Formatting for Phone Numbers
+        if self.field.subtype_is(TextField.SUBTYPE_PHONE_NUMBER):
+            try:
+                parsed_number = phonenumbers.parse(value)
+                return phonenumbers.format_number(
+                    parsed_number, phonenumbers.PhoneNumberFormat.INTERNATIONAL
+                )
+
+            except phonenumbers.NumberParseException:
+                # If phonenumbers doesn't know how to handle it, just return the
+                # value as is.
+                return value
 
         # replace ids with text values
         if value and self.field and self.field.subtype_in(ChoiceField.SUBTYPES.keys()):
@@ -930,9 +948,9 @@ class SubmissionKeyValue(models.Model):
                 value = [value]
 
             selected_options = [options_lookup.get(json.loads(v)) for v in value]
-            value = ",".join(selected_options)
+            return ",".join(selected_options)
 
-        return value
+        return self.output_value
 
     def __str__(self):
         return "{}:{}".format(self.key, self.value)

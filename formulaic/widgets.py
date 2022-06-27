@@ -21,18 +21,31 @@ class PhoneInput(TextInput):
     """
     def __init__(self, attrs=None):
         super().__init__(attrs=attrs)
-        self.attrs["utilsScript"] = settings.STATIC_URL.rstrip("/") + "/formulaic/js/intTelInput_utils.js"
+
         self.attrs["autocomplete"] = "tel"
-        self.attrs.setdefault("full_suffix", "_full")
+        self.attrs.setdefault("utilsScript", settings.STATIC_URL.rstrip("/") + "/formulaic/js/intTelInput_utils.js")
+        self.attrs.setdefault("extensionPrefix", " ext. ")
+        self.attrs.setdefault("fullSuffix", "_full")
 
     def value_from_datadict(self, data, files, name):
         """
         Instead of getting the "name" value, we want to get the "full" version.
         This version of the phone number has the country code and preformatted
-        by the front end for our convenvience.
+        by the front end for our convenience.
         """
-        suffix = self.attrs["full_suffix"]
-        return data.get(name + suffix)
+        suffix = self.attrs["fullSuffix"]
+        full_number = data.get(name + suffix)
+
+        # Determine the extension. This gets stripped from the "full" phone
+        # number. Here we check for it, and add it on to the full number.
+        formatted_number = data.get(name, "")
+        ext_pre = self.attrs["extensionPrefix"]
+        if ext_pre in formatted_number:
+            # Find the location of the extension, slice the string and add it
+            # to full_number
+            full_number += formatted_number[formatted_number.find(ext_pre):]
+
+        return full_number
 
     class Media:
         js = (
