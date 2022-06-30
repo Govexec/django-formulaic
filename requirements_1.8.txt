@@ -9,4 +9,5 @@ pyzipcode==2.0.0
 us==0.9.1
 beautifulsoup4==4.4.1
 tzlocal==1.2.2
+phonenumbers==8.12.50
 six

@@ -8,12 +8,14 @@ from django.db.models import Max, Prefetch
 from django.forms import fields, widgets
 from django.utils import timezone
 from django.utils.functional import cached_property
+import phonenumbers
 from six import iteritems, python_2_unicode_compatible, u
 
 from formulaic import fields as custom_fields
 from formulaic.auto_populate import attempt_kv_auto_populate
 from formulaic.signals import submission_complete
-from formulaic.validators import validate_mixed_content
+from formulaic.validators import validate_mixed_content, validate_phone_number
+from formulaic.widgets import PhoneInput
 
 
 @python_2_unicode_compatible
@@ -26,7 +28,7 @@ class Form(models.Model):
         'PrivacyPolicy', on_delete=models.PROTECT, null=True, blank=True
     )
 
-    archived = models.BooleanField()
+    archived = models.BooleanField(default=False)
 
     def create_submission(self, cleaned_data, source=None, metadata=None, promo_source=None):
 
@@ -295,7 +297,8 @@ class TextField(Field):
         },
         SUBTYPE_PHONE_NUMBER: {
             u"field_class": fields.CharField,
-            u"widget_class": widgets.TextInput
+            u"widget_class": PhoneInput,
+            u"validators": [validate_phone_number],
         },
         SUBTYPE_INTEGER: {
             u"field_class": fields.IntegerField,
@@ -309,7 +312,10 @@ class TextField(Field):
 
     textarea_rows = models.PositiveIntegerField(blank=True, null=True)
 
-    def get_implementation(self, widget_attrs={}):
+    def get_implementation(self, widget_attrs=None):
+
+        widget_attrs = widget_attrs or dict()
+
         subtype_options = TextField.SUBTYPES[self.subtype]
 
         widget_attrs[u"data-id"] = self.id
@@ -322,7 +328,14 @@ class TextField(Field):
 
         field_class = subtype_options[u"field_class"]
 
-        return field_class(label=self.display_name, required=self.required, widget=widget)
+        validators = subtype_options.get(u"validators", [])
+
+        return field_class(
+            label=self.display_name,
+            required=self.required,
+            widget=widget,
+            validators=validators
+        )
 
     def save(self, **kwargs):
         self.content_type = ContentType.objects.get_for_model(type(self))
@@ -892,6 +905,19 @@ class SubmissionKeyValue(models.Model):
     def output_value(self):
         value = self.value
 
+        # Special Formatting for Phone Numbers
+        if self.field.subtype_is(TextField.SUBTYPE_PHONE_NUMBER):
+            try:
+                parsed_number = phonenumbers.parse(value)
+                return phonenumbers.format_number(
+                    parsed_number, phonenumbers.PhoneNumberFormat.INTERNATIONAL
+                )
+
+            except phonenumbers.NumberParseException:
+                # If phonenumbers doesn't know how to handle it, just return the
+                # value as is.
+                return value
+
         # replace ids with text values
         if value and self.field and self.field.subtype_in(ChoiceField.SUBTYPES.keys()):
             # convert to list for query
@@ -921,9 +947,9 @@ class SubmissionKeyValue(models.Model):
                 value = [value]
 
             selected_options = [options_lookup.get(json.loads(v)) for v in value]
-            value = ",".join(selected_options)
+            return ",".join(selected_options)
 
-        return value
+        return self.output_value
 
     def __str__(self):
         return "{}:{}".format(self.key, self.value)

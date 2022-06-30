@@ -23,6 +23,18 @@ def test_formulaic_form(request):
         subtype=TextField.SUBTYPE_TEXT,
     )
 
+    TextField.objects.get_or_create(
+        name="Phone Number",
+        slug="phone-number",
+        required=True,
+        help_text=None,
+        position=1,
+        form_id=formulaic_form.id,
+        enabled=0,
+        css_class=None,
+        subtype=TextField.SUBTYPE_PHONE_NUMBER,
+    )
+
     if request.method == "POST":
         form = CustomForm(
             request.POST,
@@ -42,9 +54,6 @@ def test_formulaic_form(request):
             )
 
             return redirect("form-complete")
-
-        elif not form.is_valid():
-            raise Exception("Not valid {}".format(form.errors))
 
     else:
         form = CustomForm(

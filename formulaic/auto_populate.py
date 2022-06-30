@@ -23,13 +23,6 @@ def attempt_kv_auto_populate(submission_kv, field_val, form_data):
     if submission_kv.key.lower() == "state" or submission_kv.key.lower() == "city":
         return _attempt_state_or_city_from_zipcode(submission_kv, field_val, form_data)
 
-    if (
-        submission_kv.key.lower() == "phone"
-        or submission_kv.key.lower() == "phonenumber"
-    ):
-        # Strip out all non digit characters.
-        return re.sub("[^0-9+]", "", field_val)
-
     # . . . other kinds of auto-populate attempts could be added here
     return field_val
 

@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from django import forms
+import phonenumbers
 
 
 def validate_mixed_content(value):
@@ -27,3 +28,17 @@ def validate_mixed_content(value):
 
     if errors:
         raise forms.ValidationError(errors)
+
+
+def validate_phone_number(value):
+    """Uses the phonenumbers library to try and parse the phone number and
+    check for it's validity. """
+
+    try:
+        z = phonenumbers.parse(value, None)
+    except phonenumbers.NumberParseException:
+        raise forms.ValidationError("Enter a valid phone number.")
+
+    if not phonenumbers.is_valid_number(z):
+        raise forms.ValidationError("Enter a valid phone number.")
+

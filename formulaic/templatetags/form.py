@@ -1,5 +1,4 @@
 from django import template
-from django.conf import settings
 
 register = template.Library()
 
@@ -26,7 +25,6 @@ def widget_type(field):
     """
     if hasattr(field, 'field') and hasattr(field.field, 'widget') and field.field.widget:
         widget_name = field.field.widget.__class__.__name__.lower()
-
         if widget_name == "groupedchoicewidget":
             widget_name = field.field.widget.widget_name
 

@@ -38,8 +38,12 @@ class SubmissionTestCase(TestCase):
             subtype=models.TextField.SUBTYPE_PHONE_NUMBER,
         )
 
-    def submission_with_promo_source_saves_properly(self):
-        post_data = {"text-field-1": "My Test Value"}
+    def test_submission_with_promo_source_saves_properly(self):
+        post_data = {
+            "text-field-1": "My Test Value",
+            "phone-number-1": "(202) 555 1234",
+            "phone-number-1_full": "+12025551234"
+        }
 
         form = models.Form.objects.get(pk=self.form_id)
         custom_form = CustomForm(
@@ -49,15 +53,14 @@ class SubmissionTestCase(TestCase):
             label_suffix="",
             request=None,
         )
-
+        custom_form.is_valid()
         self.assertTrue(custom_form.is_valid(), "Form isn't valid.")
 
-        if custom_form.is_valid():
-            obj = form.create_submission(
-                custom_form.cleaned_data,
-                source=custom_form.instance_id,
-                promo_source="testing_promo_source",
-            )
+        obj = form.create_submission(
+            custom_form.cleaned_data,
+            source=custom_form.instance_id,
+            promo_source="testing_promo_source",
+        )
 
-            submission = models.Submission.objects.get(pk=obj.pk)
-            self.assertEqual(submission.promo_source, "testing_promo_source")
+        submission = models.Submission.objects.get(pk=obj.pk)
+        self.assertEqual(submission.promo_source, "testing_promo_source")

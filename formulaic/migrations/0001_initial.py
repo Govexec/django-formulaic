@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('position', models.PositiveIntegerField(verbose_name='Position')),
                 ('enabled', models.BooleanField()),
                 ('css_class', models.CharField(blank=True, max_length=120, null=True)),
-                ('content_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='contenttypes.contenttype')),
+                ('content_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='contenttypes.ContentType')),
             ],
             options={
                 'ordering': ['position'],
@@ -96,7 +96,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('operator', models.CharField(choices=[('and', 'And'), ('or', 'Or')], max_length=3)),
                 ('position', models.IntegerField()),
-                ('form', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='formulaic.form')),
+                ('form', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='formulaic.Form')),
             ],
             options={
                 'ordering': ('position',),
@@ -109,32 +109,32 @@ class Migration(migrations.Migration):
                 ('date_created', models.DateTimeField()),
                 ('source', models.CharField(blank=True, help_text='Name of the specific form placement the user filled out (e.g. sidebar-subscribe)', max_length=200, null=True)),
                 ('metadata_serialized', models.TextField(help_text='Serialized JSON object storing arbitrary submission-related metadata')),
-                ('form', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='formulaic.form')),
+                ('form', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='formulaic.Form')),
             ],
         ),
         migrations.CreateModel(
             name='BooleanField',
             fields=[
-                ('field_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='formulaic.field')),
+                ('field_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='formulaic.Field')),
                 ('default_checked', models.BooleanField()),
             ],
-            bases=('formulaic.field',),
+            bases=('formulaic.Field',),
         ),
         migrations.CreateModel(
             name='HiddenField',
             fields=[
-                ('field_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='formulaic.field')),
+                ('field_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='formulaic.Field')),
                 ('value', models.CharField(blank=True, max_length=500, null=True)),
             ],
-            bases=('formulaic.field',),
+            bases=('formulaic.Field',),
         ),
         migrations.CreateModel(
             name='TextField',
             fields=[
-                ('field_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='formulaic.field')),
+                ('field_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='formulaic.Field')),
                 ('textarea_rows', models.PositiveIntegerField(blank=True, null=True)),
             ],
-            bases=('formulaic.field',),
+            bases=('formulaic.Field',),
         ),
         migrations.CreateModel(
             name='SubmissionKeyValue',
@@ -143,8 +143,8 @@ class Migration(migrations.Migration):
                 ('key', models.CharField(db_index=True, max_length=200)),
                 ('value_charfield', models.CharField(blank=True, max_length=500, null=True)),
                 ('value_textfield', models.TextField(blank=True, null=True)),
-                ('field', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='formulaic.field')),
-                ('submission', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='values', to='formulaic.submission')),
+                ('field', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='formulaic.Field')),
+                ('submission', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='values', to='formulaic.Submission')),
             ],
         ),
         migrations.CreateModel(
@@ -152,9 +152,9 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('action', models.CharField(choices=[('show', 'Show'), ('hide', 'Hide'), ('require', 'Require (Override)'), ('optional', 'Optional (Override)'), ('change-option-group', 'Change Option Group')], max_length=50)),
-                ('field', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='formulaic.field')),
-                ('option_group', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='formulaic.optiongroup')),
-                ('rule', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='results', to='formulaic.rule')),
+                ('field', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='formulaic.Field')),
+                ('option_group', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='formulaic.OptionGroup')),
+                ('rule', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='results', to='formulaic.Rule')),
             ],
         ),
         migrations.CreateModel(
@@ -164,8 +164,8 @@ class Migration(migrations.Migration):
                 ('position', models.PositiveIntegerField()),
                 ('operator', models.CharField(choices=[('is', 'is'), ('is_not', 'is_not'), ('contains', 'contains'), ('does_not_contain', 'does_not_contain'), ('begins_with', 'begins_with'), ('ends_with', 'ends_with'), ('greater_than', 'greater_than'), ('less_than', 'less_than'), ('any_selected', 'any_selected'), ('all_selected', 'all_selected')], max_length=30)),
                 ('value_string', models.TextField()),
-                ('field', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='formulaic.field')),
-                ('rule', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='conditions', to='formulaic.rule')),
+                ('field', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='formulaic.Field')),
+                ('rule', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='conditions', to='formulaic.Rule')),
             ],
             options={
                 'ordering': ('position',),
@@ -174,7 +174,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='optiongroup',
             name='list',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='groups', to='formulaic.optionlist'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='groups', to='formulaic.OptionList'),
         ),
         migrations.AddField(
             model_name='optiongroup',
@@ -184,17 +184,17 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='option',
             name='list',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='formulaic.optionlist'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='formulaic.OptionList'),
         ),
         migrations.AddField(
             model_name='form',
             name='privacy_policy',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='formulaic.privacypolicy'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='formulaic.PrivacyPolicy'),
         ),
         migrations.AddField(
             model_name='field',
             name='form',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='formulaic.form'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='formulaic.Form'),
         ),
         migrations.CreateModel(
             name='DisplayCondition',
@@ -202,8 +202,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('values', models.TextField()),
                 ('value_option', models.CharField(choices=[('is', 'is'), ('is_not', 'is not')], max_length=15)),
-                ('affected_field', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='affecting_conditions', to='formulaic.field')),
-                ('watched_field', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='watching_conditions', to='formulaic.field')),
+                ('affected_field', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='affecting_conditions', to='formulaic.Field')),
+                ('watched_field', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='watching_conditions', to='formulaic.Field')),
             ],
         ),
         migrations.AlterUniqueTogether(
@@ -213,14 +213,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ChoiceField',
             fields=[
-                ('field_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='formulaic.field')),
+                ('field_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='formulaic.Field')),
                 ('minimum_selections', models.PositiveIntegerField(blank=True, null=True)),
                 ('maximum_selections', models.PositiveIntegerField(blank=True, null=True)),
                 ('default_options_string', models.CharField(blank=True, max_length=200, null=True)),
                 ('default_text', models.CharField(blank=True, max_length=200, null=True)),
-                ('option_group', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='formulaic.optiongroup')),
-                ('option_list', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='formulaic.optionlist')),
+                ('option_group', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='formulaic.OptionGroup')),
+                ('option_list', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='formulaic.OptionList')),
             ],
-            bases=('formulaic.field',),
+            bases=('formulaic.Field',),
         ),
     ]
