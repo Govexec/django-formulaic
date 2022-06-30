@@ -887,7 +887,6 @@ class SubmissionKeyValue(models.Model):
 
     @property
     def value(self):
-        # print("THIS ONE AT LEAST?")
         if self.value_charfield is not None:
             return json.loads(self.value_charfield)
         else:
