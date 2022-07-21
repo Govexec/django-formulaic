@@ -906,7 +906,7 @@ class SubmissionKeyValue(models.Model):
         value = self.value
 
         # Special Formatting for Phone Numbers
-        if self.field.subtype_is(TextField.SUBTYPE_PHONE_NUMBER):
+        if self.field and self.field.subtype_is(TextField.SUBTYPE_PHONE_NUMBER):
             try:
                 parsed_number = phonenumbers.parse(value)
                 return phonenumbers.format_number(
