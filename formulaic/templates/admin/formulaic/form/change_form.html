@@ -31,7 +31,40 @@
 
 <!-- CONTENT -->
 {% block content %}
+  <div class="formulaic-bootstrap">
+    <div class="container" style="display:inline-block; padding-bottom:10pt;">
+
+      {{ original_serialized }}
+      <div id="initial-data" data-initial-data="{{ original_serialized }}">
+
+
+      <div class="row">
+        <div class="col-xs-12" id="react-fields" style="border-style: double; border-color: red; border-width: 3px"></div>
+{#        <div class="col-xs-4" id="add-field"></div>#}
+{#        <div class="col-xs-4" id="edit-field"></div>#}
+      </div>
+    <div class="row"></div>
+    </div>
+  </div>
+
+
+
+
+{#    <div id="root"></div>#}
+{#    <script defer="defer" src="{% static 'admin/formulaic/react-formulaic/build/static/js/main.ae5df0d7.js' %}"></script>#}
+{#  <link href="{% static 'admin/formulaic/react-formulaic/build/static/css/main.073c9b0a.css' %}" rel="stylesheet">#}
+
+
   <div id="formulaic-container"></div>
+  <script src="{% static 'formulaic/react/react.development.js' %}"></script>
+  <script src="{% static 'formulaic/react/react-dom.development.js' %}"></script>
+  <!-- JSX support-->
+  <script src="{% static 'formulaic/react/babel.min.js' %}"></script>
+  <script src="{% static 'formulaic/react/redux.js' %}"></script>
+  <script src="{% static 'formulaic/react/react-redux.js' %}"></script>
+  <script type="text/babel" src="{% static 'formulaic/react_components/fields.js' %}"></script>
+
+
 
   {% if original %}
     <form

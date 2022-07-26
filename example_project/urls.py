@@ -33,5 +33,7 @@ urlpatterns = [
 
     path('formulaic/', include('formulaic.urls')),
     path('admin/', admin.site.urls),
+    path('react/', views.react),
     path('', views.test_formulaic_form),
+
 ]

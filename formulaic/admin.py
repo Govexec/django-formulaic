@@ -128,6 +128,7 @@ class FormAdmin(admin.ModelAdmin):
                 'all': (
                     '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css',
                     'admin/formulaic/css/form.css',
+                    'admin/formulaic/css/admin.css'
                 )
             },
             js=(
@@ -203,6 +204,10 @@ class FormAdmin(admin.ModelAdmin):
             "exportApplicationGlobal": True,
         }
 
+
+        from formulaic.serializers import FormSerializer
+        import json
+
         extra_context = extra_context or {}
         extra_context.update({
             "title": _('Change %s') % force_str(self.opts.verbose_name),
@@ -211,6 +216,7 @@ class FormAdmin(admin.ModelAdmin):
             "app_label": self.opts.app_label,
             "has_change_permission": self.has_change_permission(request, form),
             "original": form,
+            "original_serialized": json.dumps(FormSerializer(form).data),
             "task_data": json.dumps({'form_pk': object_id}),
             "media": self.media,
             "environment_config": json.dumps(environment_config),

@@ -160,7 +160,7 @@ class FieldSerializer(serializers.ModelSerializer):
 
 
 class FormSerializer(serializers.ModelSerializer):
-    #fields = FieldSerializer(source='field_set', many=True)
+    fields = FieldSerializer(source='field_set', many=True)
 
     class Meta:
         model = models.Form
@@ -170,7 +170,7 @@ class FormSerializer(serializers.ModelSerializer):
             'slug',
             'success_message',
             'privacy_policy',
-            #'fields',
+            'fields',
         )
 
 

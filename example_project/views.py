@@ -73,3 +73,19 @@ def test_formulaic_form_complete(request):
             "form": formulaic_form,
         },
     )
+
+def react(request):
+
+
+    from formulaic.models import Form, Field
+    from formulaic.serializers import FormSerializer
+    form = Form.objects.first()
+
+
+
+    return render(
+        request,
+        "formulaic/react.html",
+        context={"form": FormSerializer(form).data}
+
+    )

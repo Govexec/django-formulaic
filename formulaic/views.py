@@ -11,6 +11,9 @@ from rest_framework.response import Response
 from formulaic import models, utils, serializers, settings
 from formulaic.csv_export import export_submissions_to_file
 
+from django.shortcuts import redirect, render
+
+
 
 class CustomDjangoModelPermissions(permissions.DjangoModelPermissions):
     perms_map = {
@@ -47,6 +50,15 @@ def download_submissions(request):
         export_submissions_to_file(form, csvfile)
 
     return utils.send_file(request, filename, full_path)
+
+
+
+def change_field(request, form_id):
+    return render(
+        request,
+        "formulaic/react.html"
+    )
+    pass
 
 
 class SubmissionSourceView(rf_views.APIView):
