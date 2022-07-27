@@ -100,6 +100,7 @@ function TextField(props) {
                 onDragStart={props.handleDragStart}
                 data-pos={props.position}
                 onDragOver={props.handleDragOver}
+                onDrop={props.handleDrop}
                 style={{borderColor: 'blue', borderStyle: 'dashed', paddingTop: '5px', marginTop: '5px'}}>
                 <div><strong>Type: </strong>{props.subtype}</div>
                 <div><strong>Display Name: </strong>{props.display_name}</div>
@@ -131,6 +132,7 @@ class Fields extends React.Component {
         this.handleFieldSet = this.handleFieldSet.bind(this);
         this.handleFieldDelete = this.handleFieldDelete.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleFieldDrop = this.handleFieldDrop.bind(this);
 
         let initialData = this.getInitialData();
 
@@ -147,7 +149,7 @@ class Fields extends React.Component {
             fieldObj.handleInputChange = this.handleInputChange;
             fieldObj.handleDragStart = this.handleFieldDragStart;
             fieldObj.handleDragOver = this.handleFieldDragOver;
-
+            fieldObj.handleDrop = this.handleFieldDrop;
         });
 
         let keyedFormFields = formFields.reduce((obj, item) => {
@@ -232,8 +234,24 @@ class Fields extends React.Component {
     }
 
     handleFieldDragOver(event) {
+        event.stopPropagation();
+        event.preventDefault();
         const pos = event.target.getAttribute("data-pos");
         if(pos !== null) this.setState({dragPos: pos})
+    }
+
+    handleFieldDrop(event) {
+        // todo, make this approximately a million times better.
+        let key = this.state.dragId;
+        let newFields = {...this.state.fields}
+
+        newFields[key]["position"] = this.state.dragPos - 0.5;
+
+        Object.values(newFields)
+            .sort((a, b) => a.position - b.position)
+            .forEach((field, pos) => field.position = pos)
+
+        this.setState({fields: newFields})
     }
 
     getInitialData() {
@@ -298,7 +316,9 @@ class Fields extends React.Component {
 
                     <h3>Current Fields for {this.formName}</h3>
 
-                    {Object.values(this.state.fields).map((fieldObj) => parseFieldData(fieldObj))}
+                    {Object.values(this.state.fields)
+                        .sort((a, b) => a.position - b.position)
+                        .map((fieldObj) => parseFieldData(fieldObj))}
                 </div>
 
                 <div className="col-xs-4">
