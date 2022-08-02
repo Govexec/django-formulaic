@@ -35,15 +35,20 @@
     <div class="container" style="display:inline-block; padding-bottom:10pt;">
 
       {{ original_serialized }}
-      <div id="initial-data" data-initial-data="{{ original_serialized }}">
+      <div id="initial-data" data-initial-data="{{ original_serialized }}"></div>
+
+      <hr>
+      {{ options_lists }}
+      <div id="option-lists-data" data-options-lists="{{ options_lists }}"></div>
 
 
       <div class="row">
+
         <div class="col-xs-12" id="react-fields" style="border-style: double; border-color: red; border-width: 3px"></div>
 {#        <div class="col-xs-4" id="add-field"></div>#}
 {#        <div class="col-xs-4" id="edit-field"></div>#}
       </div>
-    <div class="row"></div>
+    <div class="row">
     </div>
   </div>
 

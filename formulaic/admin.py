@@ -205,8 +205,10 @@ class FormAdmin(admin.ModelAdmin):
         }
 
 
-        from formulaic.serializers import FormSerializer
+        from formulaic.serializers import FormSerializer, OptionListSerializer
         import json
+
+        options_lists = formulaic_models.OptionList.objects.all()
 
         extra_context = extra_context or {}
         extra_context.update({
@@ -217,6 +219,7 @@ class FormAdmin(admin.ModelAdmin):
             "has_change_permission": self.has_change_permission(request, form),
             "original": form,
             "original_serialized": json.dumps(FormSerializer(form).data),
+            "options_lists": json.dumps(OptionListSerializer(options_lists, many=True).data),
             "task_data": json.dumps({'form_pk': object_id}),
             "media": self.media,
             "environment_config": json.dumps(environment_config),

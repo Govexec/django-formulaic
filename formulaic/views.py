@@ -12,6 +12,7 @@ from formulaic import models, utils, serializers, settings
 from formulaic.csv_export import export_submissions_to_file
 
 from django.shortcuts import redirect, render
+from django.db.models import Prefetch
 
 
 
@@ -143,14 +144,22 @@ class RuleResultViewset(viewsets.ModelViewSet):
     serializer_class = serializers.RuleResultSerializer
 
 
+
+
+
 class FormViewset(viewsets.ModelViewSet):
     permission_classes = (
         CustomDjangoModelPermissions,
     )
 
-    queryset = (models.Form.objects.all())
+    queryset = (models.Form.objects.all().prefetch_related(
+        Prefetch("field_set", queryset=models.Field.objects.all().select_related("form", "content_type")),
+    ))
 
     serializer_class = serializers.FormSerializer
+
+
+
 
 
 class PrivacyPolicyViewset(viewsets.ModelViewSet):
