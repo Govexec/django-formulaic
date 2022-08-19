@@ -47,10 +47,11 @@ class HiddenFieldSerializer(serializers.ModelSerializer):
 class JsonField(serializers.Field):
 
     def to_internal_value(self, data):
-        if isinstance(data, six.text_type) or isinstance(data, dict) or isinstance(data, list):
+        types = [int, six.text_type, dict, list]
+        if any(map(lambda t: isinstance(data, t), types)):
             return data
         else:
-            msg = self.error_messages['invalid']
+            msg = self.error_messages.get('invalid', "unknown error")
             raise serializers.ValidationError(msg)
 
     def to_representation(self, obj):
