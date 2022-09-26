@@ -1,0 +1,54 @@
+{% extends "admin/change_form.html" %}
+
+<!-- LOADING -->
+{% load static i18n admin_modify admin_urls %}
+{% load setting_tags %}
+<!-- JAVASCRIPTS -->
+{% block javascripts %}
+  {{ block.super }}
+{% endblock %}
+
+{% block extrahead %}
+      <script src="https://cdn.tiny.cloud/1/{% formulaic_tinymce_key %}/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+  {{ block.super }}
+{% endblock %}
+
+<!-- COLTYPE/BODYCLASS -->
+{% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} grp-change-form{% endblock %}
+{% block content-class %}{% endblock %}
+
+<!-- PAGE-TOOLS -->
+{% block page-tools %}{% endblock %}
+
+<!-- OBJECT TOOLS -->
+{% block object-tools %}{% endblock %}
+
+<!-- CONTENT -->
+{% block content %}
+  <div class="formulaic-bootstrap">
+    <div class="container" style="display:inline-block; padding-bottom:10pt; width: 70vw;">
+
+      <div id="root">
+      <div id="initial-data" data-initial-data="{{ original_serialized }}"></div>
+      <div id="option-lists-data" data-options-lists="{{ options_lists }}"></div>
+      </div>
+      <script src="{% static 'admin/formulaic/react-formulaic/bundle.js' %}"></script>
+
+      <div class="row">
+    </div>
+  </div>
+
+
+  {% if original %}
+    <form
+      id="ld-submissions-dl-{{ original.id }}"
+      class="handl-task-start-form"
+      action="/athena/handl/task/start/"
+      method="POST"
+    >
+        <input type="hidden" name="task_name" value="formulaic.create_submission_csv"/>
+        <input type="hidden" name="task_data" value='{{ task_data }}'/>
+    </form>
+  {% endif %}
+
+{% endblock %}

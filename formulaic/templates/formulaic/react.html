@@ -1,0 +1,45 @@
+{% load static %}
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Site</title>
+
+
+  <link rel="stylesheet" href="{% static "admin/formulaic/ember-formulaic/dist/assets/ember-formulaic.css" %}">
+  <link rel="stylesheet" href="{% static "admin/formulaic/ember-formulaic/dist/assets/vendor.css" %}">
+  <link rel="stylesheet" href="{% static "admin/formulaic/css/form.css" %}">
+   <link rel="stylesheet" href="{% static "admin/css/widgets.css" %}">
+  <link type="text/css" media="all" rel="stylesheet" href="{% static 'formulaic/css/bootstrap.min.css' %}"/>
+
+ <script src="{% static 'formulaic/react/react.development.js' %}"></script>
+ <script src="{% static 'formulaic/react/react-dom.development.js' %}"></script>
+ <!-- JSX support-->
+ <script src="{% static 'formulaic/react/babel.min.js' %}"></script>
+
+
+  <script type="text/babel" src="{% static 'formulaic/react_components/fields.js' %}"></script>
+
+</head>
+<body>
+
+  {{ form }}
+  <hr style="background-color:black; height: 5px;">
+
+
+  <div class="col-xs-8" id="field-preview" style="border-style: double; border-color: red; border-width: 3px"></div>
+
+  <div class="col-xs-4" id="add-field"></div>
+  <div class="col-xs-4" id="edit-field"></div>
+
+
+</body>
+
+
+{%  block extra_js %}
+
+{%  endblock %}
+
+
+</html>

@@ -40,6 +40,8 @@ except ImportError:
 
 from formulaic import models as formulaic_models
 
+from django.template.response import TemplateResponse
+
 
 def archive_forms(modeladmin, request, queryset):
     """
@@ -151,9 +153,52 @@ class FormAdmin(admin.ModelAdmin):
         return [
             re_path(r'^([0-9]+)/archive/$', wrap(self.archive_view), name="formulaic_form_archive"),
             re_path(r'^([0-9]+)/unarchive/$', wrap(self.unarchive_view), name="formulaic_form_unarchive"),
+
+            re_path(r'^([0-9]+)/change/fields$', wrap(self.changeform_fields_view), name="formulaic_change_fields"),
             # pattern eats remaining URL path used by `ember-formulaic`
             re_path(r'^([0-9]+)/.+$', wrap(self.changeform_view)),
         ] + url_patterns
+
+    def changeform_fields_view(self, request, object_id=None, form_url="", extra_context=None):
+
+        try:
+            form = formulaic_models.Form.objects.get(pk=object_id)
+        except formulaic_models.Form.DoesNotExist:
+            form = None
+
+        if not self.has_change_permission(request, form):
+            raise PermissionDenied
+
+        if form is None:
+            raise Http404("Form does not exist")
+
+        from formulaic.serializers import FormSerializer, OptionListSerializer
+        import json
+        options_lists = formulaic_models.OptionList.objects.all()
+
+        extra_context = extra_context or {}
+        extra_context.update({
+            "title": _('Change %s') % force_str(self.opts.verbose_name),
+            "form_id": object_id,
+            "opts": self.opts,
+            "app_label": self.opts.app_label,
+            "has_change_permission": self.has_change_permission(request, form),
+            "original": form,
+            "original_serialized": json.dumps(FormSerializer(form).data),
+            "options_lists": json.dumps(OptionListSerializer(options_lists, many=True).data),
+            "task_data": json.dumps({'form_pk': object_id}),
+            "media": self.media,
+            # "environment_config": json.dumps(environment_config),
+        })
+
+        # Temporarily change the "change_form_template" so we can use the
+        # changeform_view super(). Change it back when we're done.
+        change_form_template_original = self.change_form_template
+        self.change_form_template = "admin/formulaic/form/change_fields.html"
+        resp = super(FormAdmin, self).changeform_view(
+            request, object_id=object_id, form_url=form_url, extra_context=extra_context)
+        self.change_form_template = change_form_template_original
+        return resp
 
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
 

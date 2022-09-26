@@ -32,22 +32,29 @@
 <!-- CONTENT -->
 {% block content %}
   <div class="formulaic-bootstrap">
-    <div class="container" style="display:inline-block; padding-bottom:10pt;">
+    <div class="container" style="display:inline-block; padding-bottom:10pt; width: 70vw;">
 
-      {{ original_serialized }}
-      <div id="initial-data" data-initial-data="{{ original_serialized }}"></div>
+{#      <div id="root">#}
+{#      <div id="initial-data" data-initial-data="{{ original_serialized }}"></div>#}
+{#      <div id="option-lists-data" data-options-lists="{{ options_lists }}"></div>#}
+{#      </div>#}
+{#      <script src="{% static 'admin/formulaic/react-formulaic/bundle.js' %}"></script>#}
 
-      <hr>
-      {{ options_lists }}
-      <div id="option-lists-data" data-options-lists="{{ options_lists }}"></div>
+
+{#      {{ original_serialized }}#}
 
 
-      <div class="row">
+{#      <hr>#}
+{#      {{ options_lists }}#}
 
-        <div class="col-xs-12" id="react-fields" style="border-style: double; border-color: red; border-width: 3px"></div>
+
+
+{#      <div class="row">#}
+
+{#        <div class="col-xs-12" id="react-fields" style="border-style: double; border-color: red; border-width: 3px"></div>#}
 {#        <div class="col-xs-4" id="add-field"></div>#}
 {#        <div class="col-xs-4" id="edit-field"></div>#}
-      </div>
+{#      </div>#}
     <div class="row">
     </div>
   </div>
@@ -60,14 +67,22 @@
 {#  <link href="{% static 'admin/formulaic/react-formulaic/build/static/css/main.073c9b0a.css' %}" rel="stylesheet">#}
 
 
+
+
+
   <div id="formulaic-container"></div>
-  <script src="{% static 'formulaic/react/react.development.js' %}"></script>
-  <script src="{% static 'formulaic/react/react-dom.development.js' %}"></script>
+
+
+
+
+
+{#  <script src="{% static 'formulaic/react/react.development.js' %}"></script>#}
+{#  <script src="{% static 'formulaic/react/react-dom.development.js' %}"></script>#}
   <!-- JSX support-->
-  <script src="{% static 'formulaic/react/babel.min.js' %}"></script>
+{#  <script src="{% static 'formulaic/react/babel.min.js' %}"></script>#}
 {#  <script src="{% static 'formulaic/react/redux.js' %}"></script>#}
 {#  <script src="{% static 'formulaic/react/react-redux.js' %}"></script>#}
-  <script type="text/babel" src="{% static 'formulaic/react_components/fields.js' %}"></script>
+{#  <script type="text/babel" src="{% static 'formulaic/react_components/fields.js' %}"></script>#}
 
 
 
