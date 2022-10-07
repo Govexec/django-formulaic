@@ -164,8 +164,16 @@ class FieldViewset(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ('form',)
 
+    def destroy(self, request, *args, **kwargs):
+        """Clean up any rules that may be associated with the object."""
+        instance = self.get_object()
+        instance.ruleresult_set.all().delete()
+        instance.rulecondition_set.all().delete()
 
-class TextFieldViewset(viewsets.ModelViewSet):
+        return super().destroy(request, *args, **kwargs)
+
+
+class TextFieldViewset(FieldViewset):
     permission_classes = (
         CustomDjangoModelPermissions,
     )
@@ -179,7 +187,7 @@ class TextFieldViewset(viewsets.ModelViewSet):
     filterset_fields = ('form',)
 
 
-class ChoiceFieldViewset(viewsets.ModelViewSet):
+class ChoiceFieldViewset(FieldViewset):
     permission_classes = (
         CustomDjangoModelPermissions,
     )
@@ -193,7 +201,7 @@ class ChoiceFieldViewset(viewsets.ModelViewSet):
     filterset_fields = ('form',)
 
 
-class BooleanFieldViewset(viewsets.ModelViewSet):
+class BooleanFieldViewset(FieldViewset):
     permission_classes = (
         CustomDjangoModelPermissions,
     )
@@ -207,7 +215,7 @@ class BooleanFieldViewset(viewsets.ModelViewSet):
     filterset_fields = ('form',)
 
 
-class HiddenFieldViewset(viewsets.ModelViewSet):
+class HiddenFieldViewset(FieldViewset):
     permission_classes = (
         CustomDjangoModelPermissions,
     )
