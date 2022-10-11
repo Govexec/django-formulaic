@@ -164,8 +164,24 @@ class FieldViewset(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ('form',)
 
+    def destroy(self, request, *args, **kwargs):
+        """Clean up any rules that may be associated with the object.
 
-class TextFieldViewset(viewsets.ModelViewSet):
+        # todo
+        This is intended to only be a temporary change to help alleviate
+        frustrations around not being able to delete fields. The ideal solution
+        would be to display to the user why they cannot delete a particular field.
+        At that point we can confirm the blanket delete (what this function is doing)
+        or help guide the user to carefully remove the ruleresults and ruleconditions.
+        """
+        instance = self.get_object()
+        instance.ruleresult_set.all().delete()
+        instance.rulecondition_set.all().delete()
+
+        return super().destroy(request, *args, **kwargs)
+
+
+class TextFieldViewset(FieldViewset):
     permission_classes = (
         CustomDjangoModelPermissions,
     )
@@ -179,7 +195,7 @@ class TextFieldViewset(viewsets.ModelViewSet):
     filterset_fields = ('form',)
 
 
-class ChoiceFieldViewset(viewsets.ModelViewSet):
+class ChoiceFieldViewset(FieldViewset):
     permission_classes = (
         CustomDjangoModelPermissions,
     )
@@ -193,7 +209,7 @@ class ChoiceFieldViewset(viewsets.ModelViewSet):
     filterset_fields = ('form',)
 
 
-class BooleanFieldViewset(viewsets.ModelViewSet):
+class BooleanFieldViewset(FieldViewset):
     permission_classes = (
         CustomDjangoModelPermissions,
     )
@@ -207,7 +223,7 @@ class BooleanFieldViewset(viewsets.ModelViewSet):
     filterset_fields = ('form',)
 
 
-class HiddenFieldViewset(viewsets.ModelViewSet):
+class HiddenFieldViewset(FieldViewset):
     permission_classes = (
         CustomDjangoModelPermissions,
     )
