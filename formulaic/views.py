@@ -165,7 +165,15 @@ class FieldViewset(viewsets.ModelViewSet):
     filterset_fields = ('form',)
 
     def destroy(self, request, *args, **kwargs):
-        """Clean up any rules that may be associated with the object."""
+        """Clean up any rules that may be associated with the object.
+
+        # todo
+        This is intended to only be a temporary change to help alleviate
+        frustrations around not being able to delete fields. The ideal solution
+        would be to display to the user why they cannot delete a particular field.
+        At that point we can confirm the blanket delete (what this function is doing)
+        or help guide the user to carefully remove the ruleresults and ruleconditions.
+        """
         instance = self.get_object()
         instance.ruleresult_set.all().delete()
         instance.rulecondition_set.all().delete()
