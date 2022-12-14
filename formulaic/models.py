@@ -430,6 +430,13 @@ class ChoiceField(Field):
 
     @property
     def needs_default_text(self):
+
+        # Radio selects are a little special, in that they are multi selects,
+        # but do not have multiple options. Having a default option does not
+        # make sense.
+        if self.subtype == self.SUBTYPE_RADIOSELECT:
+            return False
+
         return not self.supports_multiple_values and not self.default_option
 
     @property
