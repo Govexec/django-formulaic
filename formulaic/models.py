@@ -565,7 +565,7 @@ class RuleResult(models.Model):
     )
 
     action = models.CharField(max_length=50, choices=ACTION_CHOICES)
-    field = models.ForeignKey(Field, on_delete=models.PROTECT)
+    field = models.ForeignKey(Field, on_delete=models.PROTECT, related_name='related_results')
     rule = models.ForeignKey(
         'Rule', on_delete=models.CASCADE, related_name='results', blank=True, null=True
     )
