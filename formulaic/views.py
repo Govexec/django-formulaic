@@ -173,10 +173,38 @@ class FieldViewset(viewsets.ModelViewSet):
         would be to display to the user why they cannot delete a particular field.
         At that point we can confirm the blanket delete (what this function is doing)
         or help guide the user to carefully remove the ruleresults and ruleconditions.
+
+        If a Rule does not have a rule condition or rule result, then it is invalid. If
+        a field is associated with the last rule condition or rule result, we'll also
+        delete the rule.
         """
         instance = self.get_object()
-        instance.ruleresult_set.all().delete()
-        instance.rulecondition_set.all().delete()
+
+        rule_ids_to_be_deleted = set()
+        rule_result_ids_to_be_delete = set()
+        rule_conditions_ids_to_be_delete = set()
+
+        # Gathering rule result related deletes.
+        related_rule_results = instance.ruleresult_set.all().select_related("rule").prefetch_related("rule__results")
+        for rule_result in related_rule_results:
+
+            if rule_result.rule.results.all().count() == 1:
+                rule_ids_to_be_deleted.add(rule_result.rule_id)
+
+            rule_result_ids_to_be_delete.add(rule_result.id)
+
+        # Gathering rule condition related deletes.
+        related_ruleconditions = instance.rulecondition_set.all().select_related("rule").prefetch_related("rule__conditions")
+        for rule_condition in related_ruleconditions:
+            if rule_condition.rule.conditions.all().count() == 1:
+                rule_ids_to_be_deleted.add(rule_condition.rule_id)
+
+            rule_conditions_ids_to_be_delete.add(rule_condition.id)
+
+        # Actually perform the deletes.
+        models.Rule.objects.filter(id__in=rule_ids_to_be_deleted).delete()
+        models.RuleResult.objects.filter(id__in=rule_result_ids_to_be_delete).delete()
+        models.RuleCondition.objects.filter(id__in=rule_conditions_ids_to_be_delete).delete()
 
         return super().destroy(request, *args, **kwargs)
 
