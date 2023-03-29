@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.contrib.auth.decorators import permission_required
 from django.db.models import Count
+from django.db import transaction
 from django.http import Http404
 from django.views.decorators.cache import never_cache
 from django_filters.rest_framework import DjangoFilterBackend
@@ -201,12 +202,12 @@ class FieldViewset(viewsets.ModelViewSet):
 
             rule_conditions_ids_to_be_delete.add(rule_condition.id)
 
-        # Actually perform the deletes.
-        models.Rule.objects.filter(id__in=rule_ids_to_be_deleted).delete()
-        models.RuleResult.objects.filter(id__in=rule_result_ids_to_be_delete).delete()
-        models.RuleCondition.objects.filter(id__in=rule_conditions_ids_to_be_delete).delete()
-
-        return super().destroy(request, *args, **kwargs)
+        # Actually perform the deletes. Perform it in an atomic block to help revert
+        with transaction.atomic():
+            models.Rule.objects.filter(id__in=rule_ids_to_be_deleted).delete()
+            models.RuleResult.objects.filter(id__in=rule_result_ids_to_be_delete).delete()
+            models.RuleCondition.objects.filter(id__in=rule_conditions_ids_to_be_delete).delete()
+            return super().destroy(request, *args, **kwargs)
 
 
 class TextFieldViewset(FieldViewset):
