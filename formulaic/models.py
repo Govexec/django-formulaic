@@ -18,7 +18,7 @@ from formulaic.validators import validate_mixed_content, validate_phone_number
 from formulaic.widgets import PhoneInput
 
 
-@python_2_unicode_compatible
+
 class Form(models.Model):
     BASE_COLUMN_HEADERS = ['date', 'source', 'promo_source']
     name = models.CharField(max_length=500)
@@ -105,7 +105,7 @@ class Form(models.Model):
         ordering = ('archived', 'name',)
 
 
-@python_2_unicode_compatible
+
 class PrivacyPolicy(models.Model):
     """
     Provides an editable list of privacy policies which can be selected
@@ -126,7 +126,7 @@ class PrivacyPolicy(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
+
 class OptionList(models.Model):
     """
     Collection of options for use in selects, checkbox lists,
@@ -152,7 +152,7 @@ class OptionList(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
+
 class Option(models.Model):
     """
     An individual selectable option, represented as a member
@@ -178,7 +178,7 @@ class Option(models.Model):
         super(Option, self).save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
+
 class OptionGroup(models.Model):
     """
     A group of Options in an OptionList.  OptionGroups provide
@@ -211,7 +211,7 @@ class OptionGroup(models.Model):
         super(OptionGroup, self).save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
+
 class Field(models.Model):
     # TODO: look into changing these
     TYPE_SELECT = "select"
@@ -548,7 +548,7 @@ class ChoiceField(Field):
         super(ChoiceField, self).save(**kwargs)
 
 
-@python_2_unicode_compatible
+
 class RuleResult(models.Model):
     ACTION_SHOW = 'show'
     ACTION_HIDE = 'hide'
@@ -582,7 +582,7 @@ class RuleResult(models.Model):
         ))
 
 
-@python_2_unicode_compatible
+
 class Rule(models.Model):
     OPERATOR_AND = 'and'
     OPERATOR_OR = 'or'
@@ -603,7 +603,7 @@ class Rule(models.Model):
         ordering = ('position',)
 
 
-@python_2_unicode_compatible
+
 class RuleCondition(models.Model):
     OPERATOR_IS = 'is'
     OPERATOR_IS_NOT = 'is_not'
@@ -658,7 +658,7 @@ class RuleCondition(models.Model):
         ordering = ('position',)
 
 
-@python_2_unicode_compatible
+
 class DisplayCondition(models.Model):
     IS = "is"
     IS_NOT = "is_not"
@@ -880,7 +880,7 @@ class Submission(models.Model):
         self.metadata_serialized = json.dumps(value)
 
 
-@python_2_unicode_compatible
+
 class SubmissionKeyValue(models.Model):
     submission = models.ForeignKey(
         Submission, on_delete=models.CASCADE, related_name="values"

@@ -1,5 +1,3 @@
-import re
-from raven.contrib.django.raven_compat.models import client as raven_client
 from six import iteritems, u
 
 from formulaic.utils import state_from_zip, city_from_zip
@@ -45,7 +43,6 @@ def _attempt_state_or_city_from_zipcode(submission_kv, field_val, form_data):
         try:
             zipcode = value.strip()[:5]
         except AttributeError:
-            raven_client.captureException()
             zipcode = u(value).strip()[:5]
         break
 

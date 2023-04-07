@@ -7,12 +7,10 @@ from django.template.context_processors import csrf
 from django.template.loader import render_to_string
 from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
-from six import python_2_unicode_compatible
 
 from formulaic.rules import RuleAssessor
 
 
-@python_2_unicode_compatible
 class CustomForm(forms.Form):
     required_css_class = "required"
 

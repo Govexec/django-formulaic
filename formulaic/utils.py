@@ -1,6 +1,3 @@
-import os
-from wsgiref.util import FileWrapper
-
 from django.http import StreamingHttpResponse
 from pyzipcode import ZipCodeDatabase
 import us

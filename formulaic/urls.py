@@ -1,10 +1,4 @@
-try:
-    # django 3+
-    from django.urls import include, re_path
-except ImportError:
-    # django 1 and 2
-    from django.conf.urls import include, url as re_path
-
+from django.urls import include, re_path
 from rest_framework import routers
 from formulaic import views
 
