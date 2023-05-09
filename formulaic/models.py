@@ -953,7 +953,7 @@ class SubmissionKeyValue(models.Model):
             if not isinstance(value, list):
                 value = [value]
 
-            selected_options = [options_lookup.get(json.loads(v)) for v in value]
+            selected_options = [options_lookup.get(json.loads(v), str(v)) for v in value]
             return ",".join(selected_options)
 
         return self.output_value
