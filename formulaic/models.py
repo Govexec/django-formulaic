@@ -275,6 +275,8 @@ class Field(models.Model):
 
 
 class TextField(Field):
+    field_type = Field.TYPE_TEXT
+
     SUBTYPE_TEXT = u"text"
     SUBTYPE_TEXTAREA = u"textarea"
     SUBTYPE_FULL_NAME = u"full_name"
