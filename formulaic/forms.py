@@ -23,15 +23,33 @@ class CustomForm(forms.Form):
         self.request = kwargs.pop("request")
         form = kwargs.pop("form")
         widget_attrs = kwargs.pop("widget_attrs", {})
-        fields = form.field_set.all()
+
+        fields = form.field_set.all().select_related(
+                "textfield",
+                "hiddenfield",
+                "booleanfield",
+                "choicefield__option_list",
+                "choicefield__option_group__list"
+            ).prefetch_related(
+                "choicefield__option_list__groups__options",
+                "choicefield__option_group__options",
+                "choicefield__option_list__option_set"
+            )
+
         self.field_slugs_by_id = {}
         self.privacy_policy = form.privacy_policy
 
         super(CustomForm, self).__init__(data, *args, **kwargs)
 
         # Add fields to form
-        for i, field in enumerate(fields):
-            specific_field = field.get_specific_field()
+        for field in fields:
+
+            for field_type in ("hiddenfield", "textfield", "booleanfield", "choicefield"):
+                if hasattr(field, field_type):
+                    specific_field = getattr(field, field_type)
+                    break
+            else:
+                specific_field = field.get_specific_field()
 
             self.fields[field.slug] = specific_field.get_implementation(
                 widget_attrs=widget_attrs
@@ -40,7 +58,7 @@ class CustomForm(forms.Form):
             self.field_slugs_by_id[field.id] = field.slug
 
         # Add rules to form
-        self._rules = form.rule_set.all()
+        self._rules = form.rule_set.all().prefetch_related("conditions", "results")
 
     def _clean_fields(self):
         super(CustomForm, self)._clean_fields()
