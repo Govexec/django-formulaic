@@ -173,8 +173,8 @@ class Option(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.position:
-            max = self.objects.aggregate(m=Max("position"))["m"]
-            self.position = 10 + (max or 0)
+            last_position = Option.objects.filter(list_id=self.list_id).aggregate(m=Max("position"))["m"]
+            self.position = 10 + (last_position or 0)
         super(Option, self).save(*args, **kwargs)
 
 
@@ -206,8 +206,9 @@ class OptionGroup(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.position:
-            max = self.objects.aggregate(m=Max("position"))["m"]
-            self.position = 10 + (max or 0)
+            last_position = OptionGroup.objects.filter(list_id=self.list_id).aggregate(m=Max("position"))["m"]
+            self.position = 10 + (last_position or 0)
+
         super(OptionGroup, self).save(*args, **kwargs)
 
 
