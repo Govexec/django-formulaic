@@ -62,8 +62,10 @@ class Field(object):
         self._visible = new_field_status.visible
 
     def has_value(self, value):
-        from django.forms import CheckboxInput
-        if type(self.form_field) is CheckboxInput:
+
+        from django.forms import CheckboxInput, BooleanField
+        # todo, I'm pretty sure CheckboxInput is not correct here.
+        if type(self.form_field) is CheckboxInput or isinstance(self.form_field, BooleanField):
             return self.value
         elif type(self.value) is list:
             return value in self.value
