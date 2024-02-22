@@ -222,7 +222,7 @@ class Field(models.Model):
 
     # displayed attributes
     name = models.CharField(max_length=500)  # TODO: remove?
-    display_name = models.CharField(max_length=1000)
+    display_name = models.TextField()
     data_name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200)
     required = models.BooleanField()
