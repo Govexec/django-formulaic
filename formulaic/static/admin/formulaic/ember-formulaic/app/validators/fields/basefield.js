@@ -1,6 +1,5 @@
 import Ember from 'ember';
 
-const DISPLAY_NAME_LENGTH = 1000;
 const DATA_NAME_LENGTH = 200;
 
 export default Ember.Object.extend({
@@ -17,7 +16,7 @@ export default Ember.Object.extend({
 
     isDisplayNameInvalid: function() {
         let displayName = this.get('field.display_name');
-        return !displayName || displayName.length > DISPLAY_NAME_LENGTH;
+        return !displayName;
     }.property('field.display_name'),
 
     isDataNameInvalid: function() {
