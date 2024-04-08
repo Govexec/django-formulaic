@@ -5,8 +5,8 @@ django-filter==2.4.0
 djangorestframework==3.13.1
 nameparser==0.3.16
 raven==6.10.0
-pyzipcode==2.0.0
-us==0.9.1
+pyzipcode>=2.0.0
+us>=0.9.1
 beautifulsoup4==4.4.1
 tzlocal==1.2.2
 phonenumbers==8.12.50
