@@ -51,10 +51,14 @@ class CustomForm(forms.Form):
             else:
                 specific_field = field.get_specific_field()
 
+            field_widget_attrs = widget_attrs.copy()
+
             self.fields[field.slug] = specific_field.get_implementation(
-                widget_attrs=widget_attrs
+                widget_attrs=field_widget_attrs
             )
 
+            # Assign an attribute on to the field to allow for access to the model fields css_class
+            self.fields[field.slug].wrapper_class = field.css_class
             self.field_slugs_by_id[field.id] = field.slug
 
         # Add rules to form
