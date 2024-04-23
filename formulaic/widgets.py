@@ -45,7 +45,7 @@ class PhoneInput(TextInput):
             # to full_number
             full_number += formatted_number[formatted_number.find(ext_pre):]
 
-        return full_number
+        return full_number or formatted_number
 
     class Media:
         js = (
