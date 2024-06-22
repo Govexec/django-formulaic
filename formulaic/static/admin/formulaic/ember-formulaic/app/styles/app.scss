@@ -1,0 +1,305 @@
+// Import Bootstrap CSS from node_modules
+@import "node_modules/bootstrap/scss/bootstrap";
+
+.formulaic-bootstrap {
+    /* Basic Overrides */
+    h1, h2, h3, h4 {
+        padding:0;
+    }
+    button {
+        width:auto;
+        height:auto;
+    }
+
+
+    h1 {
+        margin: 20px 0px 10px;
+        font-weight: bold;
+        line-height: 24px;
+        font-size:20px;
+    }
+
+    .formulaic-main {
+        margin: 0px;
+    }
+
+    .formulaic-row {
+        //overflow:hidden;
+    }
+    .formulaic-row + .formulaic-row {
+        padding-top: 20px;
+        clear:both;
+    }
+
+    .preview-column {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        //overflow: hidden;
+        background-color: #eee;
+        padding-bottom:20px;
+    }
+
+    .preview-column table {
+        background-color:#fff;
+    }
+
+    .preview-column h2,
+    .edit-column h2 {
+        padding: 5px 20px 4px;
+        margin: 0 -15px 20px;
+        font-size:13px;
+        line-height:18px;
+        font-weight:bold;
+        text-shadow: 0px 1px 0px #F5F5F5;
+        border-bottom: 1px solid #CCC;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        background-size: 100% auto;
+        background-image: linear-gradient(#E5E5E5, #DBDBDB);
+    }
+    .edit-column h2 {
+        margin: 0 -20px 20px;
+    }
+
+    .edit-fields {
+        min-height: 640px;
+    }
+
+    .edit-rules .preview-column,
+    .edit-fields .preview-column {
+        padding-bottom:0;
+    }
+
+    .edit-column {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        overflow: hidden;
+        background-color: #eee;
+        padding: 0 20px 20px;
+        width:300px;
+    }
+    .edit-column h2 {
+//        background-image: linear-gradient(#c7c7c7, #666666);
+    }
+    .edit-column label {
+        display: block;
+    }
+    .edit-column .btn {
+        margin-top:10px;
+    }
+    .edit-column .extras {
+        padding: 0 20px 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        margin: 10px 0px 0px;
+    }
+    .edit-column .extras h4 {
+        //font-size: 12px;
+        //margin: 0 0 10px;
+        //font-weight: bold;
+        color: #aaa;
+        padding: 5px 20px 4px;
+        margin: 0 -20px 10px;
+        font-size: 13px;
+        line-height: 18px;
+        font-weight: bold;
+        text-shadow: 0px 1px 0px #F5F5F5;
+        border-bottom: 1px solid #CCC;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        //background-size: 100% auto;
+        //background-image: linear-gradient(#E5E5E5, #DBDBDB);
+    }
+    .edit-column .extras label {
+        font-weight:normal;
+        color: #aaa;
+    }
+    .edit-column.affix {
+        top: 80px;
+    }
+    .edit-column.affix-bottom {
+        position:fixed;
+        top:80px;
+    }
+
+    /* form index */
+    .edit-menu {
+        padding-bottom:0;
+    }
+    .edit-menu h2 {
+        margin-bottom: 0;
+    }
+    .edit-menu.loading {
+        min-height:300px;
+    }
+    .edit-menu-item {
+        padding-top: 5px;
+        padding-bottom: 4px;
+        //margin: 0;
+        font-weight: bold;
+        box-sizing: border-box;
+        border-top: 1px solid #FFF;
+        border-bottom: 1px solid #DDD;
+        clear:both;
+        overflow:hidden;
+    }
+    .edit-menu-item label {
+        line-height: 18px;
+        margin:0;
+        padding-top: 6px;
+    }
+    .edit-menu-item a {
+        display:inline-block;
+    }
+    .edit-menu-item a:hover {
+        color:#000;
+        text-decoration: none;
+    }
+    .edit-menu-controls {
+        float:right;
+    }
+    .edit-menu-controls a + a {
+        margin-left:10px;
+    }
+
+    .formulaic-controls {
+        background-color: #dfdfdf;
+        border-top: 1px solid #FFF;
+        border-bottom-left-radius: 3px;
+        border-bottom-right-radius: 3px;
+        overflow: hidden;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        clear:both;
+    }
+
+    .custom-edit-block {
+        border-bottom: 1px solid #CCC;
+        margin: 0px -15px;
+        overflow: hidden;
+    }
+    .edit-fields .custom-edit-block {
+        padding: 0 20px;
+    }
+
+    .rule-list {
+        overflow:hidden;
+        float:none;
+    }
+
+    .empty {
+        color:#aaa;
+    }
+
+    .field-preview {
+        border: 1px solid #ccc;
+        padding-top: 10px;
+        padding-bottom: 15px;
+        position: relative;
+    }
+    .field-preview.editing,
+    .field-preview.editing:hover {
+        border: 1px solid #999;
+        background-color: #ccc;
+    }
+
+    .field-preview.warning,
+    .field-preview.warning:hover {
+        background-color: #FCF8E3;
+    }
+
+    .rule-conditions li + li::before {
+        display: block;
+        text-align: center;
+        color: #aaa;
+    }
+    .rule-conditions li + li::before {
+        content: 'and';
+    }
+    .rule-conditions.or li + li::before {
+        content: 'or';
+    }
+    .rule-conditions li > div,
+    .rule-results li > div {
+        padding:3px;
+    }
+    .rule-conditions li > div.warning,
+    .rule-results li > div.warning {
+        background-color: #FCF8E3;
+    }
+
+    .form-control.text-block {
+        height: auto;
+    }
+
+    .formulaic-navbar .navbar-text {
+        padding-right:10px;
+    }
+    .formulaic-filters {
+        padding-top:9px;
+    }
+    .formulaic-filters-select {
+        width: 200px;
+        display: inline-block;
+    }
+    .formulaic-next-prev {
+        padding:0 10px 0 0;
+    }
+
+    .edit-column .wysiwyg-toggle {
+        font-size: 10px;
+        position: absolute;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        font-weight: bold;
+    }
+
+    .textfield-container {
+        position: relative;
+    }
+
+    .link-disabled,
+    .link-disabled:focus {
+        color: #999;
+        cursor: not-allowed;
+        text-decoration: none;
+    }
+}
+
+
+.preview-column .item {
+    background-color:#eee;
+    cursor:pointer;
+}
+.preview-column .item:hover {
+    background-color:#e0e0e0;
+}
+.field-selector {
+
+}
+.ui-sortable-placeholder {
+    background:url('images/bg-stripes.png') repeat !important;
+    visibility: visible !important;
+    /*opacity: 0.1;*/
+    /*min-height:100px;*/
+}
+
+.controls .glyphicon {
+    font-size:21px;
+}
+
+.field-preview .controls {
+    position:absolute;
+    right:15px;
+    top:15px;
+    z-index: 10;
+}
+
+.data-name {
+    display: inline-block;
+    margin-left: 50px;
+    color: #aaa;
+    position: absolute;
+    right: 80px;
+}
