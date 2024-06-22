@@ -1,8 +1,7 @@
 import Controller from '@ember/controller';
-import { inject as service } from '@ember/service';
-import { action } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
-import { allSettled } from 'rsvp';
+import {inject as service} from '@ember/service';
+import {action} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
 
 export default class FormIndexController extends Controller {
   @service store;
@@ -13,6 +12,8 @@ export default class FormIndexController extends Controller {
   @tracked saveActive = false;
   @tracked downloadInProgress = false;
   @tracked downloadFailed = false;
+  @tracked privacyPolicies = [];
+  @tracked model = { privacy_policy: null };
 
   get form() {
     return this.model;
@@ -22,17 +23,28 @@ export default class FormIndexController extends Controller {
     return this.model.id;
   }
 
-  get privacyPolicies() {
-    return this.store.query('privacypolicy', {});
+  get privacyPoliciesReady() {
+    return this.privacyPolicies.length > 0;
   }
 
-  get privacyPoliciesReady() {
-    return this.privacyPolicies.isFulfilled && this.model.privacy_policy.isFulfilled;
+  eq(a, b) {
+    return a === b;
   }
 
   @action
-  privacyPolicyChanged(value) {
-    this.model.privacy_policy = value;
+  async loadPrivacyPolicies() {
+    try {
+      let policies = await this.store.query('privacypolicy', {});
+      this.privacyPolicies = policies.toArray();
+    } catch (error) {
+      console.error('Error loading privacy policies:', error);
+    }
+  }
+
+   @action
+  privacyPolicyChanged(event) {
+    let selectedPolicyId = event.target.value;
+     this.model.privacy_policy = this.privacyPolicies.find(policy => policy.id === selectedPolicyId);
   }
 
   @action
@@ -45,7 +57,7 @@ export default class FormIndexController extends Controller {
     this.saveActive = true;
 
     try {
-      await allSettled([this.form.save()]);
+      await this.model.save();
       this.saveActive = false;
       this.toast.success('Form saved.');
       this.inEditMode = false;

@@ -19,7 +19,7 @@ export default class ApplicationAdapter extends RESTAdapter {
     let cacheBreaker = 'cacheBreaker=' + Math.round(new Date().getTime() / 1000);
     cacheBreaker = ((url.indexOf('?') > -1) ? '&' : '?') + cacheBreaker;
 
-    return url + cacheBreaker;
+    return url + "/" + cacheBreaker;
   }
 
   get headers() {
@@ -41,5 +41,21 @@ export default class ApplicationAdapter extends RESTAdapter {
       }
     }
     return csrfToken;
+  }
+
+  handleResponse(status, headers, payload, requestData) {
+    if (requestData.url.includes('/privacypolicies')) {
+      payload = {
+        data: payload.map(policy => ({
+          id: String(policy.id),
+          type: 'privacypolicy',
+          attributes: {
+            name: policy.name,
+            text: policy.text
+          }
+        }))
+      };
+    }
+    return super.handleResponse(status, headers, payload, requestData);
   }
 }

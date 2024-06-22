@@ -3,7 +3,7 @@ import BaseField from './basefield';
 import TextFieldValidator from '../validators/fields/textfield';
 
 export default class TextFieldModel extends BaseField {
-    @belongsTo('field') field;
+    @belongsTo('field', { async: true, inverse: null }) field;
 
     constructor() {
         super(...arguments);

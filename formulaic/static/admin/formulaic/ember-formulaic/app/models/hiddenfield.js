@@ -3,7 +3,7 @@ import BaseFieldModel from './basefield';
 import HiddenFieldValidator from '../validators/fields/hiddenfield';
 
 export default class HiddenFieldModel extends BaseFieldModel {
-    @belongsTo('field') field;
+    @belongsTo('field', { async: true, inverse: null }) field;
     @attr('string') value;
 
     constructor() {

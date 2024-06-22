@@ -3,7 +3,7 @@ import BaseFieldModel from './basefield';
 import BooleanFieldValidator from '../validators/fields/booleanfield';
 
 export default class BooleanFieldModel extends BaseFieldModel {
-    @belongsTo('field') field;
+    @belongsTo('field', { async: true, inverse: null }) field;
     @attr('boolean') default_checked;
 
     constructor() {

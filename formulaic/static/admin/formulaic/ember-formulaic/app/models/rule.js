@@ -1,9 +1,9 @@
 import Model, { belongsTo, attr, hasMany } from '@ember-data/model';
 
 export default class RuleModel extends Model {
-    @belongsTo('form', { async: true }) form;
+    @belongsTo('form', { async: true, inverse: 'rules' }) form;
     @attr('string') operator;
     @attr('number') position;
-    @hasMany('rulecondition', { async: true }) conditions;
-    @hasMany('ruleresult', { async: true }) results;
+    @hasMany('rulecondition', { async: true, inverse: 'rule' }) conditions;
+    @hasMany('ruleresult', { async: true, inverse: 'rule' }) results;
 }

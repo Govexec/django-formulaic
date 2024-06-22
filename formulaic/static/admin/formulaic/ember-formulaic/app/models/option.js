@@ -4,5 +4,5 @@ export default class OptionModel extends Model {
     @attr('string') name;
     @attr('string') value;
     @attr('number') position;
-    @belongsTo('optionlist') list;
+    @belongsTo('optionlist', { async: true, inverse: 'options' }) list;
 }

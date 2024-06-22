@@ -7,7 +7,7 @@
           <label for="form-name">Form Name</label>
         </div>
         <div class="col-xs-10">
-          <Input @type="text" id="form-name" placeholder="" @value={{this.model.name}} class="form-control input-sm" />
+          <Input @type="text" id="form-name" placeholder="" @value={{this.model.name}} class="form-control input-sm"/>
         </div>
       </div>
       <div class="edit-menu-item row">
@@ -15,7 +15,7 @@
           <label for="form-slug">Slug</label>
         </div>
         <div class="col-xs-10">
-          <Input @type="text" id="form-slug" placeholder="" @value={{this.model.slug}} class="form-control input-sm" />
+          <Input @type="text" id="form-slug" placeholder="" @value={{this.model.slug}} class="form-control input-sm"/>
         </div>
       </div>
       <div class="edit-menu-item row">
@@ -24,23 +24,26 @@
         </div>
         <div class="col-xs-10">
           {{#if this.privacyPoliciesReady}}
-            <XSelect @value={{this.model.privacy_policy.content}} @change={{this.privacyPolicyChanged}} id="form-privacy-policy" class="form-control input-sm">
-              <option>Choose Privacy Policy...</option>
+            <select {{on "change" this.privacyPolicyChanged}} id="form-privacy-policy" class="form-control input-sm">
+              <option value="">Choose Privacy Policy...</option>
               {{#each this.privacyPolicies as |policy|}}
-                <option value={{policy}}>{{policy.name}}</option>
+                <option value={{policy.id}} selected={{if (this.eq policy.id this.model.privacy_policy.id) "selected"
+                                                          null}}>{{policy.name}}</option>
               {{/each}}
-            </XSelect>
+            </select>
           {{else}}
-            Loading
+            <p>Loading ...</p>
           {{/if}}
         </div>
+
       </div>
       <div class="edit-menu-item row">
         <div class="col-xs-2">
           <label for="form-success-message">Success Message</label>
         </div>
         <div class="col-xs-10">
-          <Textarea id="form-success-message" placeholder="" @value={{this.model.success_message}} rows={{6}} class="form-control input-sm text-block" />
+          <Textarea id="form-success-message" placeholder="" @value={{this.model.success_message}} rows={{6}}
+                    class="form-control input-sm text-block"/>
         </div>
       </div>
 
@@ -75,7 +78,8 @@
         <div class="edit-menu-item col-xs-12">
           <div {{on "click" this.editRules}} role="button" tabindex="0">Rules</div>
           <span class="edit-menu-controls">
-            <div {{on "click" this.editRules}} role="button" tabindex="0"><span class="glyphicon glyphicon-menu-hamburger"></span> Change</div>
+            <div {{on "click" this.editRules}} role="button" tabindex="0"><span
+              class="glyphicon glyphicon-menu-hamburger"></span> Change</div>
           </span>
         </div>
 
