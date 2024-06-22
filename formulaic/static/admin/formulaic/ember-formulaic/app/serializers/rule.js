@@ -1,9 +1,8 @@
-import DRFSerializer from './drf';
-import DS from 'ember-data';
+import RESTSerializer, { EmbeddedRecordsMixin } from '@ember-data/serializer/rest';
 
-export default DRFSerializer.extend(DS.EmbeddedRecordsMixin, {
-    attrs: {
-        conditions: { embedded: 'always' },
-        results: { embedded: 'always' }
-    }
-});
+export default class RuleSerializer extends RESTSerializer.extend(EmbeddedRecordsMixin) {
+  attrs = {
+    conditions: { embedded: 'always' },
+    results: { embedded: 'always' }
+  };
+}

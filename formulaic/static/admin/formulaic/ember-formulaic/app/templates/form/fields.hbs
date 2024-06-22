@@ -1,26 +1,28 @@
+<!-- templates/form/fields.hbs -->
+
 <div class="row formulaic-row edit-fields">
   <div class="col-xs-8 preview-column">
     <h2>Editing Fields</h2>
     <div class="custom-edit-block">
-      {{sortable-fields items=activeFields targetController=this}}
+      <SortableFields @items={{this.activeFields}} @targetController={{this}} />
     </div>
 
     <div class="row formulaic-controls">
       <div class="col-xs-12">
-        <button class="btn btn-primary" type="submit" {{action "saveFields" true}} disabled={{controlsDisabled}}>
-          {{#if saveContinueActive}}Saving...{{else}}Save &amp; Continue Editing{{/if}}
+        <button class="btn btn-primary" type="submit" {{on "click" (fn this.saveFields true)}} disabled={{this.controlsDisabled}}>
+          {{#if this.saveContinueActive}}Saving...{{else}}Save & Continue Editing{{/if}}
         </button>
-        <button class="btn btn-primary" type="submit" {{action "saveFields" false}} disabled={{controlsDisabled}}>
-          {{#if saveActive}}Saving...{{else}}Save{{/if}}
+        <button class="btn btn-primary" type="submit" {{on "click" (fn this.saveFields false)}} disabled={{this.controlsDisabled}}>
+          {{#if this.saveActive}}Saving...{{else}}Save{{/if}}
         </button>
-        <button class="btn btn-danger" type="submit" {{action "close"}} disabled={{controlsDisabled}}>Close</button>
+        <button class="btn btn-danger" type="submit" {{on "click" this.close}} disabled={{this.controlsDisabled}}>Close</button>
       </div>
     </div>
   </div>
 
   <div class="col-xs-4">
     <div class="edit-column">
-        {{outlet "sidebar"}}
+      <Sidebar />
     </div>
   </div>
 </div>

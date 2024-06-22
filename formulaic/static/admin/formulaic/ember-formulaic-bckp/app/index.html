@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Formulaic</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {{content-for "head"}}
+
+    <link rel="stylesheet" href="http://localhost:8100/static/admin/formulaic/ember-formulaic/dist/assets/vendor.css">
+    <link rel="stylesheet" href="http://localhost:8100/static/admin/formulaic/ember-formulaic/dist/assets/ember-formulaic.css">
+
+    {{content-for "head-footer"}}
+  </head>
+  <body>
+    {{content-for "body"}}
+
+    <script src="http://localhost:8100/static/admin/formulaic/ember-formulaic/dist/assets/vendor.js"></script>
+    <script src="http://localhost:8100/static/admin/formulaic/ember-formulaic/dist/assets/ember-formulaic.js"></script>
+
+    {{content-for "body-footer"}}
+  </body>
+</html>

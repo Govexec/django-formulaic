@@ -1,3 +1,3 @@
-import BaseField from './basefield';
+import BaseFieldValidator from './basefield';
 
-export default BaseField.extend({});
+export default class HiddenFieldValidator extends BaseFieldValidator {}

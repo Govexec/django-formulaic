@@ -1,19 +1,19 @@
-import DS from 'ember-data';
-import BaseField from './basefield';
+import { belongsTo, attr, hasMany } from '@ember-data/model';
+import BaseFieldModel from './basefield';
 import ChoiceFieldValidator from '../validators/fields/choicefield';
 
-export default BaseField.extend({
-    field: DS.belongsTo('field', { async: false }),
-    minimum_selections: DS.attr('string'),
-    maximum_selections: DS.attr('string'),
-    option_list: DS.belongsTo('optionlist', { async: true }),
-    option_group: DS.belongsTo('optiongroup', { async: true }),
-    default_option: DS.belongsTo('option', {async: true }),
-    default_options: DS.hasMany('option', { async: true }),
-    default_text: DS.attr('string'),
+export default class ChoiceFieldModel extends BaseFieldModel {
+    @belongsTo('field', { async: false }) field;
+    @attr('string') minimum_selections;
+    @attr('string') maximum_selections;
+    @belongsTo('optionlist', { async: true }) option_list;
+    @belongsTo('optiongroup', { async: true }) option_group;
+    @belongsTo('option', { async: true }) default_option;
+    @hasMany('option', { async: true }) default_options;
+    @attr('string') default_text;
 
-    init() {
-        this._super(...arguments);
-        this.validator = ChoiceFieldValidator.create({field: this});
+    constructor() {
+        super(...arguments);
+        this.validator = ChoiceFieldValidator.create({ field: this });
     }
-});
+}

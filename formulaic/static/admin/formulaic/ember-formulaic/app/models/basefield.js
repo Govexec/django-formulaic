@@ -1,16 +1,16 @@
-import DS from 'ember-data';
+import Model, { attr, belongsTo } from '@ember-data/model';
 
-export default DS.Model.extend({
-    name: DS.attr('string'),
-    display_name: DS.attr('string'),
-    data_name: DS.attr('string'),
-    slug: DS.attr('string'),
-    required: DS.attr('boolean'),
-    help_text: DS.attr('string'),
-    model_class: DS.attr('string'),
-    position: DS.attr('number'),
-    css_class: DS.attr('string'),
-    form: DS.belongsTo('form'),
-    enabled: DS.attr('boolean'),
-    subtype: DS.attr('string')
-});
+export default class BaseFieldModel extends Model {
+    @attr('string') name;
+    @attr('string') display_name;
+    @attr('string') data_name;
+    @attr('string') slug;
+    @attr('boolean') required;
+    @attr('string') help_text;
+    @attr('string') model_class;
+    @attr('number') position;
+    @attr('string') css_class;
+    @belongsTo('form') form;
+    @attr('boolean') enabled;
+    @attr('string') subtype;
+}

@@ -1,3 +1,5 @@
-import BaseField from './basefield';
+//controllers/form/fields/boolean.js
 
-export default BaseField.extend();
+import BaseFieldController from './basefield';
+
+export default class BooleanFieldController extends BaseFieldController {}

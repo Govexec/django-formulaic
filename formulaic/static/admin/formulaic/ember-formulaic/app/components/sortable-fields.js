@@ -1,6 +1,24 @@
-import BaseSortable from "./base-sortable";
+//components/sortable-field.js
 
-export default BaseSortable.extend({
-    templateName: 'sortable/fields',
-    sortableSelector: '.field-sortable'
-});
+import BaseSortableComponent from './base-sortable';
+import { action } from '@ember/object';
+
+export default class SortableFieldsComponent extends BaseSortableComponent {
+  templateName = 'sortable/fields';
+  sortableSelector = '.field-sortable';
+
+  @action
+  editField(field) {
+    this.args.onEditField(field);
+  }
+
+  @action
+  deleteField(field) {
+    this.args.onDeleteField(field);
+  }
+
+  @action
+  triggerUpdateSortable() {
+    this.args.onTriggerUpdateSortable();
+  }
+}

@@ -1,6 +1,14 @@
+<!--templates/components/sortable-field.hbs-->
+
 <div class="field-sortable">
-  {{#each items as |field|}}
-    {{sortable-field field=field currentField=targetController.currentField onClick=(action 'editField' target=targetController) onDeleteClick=(action 'deleteField' target=targetController) onOrderInvalidated=(action 'triggerUpdateSortable')}}
+  {{#each @items as |field|}}
+    <SortableField
+      @field={{field}}
+      @currentField={{@currentField}}
+      @onClick={{this.editField}}
+      @onDeleteClick={{this.deleteField}}
+      @onOrderInvalidated={{this.triggerUpdateSortable}}
+    />
   {{else}}
     <div class="row">
       <div class="col-xs-12 no-records">

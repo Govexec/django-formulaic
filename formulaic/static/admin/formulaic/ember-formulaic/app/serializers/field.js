@@ -1,11 +1,10 @@
-import DRFSerializer from './drf';
-import DS from 'ember-data';
+import RESTSerializer, { EmbeddedRecordsMixin } from '@ember-data/serializer/rest';
 
-export default DRFSerializer.extend(DS.EmbeddedRecordsMixin, {
-    attrs: {
-        textfield: { embedded: 'always' },
-        choicefield: { embedded: 'always' },
-        booleanfield: { embedded: 'always' },
-        hiddenfield: { embedded: 'always' }
-    }
-});
+export default class FieldSerializer extends RESTSerializer.extend(EmbeddedRecordsMixin) {
+  attrs = {
+    textfield: { embedded: 'always' },
+    choicefield: { embedded: 'always' },
+    booleanfield: { embedded: 'always' },
+    hiddenfield: { embedded: 'always' }
+  };
+}

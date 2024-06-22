@@ -1,10 +1,10 @@
-import DS from 'ember-data';
-import BaseField from './basefield';
+import { belongsTo, attr } from '@ember-data/model';
+import BaseFieldModel from './basefield';
 
-export default BaseField.extend({
-    textfield: DS.belongsTo('textfield', {async: false}),
-    choicefield: DS.belongsTo('choicefield', {async: false}),
-    booleanfield: DS.belongsTo('booleanfield', {async: false}),
-    hiddenfield: DS.belongsTo('hiddenfield', {async: false}),
-    content_type: DS.attr('number')
-});
+export default class FieldModel extends BaseFieldModel {
+    @belongsTo('textfield', { async: false }) textfield;
+    @belongsTo('choicefield', { async: false }) choicefield;
+    @belongsTo('booleanfield', { async: false }) booleanfield;
+    @belongsTo('hiddenfield', { async: false }) hiddenfield;
+    @attr('number') content_type;
+}

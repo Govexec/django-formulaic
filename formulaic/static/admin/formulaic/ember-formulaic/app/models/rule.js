@@ -1,9 +1,9 @@
-import DS from 'ember-data';
+import Model, { belongsTo, attr, hasMany } from '@ember-data/model';
 
-export default DS.Model.extend({
-    form: DS.belongsTo('form', { async:true }),
-    operator: DS.attr('string'),
-    position: DS.attr('number'),
-    conditions: DS.hasMany('rulecondition'),
-    results: DS.hasMany('ruleresult')
-});
+export default class RuleModel extends Model {
+    @belongsTo('form', { async: true }) form;
+    @attr('string') operator;
+    @attr('number') position;
+    @hasMany('rulecondition', { async: true }) conditions;
+    @hasMany('ruleresult', { async: true }) results;
+}

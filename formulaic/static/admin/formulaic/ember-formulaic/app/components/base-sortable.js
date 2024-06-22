@@ -1,43 +1,38 @@
-import Ember from 'ember';
+//components/base-sortable.js
 
-export default Ember.Component.extend({
-    templateName: 'sortable',
-    sortableSelector: '.sortable',
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import Sortable from 'sortablejs';
 
-    didInsertElement: function() {
-        let thisView = this;
+export default class BaseSortableComponent extends Component {
+  @tracked sortable;
 
-        this.sortable = this.$(this.sortableSelector).sortable({
-            update: function() {
-                thisView.updateSortable(this);
-            },
-            containment: 'parent',
-            tolerance: 'pointer',
-            cursor: 'move'
-        });
+  @action
+  initializeSortable(element) {
+    this.sortable = Sortable.create(element, {
+      handle: '.handle',
+      animation: 150,
+      onEnd: this.updateSortable.bind(this),
+    });
+  }
 
-        // Listen to controller
-        // this.get('controller').on('orderInvalidated', this, this.updateSortable);
-    },
-    updateSortable: function() {
-        let $ = Ember.$;
+  @action
+  updateSortable() {
+    const items = this.sortable.el.querySelectorAll('.item');
+    items.forEach((item, index) => {
+      const positionElement = item.querySelector('.position');
+      positionElement.value = index;
+      positionElement.dispatchEvent(new Event('change'));
+    });
 
-        this.sortable.find('.item').each(function(index) {
-            let positionElement = $(this).find('.position');
-            positionElement.val(index);
-            positionElement.trigger('change');
-        });
+    this.sortable.sortable("refresh");
+  }
 
-        this.sortable.sortable("refresh");
-    },
-    willDestroy: function() {
-        // Un-register listener
-        // this.get('controller').off('orderInvalidated', this, this.updateSortable);
-    },
-    actions: {
-        triggerUpdateSortable: function() {
-            this.updateSortable();
-        }
+  willDestroy() {
+    super.willDestroy(...arguments);
+    if (this.sortable) {
+      this.sortable.destroy();
     }
-});
-
+  }
+}

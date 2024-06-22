@@ -1,5 +1,5 @@
-import DRFSerializer from './drf';
+import RESTSerializer from '@ember-data/serializer/rest';
 
-export default DRFSerializer.extend({
-    primaryKey: 'source'
-});
+export default class SubmissionSourceSerializer extends RESTSerializer {
+  primaryKey = 'source';
+}

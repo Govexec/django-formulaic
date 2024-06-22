@@ -1,16 +1,15 @@
-import DS from 'ember-data';
+import Model, { attr, belongsTo } from '@ember-data/model';
 import validatorFactory from '../validators/factories';
 
-export default DS.Model.extend({
-    position: DS.attr('number'),
-    rule: DS.belongsTo('rule'),
-    field: DS.belongsTo('field', {async:true}),
-    operator: DS.attr('string'),
-    //value_type: DS.attr('string'),
-    value: DS.attr('json'),
+export default class RuleConditionModel extends Model {
+    @attr('number') position;
+    @belongsTo('rule') rule;
+    @belongsTo('field', { async: true }) field;
+    @attr('string') operator;
+    @attr('json') value;
 
-    init() {
-        this._super(...arguments);
+    constructor() {
+        super(...arguments);
         this.validator = validatorFactory.createRuleValidator(this);
     }
-});
+}

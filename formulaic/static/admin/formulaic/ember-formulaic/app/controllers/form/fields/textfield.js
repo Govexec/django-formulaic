@@ -1,3 +1,5 @@
-import BaseField from './basefield';
+//controllers/form/fields/textfield.js
 
-export default BaseField.extend();
+import BaseFieldController from './basefield';
+
+export default class TextFieldController extends BaseFieldController {}

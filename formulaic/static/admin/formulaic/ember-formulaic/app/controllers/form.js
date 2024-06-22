@@ -1,5 +1,9 @@
-import Ember from 'ember';
+//controllers/form.js
 
-export default Ember.Controller.extend({
-    isEditing: false
-});
+import Controller from '@ember/controller';
+import { tracked } from '@glimmer/tracking';
+
+export default class FormController extends Controller {
+  @tracked isEditing = false;
+
+}

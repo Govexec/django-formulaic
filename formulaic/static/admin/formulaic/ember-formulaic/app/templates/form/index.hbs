@@ -1,102 +1,94 @@
 <div class="row formulaic-row form-row">
   <div class="col-xs-8 preview-column edit-menu">
     <h2>Modify Form</h2>
-      {{#if inEditMode}}
-        <div class="edit-menu-item row">
-          <div class="col-xs-2">
-            <label for="form-name">Form Name</label>
-          </div>
-          <div class="col-xs-10">
-            {{input type="text" id="form-name" placeholder="" value=model.name class="form-control input-sm"}}
-          </div>
+    {{#if this.inEditMode}}
+      <div class="edit-menu-item row">
+        <div class="col-xs-2">
+          <label for="form-name">Form Name</label>
         </div>
-        <div class="edit-menu-item row">
-          <div class="col-xs-2">
-            <label for="form-slug">Slug</label>
-          </div>
-          <div class="col-xs-10">
-            {{input type="text" id="form-slug" placeholder="" value=model.slug class="form-control input-sm"}}
-          </div>
+        <div class="col-xs-10">
+          <Input @type="text" id="form-name" placeholder="" @value={{this.model.name}} class="form-control input-sm" />
         </div>
-        <div class="edit-menu-item row">
-          <div class="col-xs-2">
-            <label for="form-privacy-policy">Privacy Policy</label>
-          </div>
-          <div class="col-xs-10">
-            {{#if privacyPoliciesReady}}
-              {{#x-select value=model.privacy_policy.content action=(action 'privacyPolicyChanged') id="form-privacy-policy" class="form-control input-sm" as |xs|}}
-                <option>Choose `Privacy Policy`...</option>
-                {{#each privacyPolicies as |policy|}}
-                  {{#xs.option value=policy}}{{policy.name}}{{/xs.option}}
-                {{/each}}
-              {{/x-select}}
-            {{else}}
-              Loading
-            {{/if}}
-          </div>
+      </div>
+      <div class="edit-menu-item row">
+        <div class="col-xs-2">
+          <label for="form-slug">Slug</label>
         </div>
-        <div class="edit-menu-item row">
-          <div class="col-xs-2">
-            <label for="form-success-message">Success Message</label>
-          </div>
-          <div class="col-xs-10">
-            {{textarea id="form-success-message" placeholder="" value=model.success_message rows=6 class="form-control input-sm text-block"}}
-          </div>
+        <div class="col-xs-10">
+          <Input @type="text" id="form-slug" placeholder="" @value={{this.model.slug}} class="form-control input-sm" />
+        </div>
+      </div>
+      <div class="edit-menu-item row">
+        <div class="col-xs-2">
+          <label for="form-privacy-policy">Privacy Policy</label>
+        </div>
+        <div class="col-xs-10">
+          {{#if this.privacyPoliciesReady}}
+            <XSelect @value={{this.model.privacy_policy.content}} @change={{this.privacyPolicyChanged}} id="form-privacy-policy" class="form-control input-sm">
+              <option>Choose Privacy Policy...</option>
+              {{#each this.privacyPolicies as |policy|}}
+                <option value={{policy}}>{{policy.name}}</option>
+              {{/each}}
+            </XSelect>
+          {{else}}
+            Loading
+          {{/if}}
+        </div>
+      </div>
+      <div class="edit-menu-item row">
+        <div class="col-xs-2">
+          <label for="form-success-message">Success Message</label>
+        </div>
+        <div class="col-xs-10">
+          <Textarea id="form-success-message" placeholder="" @value={{this.model.success_message}} rows={{6}} class="form-control input-sm text-block" />
+        </div>
+      </div>
+
+      <div class="row formulaic-controls">
+        <div class="col-xs-10 col-xs-offset-2">
+          <button class="btn btn-primary" type="submit" {{on "click" this.saveForm}}>Save</button>
+          <button class="btn btn-danger" type="submit" {{on "click" this.close}}>Close</button>
+        </div>
+      </div>
+    {{else}}
+      <div class="row">
+        <div class="edit-menu-item col-xs-12">
+          <div {{on "click" this.editForm}} role="button" tabindex="0">Form Details</div>
+          <span class="edit-menu-controls">
+            <div {{on "click" this.editForm}} role="button" tabindex="0">
+              <span class="glyphicon glyphicon-menu-hamburger"></span>
+              Change
+            </div>
+          </span>
         </div>
 
-        <div class="row formulaic-controls">
-          <div class="col-xs-10 col-xs-offset-2">
-            <button class="btn btn-primary" type="submit" {{action "saveForm" false}}>Save</button>
-            <button class="btn btn-danger" type="submit" {{action "close"}}>Close</button>
-          </div>
+        <div class="edit-menu-item col-xs-12">
+          <div {{on "click" this.editFields}} role="button" tabindex="0">Fields</div>
+          <span class="edit-menu-controls">
+            <div {{on "click" this.editFields}} role="button" tabindex="0">
+              <span class="glyphicon glyphicon-menu-hamburger"></span>
+              Change
+            </div>
+          </span>
         </div>
-      {{else}}
-        <div class="row">
-          <div class="edit-menu-item col-xs-12">
-            <a href="#0" {{action "editForm" field on="click"}}>Form Details</a>
-            <span class="edit-menu-controls">
-              <a href="#0" {{action "editForm" field on="click"}}>
-                <span class="glyphicon glyphicon-menu-hamburger"></span>
-                Change
-              </a>
-            </span>
-          </div>
 
-          <div class="edit-menu-item col-xs-12">
-            <a href="#0" {{action "editFields" field on="click"}}>Fields</a>
-            <span class="edit-menu-controls">
-              <a href="#0" {{action "editFields" field on="click"}}>
-                <span class="glyphicon glyphicon-menu-hamburger"></span>
-                Change
-              </a>
-            </span>
-          </div>
-
-          <div class="edit-menu-item col-xs-12">
-            <a href="#0" {{action "editRules" field on="click"}}>Rules</a>
-            <span class="edit-menu-controls">
-              <a href="#0" {{action "editRules" field on="click"}}><span class="glyphicon glyphicon-menu-hamburger"></span> Change</a>
-            </span>
-          </div>
-
-          <div class="edit-menu-item col-xs-12">
-            <a href="#0" {{action "viewSubmissions" field on="click"}}>Submissions</a>
-            <span class="edit-menu-controls">
-              <a href="#0" {{action "viewSubmissions" field on="click"}}>
-                <span class="glyphicon glyphicon-th-list"></span>
-                View
-              </a>
-{{!--               <a href="#0" {{action "downloadSubmissions" field on="click"}} data-for="ld-submissions-dl-{{model.id}}" class="{{if downloadInProgress 'link-disabled'}}"> --}}
-{{!--                 {{#if downloadInProgress}} --}}
-{{!--                   <span class="glyphicon glyphicon-hourglass"></span> --}}
-{{!--                 {{else}} --}}
-{{!--                   <span class="glyphicon glyphicon-save"></span> --}}
-{{!--                 {{/if}} --}}
-{{!--                 Download --}}
-{{!--               </a> --}}
-            </span>
-          </div>
+        <div class="edit-menu-item col-xs-12">
+          <div {{on "click" this.editRules}} role="button" tabindex="0">Rules</div>
+          <span class="edit-menu-controls">
+            <div {{on "click" this.editRules}} role="button" tabindex="0"><span class="glyphicon glyphicon-menu-hamburger"></span> Change</div>
+          </span>
         </div>
-      {{/if}}
+
+        <div class="edit-menu-item col-xs-12">
+          <div {{on "click" this.viewSubmissions}} role="button" tabindex="0">Submissions</div>
+          <span class="edit-menu-controls">
+            <div {{on "click" this.viewSubmissions}} role="button" tabindex="0">
+              <span class="glyphicon glyphicon-th-list"></span>
+              View
+            </div>
+          </span>
+        </div>
+      </div>
+    {{/if}}
   </div>
 </div>

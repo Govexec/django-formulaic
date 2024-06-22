@@ -1,88 +1,90 @@
-import Ember from 'ember';
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
+import { inject as controller } from '@ember/controller';
+import { action, computed } from '@ember/object';
 
-export default Ember.Component.extend({
-    tagName: 'div',
-    classNames: [
-        'field-preview',
-        'single-line-text',
-        'form-group',
-        'col-xs-12',
-        'item'
-    ],
-    classNameBindings: [
-        'isEditing:editing',
-        'completeField.validator.isInvalid:warning'
-    ],
+const FIELD_TYPES = {
+  TEXTFIELD: 'textfield',
+  CHOICEFIELD: 'choicefield',
+  BOOLEANFIELD: 'booleanfield',
+  HIDDENFIELD: 'hiddenfield'
+};
 
-    needs: 'fields',
+export default class SortableFieldComponent extends Component {
+  @controller fields;
 
-    previewComponent: function() {
-        let viewName = 'preview-' + this.get('field.subtype').replace("_", "-");
-        return viewName;
-    }.property(),
+  @tracked display_name;
+  @tracked data_name;
+  @tracked slug;
+  @tracked field;
 
-    completeField: function() {
-        let field = this.get('field');
+  get previewComponent() {
+    return `preview-${this.field.subtype.replace('_', '-')}`;
+  }
 
-        if (field.get('textfield')) {
-            return field.get('textfield');
-        } else if (field.get('choicefield')) {
-            return field.get('choicefield');
-        } else if (field.get('booleanfield')) {
-            return field.get('booleanfield');
-        } else if (field.get('hiddenfield')) {
-            return field.get('hiddenfield');
-        } else {
-            // Raise exception
-            throw new Error("Field type not implemented");
-        }
-    }.property(),
+  get completeField() {
+    const field = this.field;
 
-    invalidateOrder: function () {
-        this.get('controllers.fields').invalidateOrder();
-    },
-
-    displayNameChanged: Ember.observer('completeField.display_name', function() {
-        this.set('display_name', this.get('completeField.display_name'));
-    }),
-
-    dataNameChanged: Ember.observer('completeField.data_name', function() {
-        this.set('data_name', this.get('completeField.data_name'));
-    }),
-
-    slugChanged: Ember.observer('completeField.slug', function() {
-        this.set('slug', this.get('completeField.slug'));
-    }),
-
-    positionChanged: Ember.observer('field.position', function() {
-        this.set('completeField.position', this.get('field.position'));
-    }),
-
-    isEditing: function() {
-        return (this.get('currentField') === this.get('field'));
-    }.property('currentField'),
-
-    showDisplayName: function() {
-        return !(this.get('field.booleanfield'));
-    }.property('field.booleanfield'),
-
-    click() {
-        this.sendAction('onClick', this.get('field'));
-    },
-
-    destroy: function () {
-        /**
-         * Invalidate order after destroy
-         */
-
-        this._super(...arguments);
-
-        this.sendAction('onOrderInvalidated');
-    },
-
-    actions: {
-        clickedDeleteField: function(field, completeField) {
-            this.sendAction('onDeleteClick', field, completeField);
-        }
+    if (field.textfield) {
+      return field.textfield;
+    } else if (field.choicefield) {
+      return field.choicefield;
+    } else if (field.booleanfield) {
+      return field.booleanfield;
+    } else if (field.hiddenfield) {
+      return field.hiddenfield;
+    } else {
+      throw new Error('Field type not implemented');
     }
-});
+  }
+
+  @computed('currentField')
+  get isEditing() {
+    return this.currentField === this.field;
+  }
+
+  @computed('field.booleanfield')
+  get showDisplayName() {
+    return !this.field.booleanfield;
+  }
+
+  @action
+  invalidateOrder() {
+    this.fields.invalidateOrder();
+  }
+
+  @action
+  handleDisplayNameChange() {
+    this.display_name = this.completeField.display_name;
+  }
+
+  @action
+  handleDataNameChange() {
+    this.data_name = this.completeField.data_name;
+  }
+
+  @action
+  handleSlugChange() {
+    this.slug = this.completeField.slug;
+  }
+
+  @action
+  handlePositionChange() {
+    this.completeField.position = this.field.position;
+  }
+
+  @action
+  handleClick() {
+    this.args.onClick(this.field);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.args.onOrderInvalidated();
+  }
+
+  @action
+  clickedDeleteField(field, completeField) {
+    this.args.onDeleteClick(field, completeField);
+  }
+}

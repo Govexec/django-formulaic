@@ -1,69 +1,97 @@
-import Ember from 'ember';
+//controllers/form/rule.js
+
+import Controller from '@ember/controller';
+import { tracked } from '@glimmer/tracking';
+import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
 import validatorFactory from '../../validators/factories';
 
-export default Ember.Controller.extend(Ember.Evented, {
-    rulesPendingDeletion: [],
-    saveActive: false,
-    saveContinueActive: false,
-    validators: {},
+export default class RulesController extends Controller {
+  @service router; // Injecting the router service
 
-    activeRules: Ember.computed('model', 'model.@each.isDeleted', {
-        get() {
-            return this.get('model').filter(function(item) {
-                return !item.get('isDeleted');
-            });
-        }
-    }),
+  @tracked rulesPendingDeletion = [];
+  @tracked saveActive = false;
+  @tracked saveContinueActive = false;
+  @tracked validators = {};
 
-    controlsDisabled: function () {
-        return (this.saveActive || this.saveContinueActive);
-    }.property('saveActive', 'saveContinueActive'),
+  get activeRules() {
+    return this.model.filter(item => !item.isDeleted);
+  }
 
-    invalidateOrder: function () {
-        if (!this.get('controlsDisabled')) {
-            this.trigger('orderInvalidated');
-        }
-    },
+  get controlsDisabled() {
+    return this.saveActive || this.saveContinueActive;
+  }
 
-    validatorFor: function(obj) {
-        var validatorKey = obj.toString();
-        var validators = this.get('validators');
+  validatorFor(obj) {
+    let validatorKey = obj.toString();
+    let validators = this.validators;
 
-        if (!(validatorKey in validators)) {
-            validators[validatorKey] = validatorFactory.createRuleValidator(obj, this);
-        }
-
-        return validators[validatorKey];
-    },
-
-    removeValidatorFor: function(obj) {
-        var validatorKey = obj.toString();
-        var validators = this.get('validators');
-
-        if (validatorKey in validators) {
-            validators[validatorKey].destroy();
-            delete validators[validatorKey];
-        }
-    },
-
-    actions: {
-        addRule: function(rule) {
-            this.send('addRuleToRoute', rule);
-        },
-        deleteRule: function(rule) {
-            this.send('deleteRuleToRoute', rule);
-        },
-        addCondition: function(rule) {
-            this.send('addConditionToRoute', rule);
-        },
-        deleteCondition: function(condition) {
-            this.send('deleteConditionToRoute', condition);
-        },
-        addResult: function(rule) {
-            this.send('addResultToRoute', rule);
-        },
-        deleteResult: function(result) {
-            this.send('deleteResultToRoute', result);
-        }
+    if (!(validatorKey in validators)) {
+      validators[validatorKey] = validatorFactory.createRuleValidator(obj, this);
     }
-});
+
+    return validators[validatorKey];
+  }
+
+  removeValidatorFor(obj) {
+    let validatorKey = obj.toString();
+    let validators = this.validators;
+
+    if (validatorKey in validators) {
+      validators[validatorKey].destroy();
+      delete validators[validatorKey];
+    }
+  }
+
+  @action
+  invalidateOrder() {
+    if (!this.controlsDisabled) {
+      this.orderInvalidated();
+    }
+  }
+
+  orderInvalidated() {
+    // Custom event handler logic
+  }
+
+  @action
+  addRule(rule) {
+    this.addRuleToRoute(rule);
+  }
+
+  @action
+  deleteRule(rule) {
+    this.deleteRuleToRoute(rule);
+  }
+
+  @action
+  addCondition(rule) {
+    this.addConditionToRoute(rule);
+  }
+
+  @action
+  deleteCondition(condition) {
+    this.deleteConditionToRoute(condition);
+  }
+
+  @action
+  addResult(rule) {
+    this.addResultToRoute(rule);
+  }
+
+  @action
+  deleteResult(result) {
+    this.deleteResultToRoute(result);
+  }
+
+  @action
+  saveRules(continueEditing) {
+    this.saveActive = !continueEditing;
+    this.saveContinueActive = continueEditing;
+  }
+
+  @action
+  closeRules() {
+    this.router.transitionTo('form'); // Using the injected router service
+  }
+}

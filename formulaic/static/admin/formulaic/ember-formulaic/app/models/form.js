@@ -1,8 +1,12 @@
-import DS from 'ember-data';
+//models/form.js
 
-export default DS.Model.extend({
-    name: DS.attr('string'),
-    slug: DS.attr('string'),
-    success_message: DS.attr('string'),
-    privacy_policy: DS.belongsTo('privacypolicy', {async:true})
-});
+import Model, {attr, belongsTo, hasMany} from '@ember-data/model';
+
+export default class FormModel extends Model {
+  @attr('string') name;
+  @attr('string') slug;
+  @attr('string') success_message;
+  @belongsTo('privacypolicy', {async: true}) privacy_policy;
+  @hasMany('field', {async: true}) fields;
+  @hasMany('rule', { async: true }) rules;
+}

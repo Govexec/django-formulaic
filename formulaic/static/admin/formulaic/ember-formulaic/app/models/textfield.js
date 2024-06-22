@@ -1,12 +1,12 @@
-import DS from 'ember-data';
+import { belongsTo } from '@ember-data/model';
 import BaseField from './basefield';
 import TextFieldValidator from '../validators/fields/textfield';
 
-export default BaseField.extend({
-    field: DS.belongsTo('field'),
+export default class TextFieldModel extends BaseField {
+    @belongsTo('field') field;
 
-    init() {
-        this._super(...arguments);
-        this.validator = TextFieldValidator.create({field: this});
+    constructor() {
+        super(...arguments);
+        this.validator = TextFieldValidator.create({ field: this });
     }
-});
+}

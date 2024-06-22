@@ -1,16 +1,20 @@
-import Ember from 'ember';
+import EmberObject, { computed } from '@ember/object';
+import { isBlank } from '@ember/utils';
 
-export default Ember.Object.extend({
-    isInvalid: function () {
-        return (this.get('isFieldInvalid') || this.get('isValueInvalid'));
-    }.property('isFieldInvalid', 'isValueInvalid'),
+export default class RuleConditionValidator extends EmberObject {
+  @computed('isFieldInvalid', 'isValueInvalid')
+  get isInvalid() {
+    return this.isFieldInvalid || this.isValueInvalid;
+  }
 
-    isFieldInvalid: function() {
-        return (this.get('rulecondition.field.content') == null);
-    }.property('rulecondition.field.content'),
+  @computed('rulecondition.field.content')
+  get isFieldInvalid() {
+    return this.rulecondition.field?.content == null;
+  }
 
-    isValueInvalid: function () {
-        var isBooleanField = (this.get('rulecondition.field.content.booleanfield') != null);
-        return (Ember.isBlank(this.get('rulecondition.value')) && !isBooleanField);
-    }.property('rulecondition.value')
-});
+  @computed('rulecondition.value')
+  get isValueInvalid() {
+    const isBooleanField = this.rulecondition.field?.content?.booleanfield != null;
+    return isBlank(this.rulecondition.value) && !isBooleanField;
+  }
+}

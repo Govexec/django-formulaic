@@ -1,9 +1,22 @@
-import BaseField from './basefield';
-import Ember from 'ember';
+//controllers/form/fields/hiddenfield.js
 
-export default BaseField.extend({
-    dataNameChanged: Ember.observer('model.data_name', function() {
-        // auto-populate `display_name`; doesn't display anywhere
-        this.set('model.display_name', this.get('model.data_name'));
-    })
-});
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import BaseFieldController from './basefield';
+
+export default class HiddenFieldController extends BaseFieldController {
+  @tracked model;
+
+  get dataNameChanged() {
+    // auto-populate `display_name`; doesn't display anywhere
+    if (this.model && this.model.data_name) {
+      this.model.display_name = this.model.data_name;
+    }
+    return this.model.data_name;
+  }
+
+  constructor() {
+    super(...arguments);
+    this.dataNameChanged; // Initialize the data name change logic
+  }
+}

@@ -1,55 +1,70 @@
-import Ember from "ember";
+import Component from '@glimmer/component';
+import { inject as service } from '@ember/service';
+import { tracked } from '@glimmer/tracking';
+import { action, computed } from '@ember/object';
 
-export default Ember.Component.extend({
-    store: Ember.inject.service(),
+export default class SortableRuleComponent extends Component {
+  @service store;
 
-    tagName: 'div',
-    classNames: [
-        'field-preview', 
-        'single-line-text', 
-        'form-group',
-        'col-xs-12',
-        'item'
-    ],
-    classNameBindings: [
-        'rule.validator.isInvalid:warning'
-    ],
+  tagName = 'div';
+  classNames = [
+    'field-preview',
+    'single-line-text',
+    'form-group',
+    'col-xs-12',
+    'item'
+  ];
 
-    activeConditions: Ember.computed('rule.conditions.@each.isDeleted', {
-        get() {
-            return this.get('rule.conditions').filter(function(item) {
-                return !item.get('isDeleted');
-            });
-        }
-    }),
+  @tracked rule;
 
-    activeResults: Ember.computed('rule.results.@each.isDeleted', {
-        get() {
-            return this.get('rule.results').filter(function(item) {
-                return !item.get('isDeleted');
-            });
-        }
-    }),
+  get classNameBindings() {
+    return {
+      'warning': this.rule.validator.isInvalid
+    };
+  }
 
-    destroy() {
-        /**
-         * Invalidate order after destroy
-         */
+  @computed('rule.conditions.@each.isDeleted')
+  get activeConditions() {
+    return this.rule.conditions.filter(item => !item.isDeleted);
+  }
 
-        this._super(...arguments);
+  @computed('rule.results.@each.isDeleted')
+  get activeResults() {
+    return this.rule.results.filter(item => !item.isDeleted);
+  }
 
-        this.sendAction('onOrderInvalidated');
-    },
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.args.onOrderInvalidated();
+  }
 
-    actions: {
-        clickedDeleteRule: function(rule) {
-            this.sendAction('onDeleteClick', rule);
-        },
-        clickedAddCondition: function(rule) {
-            this.sendAction('onAddConditionClick', rule);
-        },
-        clickedAddResult: function(rule) {
-            this.sendAction('onAddResultClick', rule);
-        }
-    }
-});
+  @action
+  clickedDeleteRule(rule) {
+    this.args.onDeleteClick(rule);
+  }
+
+  @action
+  clickedAddCondition(rule) {
+    this.args.onAddConditionClick(rule);
+  }
+
+  @action
+  clickedAddResult(rule) {
+    this.args.onAddResultClick(rule);
+  }
+
+  @action
+  setOperator(operator) {
+    this.rule.operator = operator;
+  }
+
+  @action
+  deleteCondition(condition) {
+    this.args.onDeleteCondition(condition);
+  }
+
+  @action
+  deleteResult(result) {
+    this.args.onDeleteResult(result);
+  }
+}

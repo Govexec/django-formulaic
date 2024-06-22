@@ -1,8 +1,7 @@
-import DRFSerializer from './drf';
-import DS from 'ember-data';
+import RESTSerializer, { EmbeddedRecordsMixin } from '@ember-data/serializer/rest';
 
-export default DRFSerializer.extend(DS.EmbeddedRecordsMixin, {
-    attrs: {
-        options: { embedded: 'always' }
-    }
-});
+export default class OptionGroupSerializer extends RESTSerializer.extend(EmbeddedRecordsMixin) {
+  attrs = {
+    options: { embedded: 'always' }
+  };
+}

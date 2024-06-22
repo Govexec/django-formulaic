@@ -1,113 +1,134 @@
-import Ember from 'ember';
+//controllers/form/submissions.js
 
-export default Ember.Controller.extend({
-    queryParams: [
-        'page',
-        'source'
-    ],
-    formId: null,
-    source: null,
-    page: 1,
+import Controller from '@ember/controller';
+import { tracked } from '@glimmer/tracking';
+import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
 
-    fields: function() {
-        return this.store.query('field', {form: this.get('formId')});
-    }.property(),
+export default class SubmissionsController extends Controller {
+  @service store;
+  @service router; // Injecting the router service
 
-    columnHeaders: function() {
-        // base column headers
-        var headers = ['Date/Time', 'Source', 'Promo Source'];
+  queryParams = ['page', 'source'];
+  @tracked formId = null;
+  @tracked source = null;
+  @tracked page = 1;
 
-        if (this.get('fields.isFulfilled')) {
-            this.get('fields').forEach(function(field) {
-                headers.push(field.get('data_name'));
-            });
-        }
+  get fields() {
+    try {
+      return this.store.query('field', { form: this.formId });
+    } catch (error) {
+      console.error('Error fetching fields:', error);
+      throw error;
+    }
+  }
 
-        return headers;
-    }.property('fields.isFulfilled'),
+  get columnHeaders() {
+    let headers = ['Date/Time', 'Source', 'Promo Source'];
 
-    customColumnSlugs: function() {
-        var slugs = [];
+    if (this.fields.isFulfilled) {
+      this.fields.forEach(field => {
+        headers.push(field.data_name);
+      });
+    }
 
-        if (this.get('fields.isFulfilled')) {
-            this.get('fields').forEach(function(field) {
-                slugs.push(field.get('slug'));
-            });
-        }
+    return headers;
+  }
 
-        return slugs;
-    }.property('fields.isFulfilled'),
+  get customColumnSlugs() {
+    let slugs = [];
 
-    submissionDataList: function() {
-        var rows = [];
-        var slugs = this.get('customColumnSlugs');
+    if (this.fields.isFulfilled) {
+      this.fields.forEach(field => {
+        slugs.push(field.slug);
+      });
+    }
 
-        var submissions = this.get('model');
+    return slugs;
+  }
 
-        submissions.forEach(function(submission) {
-            let row = [
-                submission.get('date_created'),
-                submission.get('source'),
-                submission.get('promo_source')
-            ];
-            for (var j = 0; j < slugs.length; j++) {
-                var slug = slugs[j];
-                row.push(submission.get('custom_data')[slug]);
-            }
-            rows.push(row);
-        });
+  get submissionDataList() {
+    let rows = [];
+    let slugs = this.customColumnSlugs;
 
-        return rows;
-    }.property('page', 'model.isFulfilled', 'customColumnSlugs', 'source'),
+    let submissions = this.model;
 
-    hasSubmissions: function() {
-        return this.get('submissionDataList').length > 0;
-    }.property('submissionDataList'),
+    submissions.forEach(submission => {
+      let row = [
+        submission.date_created,
+        submission.source,
+        submission.promo_source
+      ];
+      slugs.forEach(slug => {
+        row.push(submission.custom_data[slug]);
+      });
+      rows.push(row);
+    });
 
-    metaData: Ember.computed('model', function() {
-        var meta = this.get('model.meta');
-        return meta;
-    }),
+    return rows;
+  }
 
-    count: function() {
-        if (this.get('metaData')) {
-            return this.get('metaData').count;
-        } else {
-            return null;
-        }
-    }.property('metaData'),
+  get hasSubmissions() {
+    return this.submissionDataList.length > 0;
+  }
 
-    currentPage: function() {
-        return this.getWithDefault('page', 1);
-    }.property('metaData'),
+  get metaData() {
+    return this.model.meta;
+  }
 
-    nextPage: function() {
-        return this.get('metaData').next;
-    }.property('metaData'),
+  get count() {
+    return this.metaData ? this.metaData.count : null;
+  }
 
-    previousPage: function() {
-        var previous_page = this.get('page') - 1;
-        return (previous_page > 0) ? previous_page : null;
-    }.property('metaData'),
+  get currentPage() {
+    return this.page || 1;
+  }
 
-    pageCount: function() {
-        return Math.ceil(this.get('count') / this.get('page_size'));
-    }.property('count', 'page_size'),
+  get nextPage() {
+    return this.metaData ? this.metaData.next : null;
+  }
 
-    sources: function() {
-        var source_objs = this.store.query('submissionsource', {
-            form: this.get('formId')
-        });
-        return source_objs;
-    }.property(),
+  get previousPage() {
+    let previousPage = this.page - 1;
+    return previousPage > 0 ? previousPage : null;
+  }
 
-    selectedSource: function(key, value, previousValue) {
-        if (value !== previousValue) {
-            this.send('changeSource', value);
-        }
+  get pageCount() {
+    return Math.ceil(this.count / this.page_size);
+  }
 
-        return this.get('source');
-    }.property('source'),
+  get sources() {
+    try {
+      return this.store.query('submissionsource', { form: this.formId });
+    } catch (error) {
+      console.error('Error fetching sources:', error);
+      throw error;
+    }
+  }
 
-    actions: {}
-});
+  get selectedSource() {
+    return this.source;
+  }
+
+  @action
+  changeSource(value) {
+    this.source = value;
+  }
+
+  @action
+  gotoPreviousPage() {
+    if (this.page > 1) {
+      this.page -= 1;
+    }
+  }
+
+  @action
+  gotoNextPage() {
+    this.page += 1;
+  }
+
+  @action
+  closeSubmissions() {
+    this.router.transitionTo('form');
+  }
+}

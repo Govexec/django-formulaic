@@ -1,9 +1,9 @@
-import DS from 'ember-data';
+import Model, { attr, belongsTo } from '@ember-data/model';
 
-export default DS.Model.extend({
-    date_created: DS.attr('string'),
-    source: DS.attr('string'),
-    promo_source: DS.attr('string'),
-    form: DS.belongsTo('form', { async:true }),
-    custom_data: DS.attr('json')
-});
+export default class SubmissionsModel extends Model {
+    @attr('string') date_created;
+    @attr('string') source;
+    @attr('string') promo_source;
+    @belongsTo('form', { async: true }) form;
+    @attr('json') custom_data;
+}
