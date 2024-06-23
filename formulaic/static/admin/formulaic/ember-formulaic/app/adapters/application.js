@@ -44,18 +44,6 @@ export default class ApplicationAdapter extends RESTAdapter {
   }
 
   handleResponse(status, headers, payload, requestData) {
-    if (requestData.url.includes('/privacypolicies')) {
-      payload = {
-        data: payload.map(policy => ({
-          id: String(policy.id),
-          type: 'privacypolicy',
-          attributes: {
-            name: policy.name,
-            text: policy.text
-          }
-        }))
-      };
-    }
     return super.handleResponse(status, headers, payload, requestData);
   }
 }

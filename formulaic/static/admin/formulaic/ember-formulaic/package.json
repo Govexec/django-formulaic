@@ -57,6 +57,7 @@
     "ember-qunit": "^8.0.2",
     "ember-resolver": "^11.0.1",
     "ember-select-light": "^2.0.5",
+    "ember-sortable": "^5.0.2",
     "ember-source": "~5.9.0",
     "ember-template-lint": "^5.13.0",
     "ember-toastr": "^3.0.1",
@@ -86,12 +87,12 @@
   "ember": {
     "edition": "octane"
   },
-  "dependencies": {
-    "sortablejs": "^1.15.2"
-  },
   "babel": {
     "plugins": [
       "@babel/plugin-transform-class-static-block"
     ]
+  },
+  "dependencies": {
+    "sortablejs": "^1.15.2"
   }
 }

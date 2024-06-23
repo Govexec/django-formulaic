@@ -45,18 +45,6 @@
       return csrfToken;
     }
     handleResponse(status, headers, payload, requestData) {
-      if (requestData.url.includes('/privacypolicies')) {
-        payload = {
-          data: payload.map(policy => ({
-            id: String(policy.id),
-            type: 'privacypolicy',
-            attributes: {
-              name: policy.name,
-              text: policy.text
-            }
-          }))
-        };
-      }
       return super.handleResponse(status, headers, payload, requestData);
     }
   }
@@ -99,54 +87,24 @@
   });
   0; //eaimeta@70e063a35619d71f0,"@glimmer/component/-private/ember-component-manager"eaimeta@70e063a35619d71f
 });
-;define("ember-formulaic/components/base-sortable", ["exports", "@glimmer/component", "@ember/object", "@glimmer/tracking", "sortablejs"], function (_exports, _component, _object, _tracking, _sortablejs) {
+;define("ember-formulaic/components/base-sortable", ["exports", "@glimmer/component", "@ember/object"], function (_exports, _component, _object) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
     value: true
   });
   _exports.default = void 0;
-  var _class, _descriptor; //components/base-sortable.js
-  0; //eaimeta@70e063a35619d71f0,"@glimmer/component",0,"@ember/object",0,"@glimmer/tracking",0,"sortablejs"eaimeta@70e063a35619d71f
-  function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
-  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+  var _class; // components/base-sortable.js
+  0; //eaimeta@70e063a35619d71f0,"@glimmer/component",0,"@ember/object"eaimeta@70e063a35619d71f
   function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
-  function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
   let BaseSortableComponent = _exports.default = (_class = class BaseSortableComponent extends _component.default {
-    constructor(...args) {
-      super(...args);
-      _initializerDefineProperty(this, "sortable", _descriptor, this);
-    }
-    initializeSortable(element) {
-      this.sortable = _sortablejs.default.create(element, {
-        handle: '.handle',
-        animation: 150,
-        onEnd: this.updateSortable.bind(this)
+    updateSortable(sortedItems) {
+      sortedItems.forEach((item, index) => {
+        item.position = index;
+        item.save(); // or dispatch a change event if needed
       });
     }
-    updateSortable() {
-      const items = this.sortable.el.querySelectorAll('.item');
-      items.forEach((item, index) => {
-        const positionElement = item.querySelector('.position');
-        positionElement.value = index;
-        positionElement.dispatchEvent(new Event('change'));
-      });
-      this.sortable.sortable("refresh");
-    }
-    willDestroy() {
-      super.willDestroy(...arguments);
-      if (this.sortable) {
-        this.sortable.destroy();
-      }
-    }
-  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "sortable", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: null
-  }), _applyDecoratedDescriptor(_class.prototype, "initializeSortable", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "initializeSortable"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "updateSortable", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "updateSortable"), _class.prototype)), _class);
+  }, (_applyDecoratedDescriptor(_class.prototype, "updateSortable", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "updateSortable"), _class.prototype)), _class);
 });
 ;define("ember-formulaic/components/bs-accordion", ["exports", "ember-bootstrap/components/bs-accordion"], function (_exports, _bsAccordion) {
   "use strict";
@@ -1470,7 +1428,7 @@
     value: true
   });
   _exports.default = void 0;
-  var _dec, _dec2, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5;
+  var _dec, _dec2, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5; //components/sortable-field.js
   0; //eaimeta@70e063a35619d71f0,"@glimmer/component",0,"@glimmer/tracking",0,"@ember/controller",0,"@ember/object"eaimeta@70e063a35619d71f
   function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
   function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -1484,37 +1442,48 @@
     BOOLEANFIELD: 'booleanfield',
     HIDDENFIELD: 'hiddenfield'
   };
-  let SortableFieldComponent = _exports.default = (_dec = (0, _object.computed)('currentField'), _dec2 = (0, _object.computed)('field.booleanfield'), (_class = class SortableFieldComponent extends _component.default {
-    constructor(...args) {
-      super(...args);
+  let SortableFieldComponent = _exports.default = (_dec = (0, _object.computed)('currentField'), _dec2 = (0, _object.computed)('field.hiddenfield'), (_class = class SortableFieldComponent extends _component.default {
+    constructor() {
+      super(...arguments);
       _initializerDefineProperty(this, "fields", _descriptor, this);
       _initializerDefineProperty(this, "display_name", _descriptor2, this);
       _initializerDefineProperty(this, "data_name", _descriptor3, this);
       _initializerDefineProperty(this, "slug", _descriptor4, this);
       _initializerDefineProperty(this, "field", _descriptor5, this);
+      this.field = this.args.field;
     }
     get previewComponent() {
-      return `preview-${this.field.subtype.replace('_', '-')}`;
+      if (this.field && this.field.subtype) {
+        return `preview-${this.field.subtype.replace('_', '-')}`;
+      } else {
+        return '';
+      }
     }
     get completeField() {
-      const field = this.field;
-      if (field.textfield) {
-        return field.textfield;
-      } else if (field.choicefield) {
-        return field.choicefield;
-      } else if (field.booleanfield) {
-        return field.booleanfield;
-      } else if (field.hiddenfield) {
-        return field.hiddenfield;
-      } else {
-        throw new Error('Field type not implemented');
+      console.warn("field details : ", this.field);
+      if (!this.field) {
+        return null;
       }
+      return this.field;
+
+      // switch (this.field.model_class) {
+      //   case FIELD_TYPES.TEXTFIELD:
+      //     return this.field.textfield.data;
+      //   case FIELD_TYPES.CHOICEFIELD:
+      //     return this.field.choicefield.data;
+      //   case FIELD_TYPES.BOOLEANFIELD:
+      //     return this.field.booleanfield.data;
+      //   case FIELD_TYPES.HIDDENFIELD:
+      //     return this.field.hiddenfield.data;
+      //   default:
+      //     throw new Error('Field type not implemented');
+      // }
     }
     get isEditing() {
       return this.currentField === this.field;
     }
     get showDisplayName() {
-      return !this.field.booleanfield;
+      return this.field.model_class !== FIELD_TYPES.HIDDENFIELD;
     }
     invalidateOrder() {
       this.fields.invalidateOrder();
@@ -1575,18 +1544,10 @@
     value: true
   });
   _exports.default = void 0;
-  var _class; //components/sortable-field.js
+  var _class; //components/sortable-fields.js
   0; //eaimeta@70e063a35619d71f0,"ember-formulaic/components/base-sortable",0,"@ember/object"eaimeta@70e063a35619d71f
-  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
   function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
   let SortableFieldsComponent = _exports.default = (_class = class SortableFieldsComponent extends _baseSortable.default {
-    constructor(...args) {
-      super(...args);
-      _defineProperty(this, "templateName", 'sortable/fields');
-      _defineProperty(this, "sortableSelector", '.field-sortable');
-    }
     editField(field) {
       this.args.onEditField(field);
     }
@@ -1761,7 +1722,7 @@
     value: true
   });
   _exports.default = void 0;
-  var _dec, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8;
+  var _dec, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9; //controllers/form/field.js
   0; //eaimeta@70e063a35619d71f0,"@ember/controller",0,"@ember/object",0,"@ember/service",0,"@glimmer/tracking",0,"rsvp",0,"ember-formulaic/utils/fields",0,"ember-formulaic/utils/slug"eaimeta@70e063a35619d71f
   function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
   function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -1775,14 +1736,15 @@
       _initializerDefineProperty(this, "store", _descriptor, this);
       _initializerDefineProperty(this, "router", _descriptor2, this);
       _initializerDefineProperty(this, "fieldService", _descriptor3, this);
-      _initializerDefineProperty(this, "currentField", _descriptor4, this);
-      _initializerDefineProperty(this, "saveActive", _descriptor5, this);
-      _initializerDefineProperty(this, "saveContinueActive", _descriptor6, this);
-      _initializerDefineProperty(this, "fieldsPendingDeletion", _descriptor7, this);
-      _initializerDefineProperty(this, "validators", _descriptor8, this);
+      _initializerDefineProperty(this, "model", _descriptor4, this);
+      _initializerDefineProperty(this, "currentField", _descriptor5, this);
+      _initializerDefineProperty(this, "saveActive", _descriptor6, this);
+      _initializerDefineProperty(this, "saveContinueActive", _descriptor7, this);
+      _initializerDefineProperty(this, "fieldsPendingDeletion", _descriptor8, this);
+      _initializerDefineProperty(this, "validators", _descriptor9, this);
     }
     get activeFields() {
-      return this.model.filter(item => !item.isDeleted);
+      return this.model ? this.model.filter(item => !item.isDeleted) : [];
     }
     get controlsDisabled() {
       return this.saveActive || this.saveContinueActive;
@@ -1910,35 +1872,42 @@
     enumerable: true,
     writable: true,
     initializer: null
-  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "currentField", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return null;
-    }
-  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "saveActive", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return false;
-    }
-  }), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "saveContinueActive", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return false;
-    }
-  }), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "fieldsPendingDeletion", [_tracking.tracked], {
+  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "model", [_tracking.tracked], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: function () {
       return [];
     }
-  }), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "validators", [_tracking.tracked], {
+  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "currentField", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "saveActive", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return false;
+    }
+  }), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "saveContinueActive", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return false;
+    }
+  }), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "fieldsPendingDeletion", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return [];
+    }
+  }), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "validators", [_tracking.tracked], {
     configurable: true,
     enumerable: true,
     writable: true,
@@ -4389,7 +4358,7 @@
     value: true
   });
   _exports.default = void 0;
-  var _dec, _class, _descriptor, _descriptor2;
+  var _dec, _class, _descriptor, _descriptor2; //routes/form/field.js
   0; //eaimeta@70e063a35619d71f0,"@ember/routing/route",0,"@ember/service",0,"@ember/object"eaimeta@70e063a35619d71f
   function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
   function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -4414,7 +4383,8 @@
         let fieldsData = await this.store.query('field', {
           form: this.formId
         });
-        return fieldsData;
+        console.log("fieldsData:", fieldsData.toArray());
+        return fieldsData.toArray();
       } catch (error) {
         console.error('Error fetching fields:', error);
         throw error;
@@ -4425,7 +4395,7 @@
       controller.setProperties({
         saveActive: false,
         saveContinueActive: false,
-        fields: model
+        model: model
       });
     }
     renderTemplate() {
@@ -4788,34 +4758,86 @@
     initializer: null
   }), _applyDecoratedDescriptor(_class.prototype, "closeSubmissions", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "closeSubmissions"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "gotoNextPage", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "gotoNextPage"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "gotoPreviousPage", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "gotoPreviousPage"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "changeSource", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "changeSource"), _class.prototype)), _class);
 });
-;define("ember-formulaic/serializers/field", ["exports", "@ember-data/serializer/rest"], function (_exports, _rest) {
+;define("ember-formulaic/serializers/field", ["exports", "@ember-data/serializer/json"], function (_exports, _json) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
     value: true
   });
   _exports.default = void 0;
-  0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/rest"eaimeta@70e063a35619d71f
-  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-  class FieldSerializer extends _rest.default.extend(_rest.EmbeddedRecordsMixin) {
-    constructor(...args) {
-      super(...args);
-      _defineProperty(this, "attrs", {
+  0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/json"eaimeta@70e063a35619d71f
+  // app/serializers/field.js
+  class FieldSerializer extends _json.default {
+    normalizeResponse(store, primaryModelClass, payload, id, requestType) {
+      // Check if payload is an array
+      if (Array.isArray(payload)) {
+        // Wrap the array in a 'data' key
+        return {
+          data: payload.map(item => this.normalize(primaryModelClass, item))
+        };
+      } else {
+        // Wrap the object in a 'data' key
+        return {
+          data: this.normalize(primaryModelClass, payload)
+        };
+      }
+    }
+    normalize(primaryModelClass, payload) {
+      if (Array.isArray(payload)) {
+        return payload.map(item => this.normalizeItem(item));
+      } else {
+        return this.normalizeItem(payload);
+      }
+    }
+    normalizeItem(item) {
+      let attributes = {
+        display_name: item.display_name,
+        data_name: item.data_name,
+        slug: item.slug,
+        required: item.required,
+        help_text: item.help_text,
+        model_class: item.model_class,
+        position: item.position,
+        css_class: item.css_class,
+        form: item.form,
+        subtype: item.subtype
+      };
+      let relationships = {
         textfield: {
-          embedded: 'always'
-        },
-        choicefield: {
-          embedded: 'always'
+          data: {
+            embedded: 'always',
+            type: 'textfield',
+            id: String(item.id)
+          }
         },
         booleanfield: {
-          embedded: 'always'
+          data: {
+            embedded: 'always',
+            type: 'booleanfield',
+            id: String(item.id)
+          }
+        },
+        choicefield: {
+          data: {
+            embedded: 'always',
+            type: 'choicefield',
+            id: String(item.id)
+          }
         },
         hiddenfield: {
-          embedded: 'always'
+          data: {
+            embedded: 'always',
+            type: 'hiddenfield',
+            id: String(item.id)
+          }
         }
-      });
+      };
+      return {
+        id: String(item.id),
+        type: 'field',
+        attributes,
+        relationships
+      };
     }
   }
   _exports.default = FieldSerializer;
@@ -4836,96 +4858,31 @@
   }
   _exports.default = FormSerializer;
 });
-;define("ember-formulaic/serializers/optiongroup", ["exports", "@ember-data/serializer/rest"], function (_exports, _rest) {
+;define("ember-formulaic/serializers/privacypolicy", ["exports", "@ember-data/serializer/json"], function (_exports, _json) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
     value: true
   });
   _exports.default = void 0;
-  0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/rest"eaimeta@70e063a35619d71f
-  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-  class OptionGroupSerializer extends _rest.default.extend(_rest.EmbeddedRecordsMixin) {
-    constructor(...args) {
-      super(...args);
-      _defineProperty(this, "attrs", {
-        options: {
-          embedded: 'always'
+  0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/json"eaimeta@70e063a35619d71f
+  class PrivacyPolicySerializer extends _json.default {
+    normalizeResponse(store, primaryModelClass, payload, id, requestType) {
+      console.warn('Received payload:', payload);
+      let data = payload.map(policy => ({
+        id: String(policy.id),
+        type: 'privacypolicy',
+        attributes: {
+          name: policy.name,
+          text: policy.text
         }
-      });
+      }));
+      return {
+        data
+      };
     }
   }
-  _exports.default = OptionGroupSerializer;
-});
-;define("ember-formulaic/serializers/optionlist", ["exports", "@ember-data/serializer/rest"], function (_exports, _rest) {
-  "use strict";
-
-  Object.defineProperty(_exports, "__esModule", {
-    value: true
-  });
-  _exports.default = void 0;
-  0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/rest"eaimeta@70e063a35619d71f
-  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-  class OptionListSerializer extends _rest.default.extend(_rest.EmbeddedRecordsMixin) {
-    constructor(...args) {
-      super(...args);
-      _defineProperty(this, "attrs", {
-        options: {
-          embedded: 'always'
-        }
-      });
-    }
-  }
-  _exports.default = OptionListSerializer;
-});
-;define("ember-formulaic/serializers/rule", ["exports", "@ember-data/serializer/rest"], function (_exports, _rest) {
-  "use strict";
-
-  Object.defineProperty(_exports, "__esModule", {
-    value: true
-  });
-  _exports.default = void 0;
-  0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/rest"eaimeta@70e063a35619d71f
-  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-  class RuleSerializer extends _rest.default.extend(_rest.EmbeddedRecordsMixin) {
-    constructor(...args) {
-      super(...args);
-      _defineProperty(this, "attrs", {
-        conditions: {
-          embedded: 'always'
-        },
-        results: {
-          embedded: 'always'
-        }
-      });
-    }
-  }
-  _exports.default = RuleSerializer;
-});
-;define("ember-formulaic/serializers/submissionsource", ["exports", "@ember-data/serializer/rest"], function (_exports, _rest) {
-  "use strict";
-
-  Object.defineProperty(_exports, "__esModule", {
-    value: true
-  });
-  _exports.default = void 0;
-  0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/rest"eaimeta@70e063a35619d71f
-  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-  class SubmissionSourceSerializer extends _rest.default {
-    constructor(...args) {
-      super(...args);
-      _defineProperty(this, "primaryKey", 'source');
-    }
-  }
-  _exports.default = SubmissionSourceSerializer;
+  _exports.default = PrivacyPolicySerializer;
 });
 ;define("ember-formulaic/services/-ensure-registered", ["exports", "@embroider/util/services/ensure-registered"], function (_exports, _ensureRegistered) {
   "use strict";
@@ -5122,7 +5079,7 @@
   });
   0; //eaimeta@70e063a35619d71f0,"ember-page-title/services/page-title"eaimeta@70e063a35619d71f
 });
-;define("ember-formulaic/services/store", ["exports", "@ember/debug", "ember-data/store"], function (_exports, _debug, _store) {
+;define("ember-formulaic/services/store", ["exports", "ember-data/store"], function (_exports, _store) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
@@ -5134,16 +5091,8 @@
       return _store.default;
     }
   });
-  0; //eaimeta@70e063a35619d71f0,"@ember/debug",0,"ember-data/store"eaimeta@70e063a35619d71f
-  (true && !(false) && (0, _debug.deprecate)("You are relying on ember-data auto-magically installing the store service. Use `export { default } from 'ember-data/store';` in app/services/store.js instead", false, {
-    id: 'ember-data:deprecate-legacy-imports',
-    for: 'ember-data',
-    until: '6.0',
-    since: {
-      enabled: '5.2',
-      available: '5.2'
-    }
-  }));
+  0; //eaimeta@70e063a35619d71f0,"ember-data/store"eaimeta@70e063a35619d71f
+  // app/services/store.js
 });
 ;define("ember-formulaic/services/toast", ["exports", "ember-formulaic/config/environment", "ember-toastr/services/toast"], function (_exports, _environment, _toast) {
   "use strict";
@@ -5212,14 +5161,23 @@
   0; //eaimeta@70e063a35619d71f0,"@ember/template-factory"eaimeta@70e063a35619d71f
   var _default = _exports.default = (0, _templateFactory.createTemplateFactory)(
   /*
-    <div {{did-insert this.initializeSortable}} class="sortable">
-    {{yield}}
+    <!-- templates/components/base-sortable.hbs -->
+  <div class="sortable">
+    <SortableGroup @onChange={{this.updateSortable}}>
+      {{#each @items as |item|}}
+        <SortableItem @model={{item}} as |item|>
+          <div class="item handle">
+            {{yield item}}
+          </div>
+        </SortableItem>
+      {{/each}}
+    </SortableGroup>
   </div>
   
   */
   {
-    "id": "sJGL7j7H",
-    "block": "[[[11,0],[24,0,\"sortable\"],[4,[38,1],[[30,0,[\"initializeSortable\"]]],null],[12],[1,\"\\n  \"],[18,1,null],[1,\"\\n\"],[13],[1,\"\\n\"]],[\"&default\"],false,[\"div\",\"did-insert\",\"yield\"]]",
+    "id": "tcAZ7ZWT",
+    "block": "[[[3,\" templates/components/base-sortable.hbs \"],[1,\"\\n\"],[10,0],[14,0,\"sortable\"],[12],[1,\"\\n  \"],[8,[39,1],null,[[\"@onChange\"],[[30,0,[\"updateSortable\"]]]],[[\"default\"],[[[[1,\"\\n\"],[42,[28,[37,3],[[28,[37,3],[[30,1]],null]],null],null,[[[1,\"      \"],[8,[39,4],null,[[\"@model\"],[[30,2]]],[[\"default\"],[[[[1,\"\\n        \"],[10,0],[14,0,\"item handle\"],[12],[1,\"\\n          \"],[18,4,[[30,3]]],[1,\"\\n        \"],[13],[1,\"\\n      \"]],[3]]]]],[1,\"\\n\"]],[2]],null],[1,\"  \"]],[]]]]],[1,\"\\n\"],[13],[1,\"\\n\"]],[\"@items\",\"item\",\"item\",\"&default\"],false,[\"div\",\"sortable-group\",\"each\",\"-track-array\",\"sortable-item\",\"yield\"]]",
     "moduleName": "ember-formulaic/templates/components/base-sortable.hbs",
     "isStrictMode": false
   });
@@ -5658,7 +5616,9 @@
   0; //eaimeta@70e063a35619d71f0,"@ember/template-factory"eaimeta@70e063a35619d71f
   var _default = _exports.default = (0, _templateFactory.createTemplateFactory)(
   /*
-    <div
+    <!--templates/components/sortable-field.hbs -->
+  
+  <div
     class="field-preview single-line-text form-group col-xs-12 item {{if this.isEditing "editing"}} {{if this.completeField.validator.isInvalid "warning"}}"
     {{on "click" this.handleClick}}
   >
@@ -5694,8 +5654,8 @@
   
   */
   {
-    "id": "eTp6thbE",
-    "block": "[[[11,0],[16,0,[29,[\"field-preview single-line-text form-group col-xs-12 item \",[52,[30,0,[\"isEditing\"]],\"editing\"],\" \",[52,[30,0,[\"completeField\",\"validator\",\"isInvalid\"]],\"warning\"]]]],[4,[38,2],[\"click\",[30,0,[\"handleClick\"]]],null],[12],[1,\"\\n  \"],[10,\"input\"],[15,2,[30,0,[\"field\",\"position\"]]],[14,0,\"position\"],[14,4,\"hidden\"],[12],[13],[1,\"\\n  \"],[10,\"ul\"],[14,0,\"controls list-inline\"],[12],[1,\"\\n    \"],[10,\"li\"],[12],[1,\"\\n      \"],[11,\"button\"],[24,0,\"btn btn-xs btn-link\"],[4,[38,2],[\"click\",[28,[37,7],[[30,0,[\"clickedDeleteField\"]],[30,0,[\"field\"]],[30,0,[\"completeField\"]]],null]],null],[12],[1,\"\\n        \"],[10,1],[14,0,\"glyphicon glyphicon-trash\"],[12],[13],[1,\"\\n      \"],[13],[1,\"\\n    \"],[13],[1,\"\\n  \"],[13],[1,\"\\n\\n\"],[41,[30,0,[\"completeField\",\"data_name\"]],[[[1,\"    \"],[10,1],[14,0,\"data-name\"],[12],[1,\"(\"],[1,[30,0,[\"completeField\",\"data_name\"]]],[1,\")\"],[13],[1,\"\\n\"]],[]],null],[1,\"\\n  \"],[10,0],[14,0,\"col-xs-6\"],[12],[1,\"\\n\"],[41,[30,0,[\"showDisplayName\"]],[[[1,\"      \"],[10,\"label\"],[12],[1,\"\\n\"],[41,[30,0,[\"completeField\",\"display_name\"]],[[[1,\"          \"],[2,[30,0,[\"completeField\",\"display_name\"]]],[1,\"\\n\"]],[]],[[[1,\"          \"],[10,1],[14,0,\"empty\"],[12],[1,\"(Field Name)\"],[13],[1,\"\\n\"]],[]]],[41,[30,0,[\"completeField\",\"required\"]],[[[1,\"          \"],[10,1],[14,0,\"text-danger\"],[12],[1,\"*\"],[13],[1,\"\\n\"]],[]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],null],[1,\"    \"],[46,[30,0,[\"previewComponent\"]],null,[[\"completeField\"],[[30,0,[\"completeField\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"]],[],false,[\"div\",\"if\",\"on\",\"input\",\"ul\",\"li\",\"button\",\"fn\",\"span\",\"label\",\"component\"]]",
+    "id": "5c/jAeix",
+    "block": "[[[3,\"templates/components/sortable-field.hbs \"],[1,\"\\n\\n\"],[11,0],[16,0,[29,[\"field-preview single-line-text form-group col-xs-12 item \",[52,[30,0,[\"isEditing\"]],\"editing\"],\" \",[52,[30,0,[\"completeField\",\"validator\",\"isInvalid\"]],\"warning\"]]]],[4,[38,2],[\"click\",[30,0,[\"handleClick\"]]],null],[12],[1,\"\\n  \"],[10,\"input\"],[15,2,[30,0,[\"field\",\"position\"]]],[14,0,\"position\"],[14,4,\"hidden\"],[12],[13],[1,\"\\n  \"],[10,\"ul\"],[14,0,\"controls list-inline\"],[12],[1,\"\\n    \"],[10,\"li\"],[12],[1,\"\\n      \"],[11,\"button\"],[24,0,\"btn btn-xs btn-link\"],[4,[38,2],[\"click\",[28,[37,7],[[30,0,[\"clickedDeleteField\"]],[30,0,[\"field\"]],[30,0,[\"completeField\"]]],null]],null],[12],[1,\"\\n        \"],[10,1],[14,0,\"glyphicon glyphicon-trash\"],[12],[13],[1,\"\\n      \"],[13],[1,\"\\n    \"],[13],[1,\"\\n  \"],[13],[1,\"\\n\\n\"],[41,[30,0,[\"completeField\",\"data_name\"]],[[[1,\"    \"],[10,1],[14,0,\"data-name\"],[12],[1,\"(\"],[1,[30,0,[\"completeField\",\"data_name\"]]],[1,\")\"],[13],[1,\"\\n\"]],[]],null],[1,\"\\n  \"],[10,0],[14,0,\"col-xs-6\"],[12],[1,\"\\n\"],[41,[30,0,[\"showDisplayName\"]],[[[1,\"      \"],[10,\"label\"],[12],[1,\"\\n\"],[41,[30,0,[\"completeField\",\"display_name\"]],[[[1,\"          \"],[2,[30,0,[\"completeField\",\"display_name\"]]],[1,\"\\n\"]],[]],[[[1,\"          \"],[10,1],[14,0,\"empty\"],[12],[1,\"(Field Name)\"],[13],[1,\"\\n\"]],[]]],[41,[30,0,[\"completeField\",\"required\"]],[[[1,\"          \"],[10,1],[14,0,\"text-danger\"],[12],[1,\"*\"],[13],[1,\"\\n\"]],[]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],null],[1,\"    \"],[46,[30,0,[\"previewComponent\"]],null,[[\"completeField\"],[[30,0,[\"completeField\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"]],[],false,[\"div\",\"if\",\"on\",\"input\",\"ul\",\"li\",\"button\",\"fn\",\"span\",\"label\",\"component\"]]",
     "moduleName": "ember-formulaic/templates/components/sortable-field.hbs",
     "isStrictMode": false
   });
@@ -5710,31 +5670,33 @@
   0; //eaimeta@70e063a35619d71f0,"@ember/template-factory"eaimeta@70e063a35619d71f
   var _default = _exports.default = (0, _templateFactory.createTemplateFactory)(
   /*
-    <!--templates/components/sortable-field.hbs-->
+    <!--templates/components/sortable-fields.hbs-->
   
   <div class="field-sortable">
     {{#each @items as |field|}}
-      <SortableField
-        @field={{field}}
-        @currentField={{@currentField}}
-        @onClick={{this.editField}}
-        @onDeleteClick={{this.deleteField}}
-        @onOrderInvalidated={{this.triggerUpdateSortable}}
-      />
-    {{else}}
-      <div class="row">
-        <div class="col-xs-12 no-records">
-          <h4>This form doesn't have any fields</h4>
-          <p>Click on the options in the 'Add Fields' panel to the right to add one</p>
+      {{#if field}}
+        <SortableField
+          @field={{field}}
+          @currentField={{@currentField}}
+          @onClick={{this.editField}}
+          @onDeleteClick={{this.deleteField}}
+          @onOrderInvalidated={{this.triggerUpdateSortable}}
+        />
+      {{else}}
+        <div class="row">
+          <div class="col-xs-12 no-records">
+            <h4>This form doesn't have any fields</h4>
+            <p>Click on the options in the 'Add Fields' panel to the right to add one</p>
+          </div>
         </div>
-      </div>
+      {{/if}}
     {{/each}}
   </div>
   
   */
   {
-    "id": "z0Wpvdih",
-    "block": "[[[3,\"templates/components/sortable-field.hbs\"],[1,\"\\n\\n\"],[10,0],[14,0,\"field-sortable\"],[12],[1,\"\\n\"],[42,[28,[37,2],[[28,[37,2],[[30,1]],null]],null],null,[[[1,\"    \"],[8,[39,3],null,[[\"@field\",\"@currentField\",\"@onClick\",\"@onDeleteClick\",\"@onOrderInvalidated\"],[[30,2],[30,3],[30,0,[\"editField\"]],[30,0,[\"deleteField\"]],[30,0,[\"triggerUpdateSortable\"]]]],null],[1,\"\\n\"]],[2]],[[[1,\"    \"],[10,0],[14,0,\"row\"],[12],[1,\"\\n      \"],[10,0],[14,0,\"col-xs-12 no-records\"],[12],[1,\"\\n        \"],[10,\"h4\"],[12],[1,\"This form doesn't have any fields\"],[13],[1,\"\\n        \"],[10,2],[12],[1,\"Click on the options in the 'Add Fields' panel to the right to add one\"],[13],[1,\"\\n      \"],[13],[1,\"\\n    \"],[13],[1,\"\\n\"]],[]]],[13],[1,\"\\n\"]],[\"@items\",\"field\",\"@currentField\"],false,[\"div\",\"each\",\"-track-array\",\"sortable-field\",\"h4\",\"p\"]]",
+    "id": "FyCa6920",
+    "block": "[[[3,\"templates/components/sortable-fields.hbs\"],[1,\"\\n\\n\"],[10,0],[14,0,\"field-sortable\"],[12],[1,\"\\n\"],[42,[28,[37,2],[[28,[37,2],[[30,1]],null]],null],null,[[[41,[30,2],[[[1,\"      \"],[8,[39,4],null,[[\"@field\",\"@currentField\",\"@onClick\",\"@onDeleteClick\",\"@onOrderInvalidated\"],[[30,2],[30,3],[30,0,[\"editField\"]],[30,0,[\"deleteField\"]],[30,0,[\"triggerUpdateSortable\"]]]],null],[1,\"\\n\"]],[]],[[[1,\"      \"],[10,0],[14,0,\"row\"],[12],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-12 no-records\"],[12],[1,\"\\n          \"],[10,\"h4\"],[12],[1,\"This form doesn't have any fields\"],[13],[1,\"\\n          \"],[10,2],[12],[1,\"Click on the options in the 'Add Fields' panel to the right to add one\"],[13],[1,\"\\n        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n\"]],[]]]],[2]],null],[13],[1,\"\\n\"]],[\"@items\",\"field\",\"@currentField\"],false,[\"div\",\"each\",\"-track-array\",\"if\",\"sortable-field\",\"h4\",\"p\"]]",
     "moduleName": "ember-formulaic/templates/components/sortable-fields.hbs",
     "isStrictMode": false
   });
@@ -5889,17 +5851,21 @@
     <div class="col-xs-8 preview-column">
       <h2>Editing Fields</h2>
       <div class="custom-edit-block">
+        {{!-- Ensure SortableFields component is available --}}
         <SortableFields @items={{this.activeFields}} @targetController={{this}} />
       </div>
   
       <div class="row formulaic-controls">
         <div class="col-xs-12">
+          {{!-- Save & Continue Editing Button --}}
           <button class="btn btn-primary" type="submit" {{on "click" (fn this.saveFields true)}} disabled={{this.controlsDisabled}}>
             {{#if this.saveContinueActive}}Saving...{{else}}Save & Continue Editing{{/if}}
           </button>
+          {{!-- Save Button --}}
           <button class="btn btn-primary" type="submit" {{on "click" (fn this.saveFields false)}} disabled={{this.controlsDisabled}}>
             {{#if this.saveActive}}Saving...{{else}}Save{{/if}}
           </button>
+          {{!-- Close Button --}}
           <button class="btn btn-danger" type="submit" {{on "click" this.close}} disabled={{this.controlsDisabled}}>Close</button>
         </div>
       </div>
@@ -5907,6 +5873,7 @@
   
     <div class="col-xs-4">
       <div class="edit-column">
+        {{!-- Ensure Sidebar component is available --}}
         <Sidebar />
       </div>
     </div>
@@ -5914,8 +5881,8 @@
   
   */
   {
-    "id": "oOpW7/Wx",
-    "block": "[[[3,\" templates/form/fields.hbs \"],[1,\"\\n\\n\"],[10,0],[14,0,\"row formulaic-row edit-fields\"],[12],[1,\"\\n  \"],[10,0],[14,0,\"col-xs-8 preview-column\"],[12],[1,\"\\n    \"],[10,\"h2\"],[12],[1,\"Editing Fields\"],[13],[1,\"\\n    \"],[10,0],[14,0,\"custom-edit-block\"],[12],[1,\"\\n      \"],[8,[39,2],null,[[\"@items\",\"@targetController\"],[[30,0,[\"activeFields\"]],[30,0]]],null],[1,\"\\n    \"],[13],[1,\"\\n\\n    \"],[10,0],[14,0,\"row formulaic-controls\"],[12],[1,\"\\n      \"],[10,0],[14,0,\"col-xs-12\"],[12],[1,\"\\n        \"],[11,\"button\"],[24,0,\"btn btn-primary\"],[16,\"disabled\",[30,0,[\"controlsDisabled\"]]],[24,4,\"submit\"],[4,[38,4],[\"click\",[28,[37,5],[[30,0,[\"saveFields\"]],true],null]],null],[12],[1,\"\\n          \"],[41,[30,0,[\"saveContinueActive\"]],[[[1,\"Saving...\"]],[]],[[[1,\"Save & Continue Editing\"]],[]]],[1,\"\\n        \"],[13],[1,\"\\n        \"],[11,\"button\"],[24,0,\"btn btn-primary\"],[16,\"disabled\",[30,0,[\"controlsDisabled\"]]],[24,4,\"submit\"],[4,[38,4],[\"click\",[28,[37,5],[[30,0,[\"saveFields\"]],false],null]],null],[12],[1,\"\\n          \"],[41,[30,0,[\"saveActive\"]],[[[1,\"Saving...\"]],[]],[[[1,\"Save\"]],[]]],[1,\"\\n        \"],[13],[1,\"\\n        \"],[11,\"button\"],[24,0,\"btn btn-danger\"],[16,\"disabled\",[30,0,[\"controlsDisabled\"]]],[24,4,\"submit\"],[4,[38,4],[\"click\",[30,0,[\"close\"]]],null],[12],[1,\"Close\"],[13],[1,\"\\n      \"],[13],[1,\"\\n    \"],[13],[1,\"\\n  \"],[13],[1,\"\\n\\n  \"],[10,0],[14,0,\"col-xs-4\"],[12],[1,\"\\n    \"],[10,0],[14,0,\"edit-column\"],[12],[1,\"\\n      \"],[8,[39,7],null,null,null],[1,\"\\n    \"],[13],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"]],[],false,[\"div\",\"h2\",\"sortable-fields\",\"button\",\"on\",\"fn\",\"if\",\"sidebar\"]]",
+    "id": "Li8E9xkk",
+    "block": "[[[3,\" templates/form/fields.hbs \"],[1,\"\\n\\n\"],[10,0],[14,0,\"row formulaic-row edit-fields\"],[12],[1,\"\\n  \"],[10,0],[14,0,\"col-xs-8 preview-column\"],[12],[1,\"\\n    \"],[10,\"h2\"],[12],[1,\"Editing Fields\"],[13],[1,\"\\n    \"],[10,0],[14,0,\"custom-edit-block\"],[12],[1,\"\\n\"],[1,\"      \"],[8,[39,2],null,[[\"@items\",\"@targetController\"],[[30,0,[\"activeFields\"]],[30,0]]],null],[1,\"\\n    \"],[13],[1,\"\\n\\n    \"],[10,0],[14,0,\"row formulaic-controls\"],[12],[1,\"\\n      \"],[10,0],[14,0,\"col-xs-12\"],[12],[1,\"\\n\"],[1,\"        \"],[11,\"button\"],[24,0,\"btn btn-primary\"],[16,\"disabled\",[30,0,[\"controlsDisabled\"]]],[24,4,\"submit\"],[4,[38,4],[\"click\",[28,[37,5],[[30,0,[\"saveFields\"]],true],null]],null],[12],[1,\"\\n          \"],[41,[30,0,[\"saveContinueActive\"]],[[[1,\"Saving...\"]],[]],[[[1,\"Save & Continue Editing\"]],[]]],[1,\"\\n        \"],[13],[1,\"\\n\"],[1,\"        \"],[11,\"button\"],[24,0,\"btn btn-primary\"],[16,\"disabled\",[30,0,[\"controlsDisabled\"]]],[24,4,\"submit\"],[4,[38,4],[\"click\",[28,[37,5],[[30,0,[\"saveFields\"]],false],null]],null],[12],[1,\"\\n          \"],[41,[30,0,[\"saveActive\"]],[[[1,\"Saving...\"]],[]],[[[1,\"Save\"]],[]]],[1,\"\\n        \"],[13],[1,\"\\n\"],[1,\"        \"],[11,\"button\"],[24,0,\"btn btn-danger\"],[16,\"disabled\",[30,0,[\"controlsDisabled\"]]],[24,4,\"submit\"],[4,[38,4],[\"click\",[30,0,[\"close\"]]],null],[12],[1,\"Close\"],[13],[1,\"\\n      \"],[13],[1,\"\\n    \"],[13],[1,\"\\n  \"],[13],[1,\"\\n\\n  \"],[10,0],[14,0,\"col-xs-4\"],[12],[1,\"\\n    \"],[10,0],[14,0,\"edit-column\"],[12],[1,\"\\n\"],[1,\"      \"],[8,[39,7],null,null,null],[1,\"\\n    \"],[13],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"]],[],false,[\"div\",\"h2\",\"sortable-fields\",\"button\",\"on\",\"fn\",\"if\",\"sidebar\"]]",
     "moduleName": "ember-formulaic/templates/form/fields.hbs",
     "isStrictMode": false
   });
@@ -6688,28 +6655,15 @@
     }
   }));
 });
-;define("ember-formulaic/transforms/string", ["exports", "@ember/debug", "@ember-data/serializer/-private"], function (_exports, _debug, _private) {
+;define("ember-formulaic/transforms/string", ["exports", "@ember-data/serializer/transform"], function (_exports, _transform) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
     value: true
   });
-  Object.defineProperty(_exports, "default", {
-    enumerable: true,
-    get: function () {
-      return _private.StringTransform;
-    }
-  });
-  0; //eaimeta@70e063a35619d71f0,"@ember/debug",0,"@ember-data/serializer/-private"eaimeta@70e063a35619d71f
-  (true && !(false) && (0, _debug.deprecate)("You are relying on ember-data auto-magically installing the StringTransform. Use `export { StringTransform as default } from '@ember-data/serializer/transform';` in app/transforms/string.js instead", false, {
-    id: 'ember-data:deprecate-legacy-imports',
-    for: 'ember-data',
-    until: '6.0',
-    since: {
-      enabled: '5.2',
-      available: '5.2'
-    }
-  }));
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/transform"eaimeta@70e063a35619d71f
+  var _default = _exports.default = _transform.StringTransform;
 });
 ;define("ember-formulaic/utils/fields", ["exports", "ember-formulaic/models/field"], function (_exports, _field) {
   "use strict";
@@ -7058,7 +7012,7 @@ catch(err) {
 
 ;
           if (!runningTests) {
-            require("ember-formulaic/app")["default"].create({"API_HOST":"","API_NAMESPACE":"formulaic/api","LOG_RESOLVER":true,"LOG_ACTIVE_GENERATION":true,"LOG_TRANSITIONS":true,"LOG_TRANSITIONS_INTERNAL":true,"LOG_VIEW_LOOKUPS":true,"name":"ember-formulaic","version":"0.0.0+f8c0ceb6"});
+            require("ember-formulaic/app")["default"].create({"API_HOST":"","API_NAMESPACE":"formulaic/api","LOG_RESOLVER":true,"LOG_ACTIVE_GENERATION":true,"LOG_TRANSITIONS":true,"LOG_TRANSITIONS_INTERNAL":true,"LOG_VIEW_LOOKUPS":true,"name":"ember-formulaic","version":"0.0.0+5af179f4"});
           }
         
 //# sourceMappingURL=ember-formulaic.map

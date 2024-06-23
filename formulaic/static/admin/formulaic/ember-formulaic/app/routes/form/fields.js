@@ -1,3 +1,5 @@
+//routes/form/field.js
+
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
@@ -16,8 +18,9 @@ export default class FieldsRoute extends Route {
 
   async model() {
     try {
-      let fieldsData = await this.store.query('field', { form: this.formId  });
-      return fieldsData;
+      let fieldsData = await this.store.query('field', { form: this.formId });
+      console.log("fieldsData:", fieldsData.toArray());
+      return fieldsData.toArray();
     } catch (error) {
       console.error('Error fetching fields:', error);
       throw error;
@@ -26,10 +29,11 @@ export default class FieldsRoute extends Route {
 
   setupController(controller, model) {
     super.setupController(controller, model);
+
     controller.setProperties({
       saveActive: false,
       saveContinueActive: false,
-      fields: model,
+      model: model,
     });
   }
 

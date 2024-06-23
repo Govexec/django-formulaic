@@ -1,8 +1,10 @@
+//controllers/form/field.js
+
 import Controller from '@ember/controller';
-import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
-import { tracked } from '@glimmer/tracking';
-import { allSettled } from 'rsvp';
+import {action} from '@ember/object';
+import {inject as service} from '@ember/service';
+import {tracked} from '@glimmer/tracking';
+import {allSettled} from 'rsvp';
 import FieldHelpers from '../../utils/fields';
 import slug from '../../utils/slug';
 
@@ -11,6 +13,7 @@ export default class FieldsController extends Controller {
   @service router;
   @service('field-service') fieldService;
 
+  @tracked model = [];
   @tracked currentField = null;
   @tracked saveActive = false;
   @tracked saveContinueActive = false;
@@ -18,7 +21,7 @@ export default class FieldsController extends Controller {
   @tracked validators = {};
 
   get activeFields() {
-    return this.model.filter(item => !item.isDeleted);
+    return this.model ? this.model.filter(item => !item.isDeleted) : [];
   }
 
   get controlsDisabled() {

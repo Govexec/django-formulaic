@@ -1,7 +1,9 @@
+//components/sortable-field.js
+
 import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { inject as controller } from '@ember/controller';
-import { action, computed } from '@ember/object';
+import {tracked} from '@glimmer/tracking';
+import {inject as controller} from '@ember/controller';
+import {action, computed} from '@ember/object';
 
 const FIELD_TYPES = {
   TEXTFIELD: 'textfield',
@@ -18,34 +20,51 @@ export default class SortableFieldComponent extends Component {
   @tracked slug;
   @tracked field;
 
+  constructor() {
+    super(...arguments);
+    this.field = this.args.field;
+  }
+
   get previewComponent() {
-    return `preview-${this.field.subtype.replace('_', '-')}`;
+    if (this.field && this.field.subtype) {
+      return `preview-${this.field.subtype.replace('_', '-')}`;
+    } else {
+      return '';
+    }
   }
 
   get completeField() {
-    const field = this.field;
+    console.warn("field details : ", this.field);
 
-    if (field.textfield) {
-      return field.textfield;
-    } else if (field.choicefield) {
-      return field.choicefield;
-    } else if (field.booleanfield) {
-      return field.booleanfield;
-    } else if (field.hiddenfield) {
-      return field.hiddenfield;
-    } else {
-      throw new Error('Field type not implemented');
+    if (!this.field) {
+      return null;
     }
+
+    return this.field;
+
+    // switch (this.field.model_class) {
+    //   case FIELD_TYPES.TEXTFIELD:
+    //     return this.field.textfield.data;
+    //   case FIELD_TYPES.CHOICEFIELD:
+    //     return this.field.choicefield.data;
+    //   case FIELD_TYPES.BOOLEANFIELD:
+    //     return this.field.booleanfield.data;
+    //   case FIELD_TYPES.HIDDENFIELD:
+    //     return this.field.hiddenfield.data;
+    //   default:
+    //     throw new Error('Field type not implemented');
+    // }
   }
+
 
   @computed('currentField')
   get isEditing() {
     return this.currentField === this.field;
   }
 
-  @computed('field.booleanfield')
+  @computed('field.hiddenfield')
   get showDisplayName() {
-    return !this.field.booleanfield;
+    return this.field.model_class !== FIELD_TYPES.HIDDENFIELD
   }
 
   @action

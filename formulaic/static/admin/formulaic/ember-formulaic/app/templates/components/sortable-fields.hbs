@@ -1,20 +1,22 @@
-<!--templates/components/sortable-field.hbs-->
+<!--templates/components/sortable-fields.hbs-->
 
 <div class="field-sortable">
   {{#each @items as |field|}}
-    <SortableField
-      @field={{field}}
-      @currentField={{@currentField}}
-      @onClick={{this.editField}}
-      @onDeleteClick={{this.deleteField}}
-      @onOrderInvalidated={{this.triggerUpdateSortable}}
-    />
-  {{else}}
-    <div class="row">
-      <div class="col-xs-12 no-records">
-        <h4>This form doesn't have any fields</h4>
-        <p>Click on the options in the 'Add Fields' panel to the right to add one</p>
+    {{#if field}}
+      <SortableField
+        @field={{field}}
+        @currentField={{@currentField}}
+        @onClick={{this.editField}}
+        @onDeleteClick={{this.deleteField}}
+        @onOrderInvalidated={{this.triggerUpdateSortable}}
+      />
+    {{else}}
+      <div class="row">
+        <div class="col-xs-12 no-records">
+          <h4>This form doesn't have any fields</h4>
+          <p>Click on the options in the 'Add Fields' panel to the right to add one</p>
+        </div>
       </div>
-    </div>
+    {{/if}}
   {{/each}}
 </div>

@@ -15,6 +15,12 @@ module.exports = function (defaults) {
       bootstrapVersion: 4,
       importBootstrapCSS: false,
       insertEmberWormholeElementToDom: false
+    },
+     'ember-cli-babel': {
+      includePolyfill: true
+    },
+    'ember-fetch': {
+      preferNative: true
     }
   });
 
