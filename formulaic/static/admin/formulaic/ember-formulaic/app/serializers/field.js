@@ -4,7 +4,6 @@ export default class FieldSerializer extends JSONSerializer {
   normalizeResponse(store, primaryModelClass, payload, id, requestType) {
     let data, included;
 
-    // Normalize each item in the payload and extract included records
     if (Array.isArray(payload)) {
       data = payload.map((item) => this._normalizeItem(item));
       included = this._extractIncluded(payload);
@@ -13,12 +12,10 @@ export default class FieldSerializer extends JSONSerializer {
       included = this._extractIncluded([payload]);
     }
 
-    // Push included records into the store before the main data
     included.forEach(record => {
       store.push({ data: record });
     });
 
-    // Return the main data
     return { data };
   }
 
@@ -28,10 +25,8 @@ export default class FieldSerializer extends JSONSerializer {
       data_name: item.data_name,
       slug: item.slug,
       required: item.required,
-      help_text: item.help_text,
       model_class: item.model_class,
       position: item.position,
-      css_class: item.css_class,
       form: item.form,
       subtype: item.subtype,
       enabled: item.enabled,
@@ -74,19 +69,19 @@ export default class FieldSerializer extends JSONSerializer {
         seenChoicefields.add(item.choicefield.id);
         included.push(this._createIncludedRecord('choicefield', item.choicefield, item));
 
-        if (item.choicefield.option_list && !seenOptionLists.has(item.choicefield.option_list.id)) {
-          seenOptionLists.add(item.choicefield.option_list.id);
-          included.push(this._createIncludedRecord('optionlist', item.choicefield.option_list, item.choicefield));
+        if (item.choicefield.option_list && !seenOptionLists.has(item.choicefield.option_list)) {
+          seenOptionLists.add(item.choicefield.option_list);
+          included.push(this._createIncludedRecord('optionlist', { id: item.choicefield.option_list }, item.choicefield));
         }
 
-        if (item.choicefield.option_group && !seenOptionGroups.has(item.choicefield.option_group.id)) {
-          seenOptionGroups.add(item.choicefield.option_group.id);
-          included.push(this._createIncludedRecord('optiongroup', item.choicefield.option_group, item.choicefield));
+        if (item.choicefield.option_group && !seenOptionGroups.has(item.choicefield.option_group)) {
+          seenOptionGroups.add(item.choicefield.option_group);
+          included.push(this._createIncludedRecord('optiongroup', { id: item.choicefield.option_group }, item.choicefield));
         }
 
-        if (item.choicefield.default_option && !seenOptions.has(item.choicefield.default_option.id)) {
-          seenOptions.add(item.choicefield.default_option.id);
-          included.push(this._createIncludedRecord('option', item.choicefield.default_option, item.choicefield));
+        if (item.choicefield.default_option && !seenOptions.has(item.choicefield.default_option)) {
+          seenOptions.add(item.choicefield.default_option);
+          included.push(this._createIncludedRecord('option', { id: item.choicefield.default_option }, item.choicefield));
         }
 
         if (item.choicefield.default_options && item.choicefield.default_options.length) {
@@ -104,10 +99,6 @@ export default class FieldSerializer extends JSONSerializer {
         included.push(this._createIncludedRecord('hiddenfield', item.hiddenfield, item));
       }
 
-      if (item.option_list && !seenOptionLists.has(item.option_list)) {
-        seenOptionLists.add(item.option_list);
-        included.push(this._createIncludedRecord('optionlist', { id: item.option_list }, item));
-      }
     });
 
     return included;
@@ -120,6 +111,13 @@ export default class FieldSerializer extends JSONSerializer {
       field: { data: { type: 'field', id: String(parentItem.id) } },
       form: { data: { type: 'form', id: String(item.form) } }
     };
+
+    if (type === 'choicefield') {
+      relationships.option_list = item.option_list ? { data: { type: 'optionlist', id: String(item.option_list) } } : null;
+      relationships.option_group = item.option_group ? { data: { type: 'optiongroup', id: String(item.option_group) } } : null;
+      relationships.default_option = item.default_option ? { data: { type: 'option', id: String(item.default_option) } } : null;
+      relationships.default_options = item.default_options ? item.default_options.map(option => ({ data: { type: 'option', id: String(option) } })) : [];
+    }
 
     return {
       id: String(item.id),

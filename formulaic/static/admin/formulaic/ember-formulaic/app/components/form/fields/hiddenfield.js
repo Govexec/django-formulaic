@@ -5,7 +5,6 @@ import BaseFieldComponent from './basefield';
 export default class HiddenFieldComponent extends BaseFieldComponent {
 
   get dataNameChanged() {
-    // auto-populate `display_name`; doesn't display anywhere
     if (this.model && this.model.data_name) {
       this.model.display_name = this.model.data_name;
     }

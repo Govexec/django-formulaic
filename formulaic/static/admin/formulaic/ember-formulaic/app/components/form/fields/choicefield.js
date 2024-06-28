@@ -8,20 +8,15 @@ import BaseFieldComponent from './basefield';
 
 export default class ChoiceFieldComponent extends BaseFieldComponent {
   @service store;
+  @service('field-service') fieldService;
 
   @tracked optionlists = null;
   @tracked optiongroups = null;
-  @tracked resolvedOptionList = null;
-  @tracked resolvedOptionGroup = null;
-  @tracked resolvedDefaultOption = null;
 
   constructor() {
     super(...arguments);
     once(this, this.loadOptionLists);
     once(this, this.loadOptionGroups);
-
-    this.resolvedOptionList = this.model.option_list;
-
   }
 
   async loadOptionLists() {
@@ -34,34 +29,30 @@ export default class ChoiceFieldComponent extends BaseFieldComponent {
   }
 
   async loadOptionGroups() {
-    if (this.model.option_list) {
+    if (this.model.option_list)
+    {
       try {
         let option_groups = await this.store.query('optiongroup', {
           list: this.model.option_list.id
         });
         this.optiongroups = option_groups.toArray();
-
-        // let option_list = await this.model.option_list;
-        // console.warn("option list : ", option_list);
       } catch (error) {
         console.error('Error loading option groups:', error);
       }
     }
   }
 
-
   get hasOptionGroups() {
     return this.optiongroups && this.optiongroups.length > 0;
   }
 
   get modelOptions() {
-    // if (this.model.option_group?.content) {
-    //   return this.model.option_group.options;
-    // } else if (this.model.option_list?.content) {
-    //   return this.model.option_list.options;
-    // }
-
-    return this.optionlists;
+    if (this.model.option_group?.options) {
+      return this.model.option_group.options;
+    } else if (this.model.option_list?.options) {
+      return this.model.option_list.options
+    }
+    return null;
   }
 
   get defaultOption() {
@@ -85,7 +76,7 @@ export default class ChoiceFieldComponent extends BaseFieldComponent {
   }
 
   async optionsReady() {
-    return this.options != null; //&& this.model.default_options?.isFulfilled;
+    return this.modelOptions != null; //&& this.model.default_options?.isFulfilled;
   }
 
   get supportsMultiValue() {
@@ -93,20 +84,32 @@ export default class ChoiceFieldComponent extends BaseFieldComponent {
   }
 
   @action
-  optionListChanged(value) {
-    if (this.model.option_list.content !== value) {
-      this.model.option_list = value;
-      this.loadOptionGroups(); // Reload option groups when the option list changes
+  async optionListChanged(event) {
+
+    const selectedOptionListId = event.target.value;
+
+    if (this.model.option_list?.id !== selectedOptionListId) {
+      this.model.option_list = await this.store.findRecord('optionlist', selectedOptionListId);
+      this.modelOptions;
+      await this.loadOptionGroups();
     }
   }
 
   @action
-  optionGroupChanged(value) {
-    this.model.option_group = value;
+  async optionGroupChanged(event) {
+    const selectedOptionGroupId = event.target.value;
+
+    if (selectedOptionGroupId) {
+      this.model.option_group = await this.store.findRecord('optiongroup', selectedOptionGroupId);
+    }
   }
 
   @action
-  defaultOptionChanged(value) {
-    this.model.default_option = value;
+  async defaultOptionChanged(event) {
+    const selectedDefaultOptionId = event.target.value;
+
+    if (selectedDefaultOptionId) {
+      this.model.default_option = await this.store.findRecord('option', selectedDefaultOptionId);
+    }
   }
 }

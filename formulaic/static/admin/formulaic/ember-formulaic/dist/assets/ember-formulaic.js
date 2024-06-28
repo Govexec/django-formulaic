@@ -1287,7 +1287,7 @@
     value: true
   });
   _exports.default = void 0;
-  var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6; //components/form/fields/choicefield.js
+  var _dec, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4; //components/form/fields/choicefield.js
   0; //eaimeta@70e063a35619d71f0,"@ember/object",0,"@glimmer/tracking",0,"@ember/service",0,"@ember/runloop",0,"ember-formulaic/components/form/fields/basefield"eaimeta@70e063a35619d71f
   function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
   function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -1295,18 +1295,15 @@
   function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
   function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
   function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
-  let ChoiceFieldComponent = _exports.default = (_class = class ChoiceFieldComponent extends _basefield.default {
+  let ChoiceFieldComponent = _exports.default = (_dec = (0, _service.inject)('field-service'), (_class = class ChoiceFieldComponent extends _basefield.default {
     constructor() {
       super(...arguments);
       _initializerDefineProperty(this, "store", _descriptor, this);
-      _initializerDefineProperty(this, "optionlists", _descriptor2, this);
-      _initializerDefineProperty(this, "optiongroups", _descriptor3, this);
-      _initializerDefineProperty(this, "resolvedOptionList", _descriptor4, this);
-      _initializerDefineProperty(this, "resolvedOptionGroup", _descriptor5, this);
-      _initializerDefineProperty(this, "resolvedDefaultOption", _descriptor6, this);
+      _initializerDefineProperty(this, "fieldService", _descriptor2, this);
+      _initializerDefineProperty(this, "optionlists", _descriptor3, this);
+      _initializerDefineProperty(this, "optiongroups", _descriptor4, this);
       (0, _runloop.once)(this, this.loadOptionLists);
       (0, _runloop.once)(this, this.loadOptionGroups);
-      this.resolvedOptionList = this.model.option_list;
     }
     async loadOptionLists() {
       try {
@@ -1323,9 +1320,6 @@
             list: this.model.option_list.id
           });
           this.optiongroups = option_groups.toArray();
-
-          // let option_list = await this.model.option_list;
-          // console.warn("option list : ", option_list);
         } catch (error) {
           console.error('Error loading option groups:', error);
         }
@@ -1335,13 +1329,12 @@
       return this.optiongroups && this.optiongroups.length > 0;
     }
     get modelOptions() {
-      // if (this.model.option_group?.content) {
-      //   return this.model.option_group.options;
-      // } else if (this.model.option_list?.content) {
-      //   return this.model.option_list.options;
-      // }
-
-      return this.optionlists;
+      if (this.model.option_group?.options) {
+        return this.model.option_group.options;
+      } else if (this.model.option_list?.options) {
+        return this.model.option_list.options;
+      }
+      return null;
     }
     get defaultOption() {
       if (this.model.default_options.length > 0) {
@@ -1360,64 +1353,56 @@
       return this.optionlists != null;
     }
     async optionsReady() {
-      return this.options != null; //&& this.model.default_options?.isFulfilled;
+      return this.modelOptions != null; //&& this.model.default_options?.isFulfilled;
     }
     get supportsMultiValue() {
       return ["checkbox_select_multiple", "select_multiple"].includes(this.model.subtype);
     }
-    optionListChanged(value) {
-      if (this.model.option_list.content !== value) {
-        this.model.option_list = value;
-        this.loadOptionGroups(); // Reload option groups when the option list changes
+    async optionListChanged(event) {
+      const selectedOptionListId = event.target.value;
+      if (this.model.option_list?.id !== selectedOptionListId) {
+        this.model.option_list = await this.store.findRecord('optionlist', selectedOptionListId);
+        this.modelOptions;
+        await this.loadOptionGroups();
       }
     }
-    optionGroupChanged(value) {
-      this.model.option_group = value;
+    async optionGroupChanged(event) {
+      const selectedOptionGroupId = event.target.value;
+      if (selectedOptionGroupId) {
+        this.model.option_group = await this.store.findRecord('optiongroup', selectedOptionGroupId);
+      }
     }
-    defaultOptionChanged(value) {
-      this.model.default_option = value;
+    async defaultOptionChanged(event) {
+      const selectedDefaultOptionId = event.target.value;
+      if (selectedDefaultOptionId) {
+        this.model.default_option = await this.store.findRecord('option', selectedDefaultOptionId);
+      }
     }
   }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "store", [_service.inject], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: null
-  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "optionlists", [_tracking.tracked], {
+  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "fieldService", [_dec], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: null
+  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "optionlists", [_tracking.tracked], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: function () {
       return null;
     }
-  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "optiongroups", [_tracking.tracked], {
+  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "optiongroups", [_tracking.tracked], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: function () {
       return null;
     }
-  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "resolvedOptionList", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return null;
-    }
-  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "resolvedOptionGroup", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return null;
-    }
-  }), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "resolvedDefaultOption", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return null;
-    }
-  }), _applyDecoratedDescriptor(_class.prototype, "optionListChanged", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "optionListChanged"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "optionGroupChanged", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "optionGroupChanged"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "defaultOptionChanged", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "defaultOptionChanged"), _class.prototype)), _class);
+  }), _applyDecoratedDescriptor(_class.prototype, "optionListChanged", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "optionListChanged"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "optionGroupChanged", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "optionGroupChanged"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "defaultOptionChanged", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "defaultOptionChanged"), _class.prototype)), _class));
 });
 ;define("ember-formulaic/components/form/fields/hiddenfield", ["exports", "ember-formulaic/components/form/fields/basefield"], function (_exports, _basefield) {
   "use strict";
@@ -1430,7 +1415,6 @@
   //components/form/fields/hiddenfield.js
   class HiddenFieldComponent extends _basefield.default {
     get dataNameChanged() {
-      // auto-populate `display_name`; doesn't display anywhere
       if (this.model && this.model.data_name) {
         this.model.display_name = this.model.data_name;
       }
@@ -3474,16 +3458,16 @@
     async: false,
     inverse: 'choicefield'
   }), _dec2 = (0, _model.attr)('string'), _dec3 = (0, _model.attr)('string'), _dec4 = (0, _model.belongsTo)('optionlist', {
-    async: true,
-    inverse: 'choice_fields'
+    async: false,
+    inverse: 'choicefield'
   }), _dec5 = (0, _model.belongsTo)('optiongroup', {
-    async: true,
+    async: false,
     inverse: null
   }), _dec6 = (0, _model.belongsTo)('option', {
-    async: true,
+    async: false,
     inverse: null
   }), _dec7 = (0, _model.hasMany)('option', {
-    async: true,
+    async: false,
     inverse: null
   }), _dec8 = (0, _model.attr)('string'), (_class = class ChoiceFieldModel extends _basefield.default {
     constructor() {
@@ -3739,7 +3723,7 @@
       _initializerDefineProperty(this, "value", _descriptor2, this);
       _initializerDefineProperty(this, "position", _descriptor3, this);
       _initializerDefineProperty(this, "list", _descriptor4, this);
-      _initializerDefineProperty(this, "option_group", _descriptor5, this);
+      _initializerDefineProperty(this, "group", _descriptor5, this);
     }
   }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "name", [_dec], {
     configurable: true,
@@ -3761,7 +3745,7 @@
     enumerable: true,
     writable: true,
     initializer: null
-  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "option_group", [_dec5], {
+  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "group", [_dec5], {
     configurable: true,
     enumerable: true,
     writable: true,
@@ -3788,7 +3772,7 @@
     inverse: 'groups'
   }), _dec4 = (0, _model.hasMany)('option', {
     async: false,
-    inverse: 'option_group'
+    inverse: 'group'
   }), (_class = class OptionGroupModel extends _model.default {
     constructor(...args) {
       super(...args);
@@ -3835,13 +3819,13 @@
   function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
   function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
   let OptionListModel = _exports.default = (_dec = (0, _model.attr)('string'), _dec2 = (0, _model.hasMany)('option', {
-    async: true,
+    async: false,
     inverse: 'list'
   }), _dec3 = (0, _model.hasMany)('optiongroup', {
-    async: true,
+    async: false,
     inverse: 'list'
   }), _dec4 = (0, _model.hasMany)('choicefield', {
-    async: true,
+    async: false,
     inverse: 'option_list'
   }), (_class = class OptionListModel extends _model.default {
     constructor(...args) {
@@ -3849,7 +3833,7 @@
       _initializerDefineProperty(this, "name", _descriptor, this);
       _initializerDefineProperty(this, "options", _descriptor2, this);
       _initializerDefineProperty(this, "groups", _descriptor3, this);
-      _initializerDefineProperty(this, "choice_fields", _descriptor4, this);
+      _initializerDefineProperty(this, "choicefield", _descriptor4, this);
     }
   }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "name", [_dec], {
     configurable: true,
@@ -3866,7 +3850,7 @@
     enumerable: true,
     writable: true,
     initializer: null
-  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "choice_fields", [_dec4], {
+  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "choicefield", [_dec4], {
     configurable: true,
     enumerable: true,
     writable: true,
@@ -4473,23 +4457,7 @@
         let fieldRecords = await this.store.query('field', {
           form: this.formId
         });
-        let updatedFieldRecords = await Promise.all(fieldRecords.map(async field => {
-          if (field.model_class === 'choicefield') {
-            // Ensure option_list is loaded
-            await field.choicefield.option_list;
-
-            // Update other relationships if needed
-            await field.choicefield.default_option;
-            await field.choicefield.option_group;
-            await field.choicefield.default_options;
-          }
-          console.warn("field : ", field);
-          return field;
-        }));
-
-        //console.warn("updatedFieldRecords : ", updatedFieldRecords);
-
-        return updatedFieldRecords; // Return the updated field records
+        return fieldRecords.toArray();
       } catch (error) {}
     }
     renderTemplate() {
@@ -4825,8 +4793,6 @@
   class FieldSerializer extends _json.default {
     normalizeResponse(store, primaryModelClass, payload, id, requestType) {
       let data, included;
-
-      // Normalize each item in the payload and extract included records
       if (Array.isArray(payload)) {
         data = payload.map(item => this._normalizeItem(item));
         included = this._extractIncluded(payload);
@@ -4834,15 +4800,11 @@
         data = this._normalizeItem(payload);
         included = this._extractIncluded([payload]);
       }
-
-      // Push included records into the store before the main data
       included.forEach(record => {
         store.push({
           data: record
         });
       });
-
-      // Return the main data
       return {
         data
       };
@@ -4853,10 +4815,8 @@
         data_name: item.data_name,
         slug: item.slug,
         required: item.required,
-        help_text: item.help_text,
         model_class: item.model_class,
         position: item.position,
-        css_class: item.css_class,
         form: item.form,
         subtype: item.subtype,
         enabled: item.enabled,
@@ -4922,17 +4882,23 @@
         if (item.choicefield && !seenChoicefields.has(item.choicefield.id)) {
           seenChoicefields.add(item.choicefield.id);
           included.push(this._createIncludedRecord('choicefield', item.choicefield, item));
-          if (item.choicefield.option_list && !seenOptionLists.has(item.choicefield.option_list.id)) {
-            seenOptionLists.add(item.choicefield.option_list.id);
-            included.push(this._createIncludedRecord('optionlist', item.choicefield.option_list, item.choicefield));
+          if (item.choicefield.option_list && !seenOptionLists.has(item.choicefield.option_list)) {
+            seenOptionLists.add(item.choicefield.option_list);
+            included.push(this._createIncludedRecord('optionlist', {
+              id: item.choicefield.option_list
+            }, item.choicefield));
           }
-          if (item.choicefield.option_group && !seenOptionGroups.has(item.choicefield.option_group.id)) {
-            seenOptionGroups.add(item.choicefield.option_group.id);
-            included.push(this._createIncludedRecord('optiongroup', item.choicefield.option_group, item.choicefield));
+          if (item.choicefield.option_group && !seenOptionGroups.has(item.choicefield.option_group)) {
+            seenOptionGroups.add(item.choicefield.option_group);
+            included.push(this._createIncludedRecord('optiongroup', {
+              id: item.choicefield.option_group
+            }, item.choicefield));
           }
-          if (item.choicefield.default_option && !seenOptions.has(item.choicefield.default_option.id)) {
-            seenOptions.add(item.choicefield.default_option.id);
-            included.push(this._createIncludedRecord('option', item.choicefield.default_option, item.choicefield));
+          if (item.choicefield.default_option && !seenOptions.has(item.choicefield.default_option)) {
+            seenOptions.add(item.choicefield.default_option);
+            included.push(this._createIncludedRecord('option', {
+              id: item.choicefield.default_option
+            }, item.choicefield));
           }
           if (item.choicefield.default_options && item.choicefield.default_options.length) {
             item.choicefield.default_options.forEach(option => {
@@ -4946,12 +4912,6 @@
         if (item.hiddenfield && !seenHiddenfields.has(item.hiddenfield.id)) {
           seenHiddenfields.add(item.hiddenfield.id);
           included.push(this._createIncludedRecord('hiddenfield', item.hiddenfield, item));
-        }
-        if (item.option_list && !seenOptionLists.has(item.option_list)) {
-          seenOptionLists.add(item.option_list);
-          included.push(this._createIncludedRecord('optionlist', {
-            id: item.option_list
-          }, item));
         }
       });
       return included;
@@ -4972,6 +4932,32 @@
           }
         }
       };
+      if (type === 'choicefield') {
+        relationships.option_list = item.option_list ? {
+          data: {
+            type: 'optionlist',
+            id: String(item.option_list)
+          }
+        } : null;
+        relationships.option_group = item.option_group ? {
+          data: {
+            type: 'optiongroup',
+            id: String(item.option_group)
+          }
+        } : null;
+        relationships.default_option = item.default_option ? {
+          data: {
+            type: 'option',
+            id: String(item.default_option)
+          }
+        } : null;
+        relationships.default_options = item.default_options ? item.default_options.map(option => ({
+          data: {
+            type: 'option',
+            id: String(option)
+          }
+        })) : [];
+      }
       return {
         id: String(item.id),
         type: type,
@@ -4998,6 +4984,50 @@
   }
   _exports.default = FormSerializer;
 });
+;define("ember-formulaic/serializers/option", ["exports", "@ember-data/serializer/json"], function (_exports, _json) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/json"eaimeta@70e063a35619d71f
+  class OptionSerializer extends _json.default {
+    normalizeResponse(store, primaryModelClass, payload, id, requestType) {
+      let data, included;
+      if (Array.isArray(payload)) {
+        data = payload.map(item => this._normalizeItem(item));
+      } else {
+        data = this._normalizeItem(payload);
+      }
+      return {
+        data
+      };
+    }
+    _normalizeItem(item) {
+      let attributes = {
+        name: item.name,
+        value: item.value,
+        position: item.position
+      };
+      let relationships = {
+        list: item.list ? {
+          data: {
+            type: 'optionlist',
+            id: String(item.list)
+          }
+        } : null
+      };
+      return {
+        id: String(item.id),
+        type: 'option',
+        attributes,
+        relationships
+      };
+    }
+  }
+  _exports.default = OptionSerializer;
+});
 ;define("ember-formulaic/serializers/optiongroup", ["exports", "@ember-data/serializer/json"], function (_exports, _json) {
   "use strict";
 
@@ -5016,12 +5046,13 @@
         data = this._normalizeItem(payload);
         included = this._extractIncluded([payload]);
       }
-      if (requestType === 'queryRecord' && Array.isArray(data) && data.length > 0) {
-        data = data[0];
-      }
+      included.forEach(record => {
+        store.push({
+          data: record
+        });
+      });
       return {
-        data,
-        included
+        data
       };
     }
     _normalizeItem(item) {
@@ -5029,20 +5060,19 @@
         name: item.name,
         position: item.position
       };
-      let uniqueOptions = this._uniqueById(item.options || []);
       let relationships = {
+        options: item.options ? item.options.map(option => ({
+          data: {
+            type: 'option',
+            id: String(option.id)
+          }
+        })) : [],
         list: item.list ? {
           data: {
             type: 'optionlist',
             id: String(item.list)
           }
-        } : null,
-        options: {
-          data: uniqueOptions.map(opt => ({
-            type: 'option',
-            id: String(opt.id)
-          }))
-        }
+        } : null
       };
       return {
         id: String(item.id),
@@ -5055,48 +5085,43 @@
       let included = [];
       let seenOptions = new Set();
       payload.forEach(item => {
-        this._uniqueById(item.options || []).forEach(opt => {
-          if (!seenOptions.has(opt.id)) {
-            seenOptions.add(opt.id);
-            included.push({
-              type: 'option',
-              id: String(opt.id),
-              attributes: {
-                name: opt.name,
-                value: opt.value,
-                position: opt.position
-              },
-              relationships: {
-                list: {
-                  data: {
-                    type: 'optionlist',
-                    id: String(opt.list)
-                  }
-                },
-                option_group: {
-                  data: {
-                    type: 'optiongroup',
-                    id: String(item.id)
-                  }
-                }
-              }
-            });
-          }
-        });
+        if (item.options && item.options.length) {
+          item.options.forEach(option => {
+            if (!seenOptions.has(option.id)) {
+              seenOptions.add(option.id);
+              included.push(this._createIncludedRecord('option', option, item));
+            }
+          });
+        }
       });
       return included;
     }
-    _uniqueById(array) {
-      const seen = new Set();
-      return array.filter(item => {
-        const id = item.id;
-        if (seen.has(id)) {
-          return false;
-        } else {
-          seen.add(id);
-          return true;
+    _createIncludedRecord(type, item, parentItem) {
+      let attributes = {
+        name: item.name,
+        value: item.value,
+        position: item.position
+      };
+      let relationships = {
+        group: {
+          data: {
+            type: 'optiongroup',
+            id: String(parentItem.id)
+          }
+        },
+        list: {
+          data: {
+            type: 'optionlist',
+            id: String(item.list)
+          }
         }
-      });
+      };
+      return {
+        id: String(item.id),
+        type: type,
+        attributes,
+        relationships
+      };
     }
   }
   _exports.default = OptionGroupSerializer;
@@ -5109,17 +5134,21 @@
   });
   _exports.default = void 0;
   0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/json"eaimeta@70e063a35619d71f
-  class OptionlistSerializer extends _json.default {
+  class OptionListSerializer extends _json.default {
     normalizeResponse(store, primaryModelClass, payload, id, requestType) {
-      let data;
+      let data, included;
       if (Array.isArray(payload)) {
         data = payload.map(item => this._normalizeItem(item));
+        included = this._extractIncluded(payload);
       } else {
         data = this._normalizeItem(payload);
+        included = this._extractIncluded([payload]);
       }
-      if (requestType === 'queryRecord' && Array.isArray(data) && data.length > 0) {
-        data = data[0];
-      }
+      included.forEach(record => {
+        store.push({
+          data: record
+        });
+      });
       return {
         data
       };
@@ -5129,24 +5158,18 @@
         name: item.name
       };
       let relationships = {
-        options: {
-          data: (item.options || []).map(opt => ({
+        options: item.options ? item.options.map(option => ({
+          data: {
             type: 'option',
-            id: String(opt.id)
-          }))
-        },
-        groups: {
-          data: this._uniqueById(item.groups || []).map(grp => ({
+            id: String(option.id)
+          }
+        })) : [],
+        groups: item.groups ? item.groups.map(group => ({
+          data: {
             type: 'optiongroup',
-            id: String(grp.id)
-          }))
-        },
-        choice_fields: {
-          data: (item.choice_fields || []).map(cf => ({
-            type: 'choicefield',
-            id: String(cf.id)
-          }))
-        }
+            id: String(group.id)
+          }
+        })) : []
       };
       return {
         id: String(item.id),
@@ -5155,20 +5178,54 @@
         relationships
       };
     }
-    _uniqueById(array) {
-      const seen = new Set();
-      return array.filter(item => {
-        const id = item.id;
-        if (seen.has(id)) {
-          return false;
-        } else {
-          seen.add(id);
-          return true;
+    _extractIncluded(payload) {
+      let included = [];
+      let seenOptions = new Set();
+      let seenOptionGroups = new Set();
+      payload.forEach(item => {
+        if (item.options && item.options.length) {
+          item.options.forEach(option => {
+            if (!seenOptions.has(option.id)) {
+              seenOptions.add(option.id);
+              included.push(this._createIncludedRecord('option', option, item));
+            }
+          });
+        }
+        if (item.groups && item.groups.length) {
+          item.groups.forEach(group => {
+            if (!seenOptionGroups.has(group.id)) {
+              seenOptionGroups.add(group.id);
+              included.push(this._createIncludedRecord('optiongroup', group, item));
+            }
+          });
         }
       });
+      return included;
+    }
+    _createIncludedRecord(type, item, parentItem) {
+      let attributes = {
+        name: item.name,
+        value: item.value,
+        position: item.position,
+        list: item.list
+      };
+      let relationships = {
+        list: {
+          data: {
+            type: 'optionlist',
+            id: String(parentItem.id)
+          }
+        }
+      };
+      return {
+        id: String(item.id),
+        type: type,
+        attributes,
+        relationships
+      };
     }
   }
-  _exports.default = OptionlistSerializer;
+  _exports.default = OptionListSerializer;
 });
 ;define("ember-formulaic/serializers/privacypolicy", ["exports", "@ember-data/serializer/json"], function (_exports, _json) {
   "use strict";
@@ -5313,7 +5370,6 @@
     }
     createBaseField(subtype, form, model_class) {
       const position = document.querySelectorAll('.field-sortable .item').length;
-      console.log("position : ", position);
       let field = this.store.createRecord('field', {
         display_name: null,
         data_name: null,
@@ -5326,9 +5382,6 @@
         subtype: subtype,
         form: form
       });
-
-      //console.warn(this.sortableVersion++);
-
       return field;
     }
     openEditField(context, field) {
@@ -5384,7 +5437,6 @@
           break;
       }
       field[type + 'field'] = specificField;
-      console.warn("final-field : ", field);
       return field;
     }
   }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "store", [_service.inject], {
@@ -5676,12 +5728,6 @@
   /*
     <!-- templates/form/fields/choicefield.hbs -->
   
-  {{#if this.resolvedOptionList}}
-    <p>Option List: {{this.optionList.id}}</p>
-    {{else}}
-    <p>Loading option list...</p>
-  {{/if}}
-  
   <h2>Edit '{{this.subtypeName}}' field</h2>
   <div class="textfield-container {{if this.validator.isDisplayNameInvalid 'has-error'}}">
     <button class="btn btn-link wysiwyg-toggle" {{on "click" this.toggleDisplayNameWYSIWYG}}>
@@ -5759,7 +5805,7 @@
     Default Selected
     {{#if this.optionlistsReady}}
       {{#if this.supportsMultiValue}}
-        <select {{on "change" this.defaultOptionChanged}} class="form-control input-sm" multiple="multiple">
+        <select {{on "change" this.defaultOptionChanged}} class="form-control input-sm select2" multiple="multiple">
           <option value="">Choose `Default Option`...</option>
           {{#each this.modelOptions as |modelOption|}}
             <option value={{modelOption.id}} selected={{if
@@ -5820,8 +5866,8 @@
   
   */
   {
-    "id": "wXlLaxQv",
-    "block": "[[[3,\" templates/form/fields/choicefield.hbs \"],[1,\"\\n\\n\"],[41,[30,0,[\"resolvedOptionList\"]],[[[1,\"  \"],[10,2],[12],[1,\"Option List: \"],[1,[30,0,[\"optionList\",\"id\"]]],[13],[1,\"\\n\"]],[]],[[[1,\"  \"],[10,2],[12],[1,\"Loading option list...\"],[13],[1,\"\\n\"]],[]]],[1,\"\\n\"],[10,\"h2\"],[12],[1,\"Edit '\"],[1,[30,0,[\"subtypeName\"]]],[1,\"' field\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[\"textfield-container \",[52,[30,0,[\"validator\",\"isDisplayNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[11,\"button\"],[24,0,\"btn btn-link wysiwyg-toggle\"],[4,[38,5],[\"click\",[30,0,[\"toggleDisplayNameWYSIWYG\"]]],null],[12],[1,\"\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      TEXT\\n\"]],[]],[[[1,\"      WYSIWYG\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Display Name\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      \"],[8,[39,7],null,[[\"@options\",\"@value\",\"@onChange\"],[[30,0,[\"editorOptions\"]],[30,0,[\"model\",\"display_name\"]],[30,0,[\"updateDisplayName\"]]]],null],[1,\"\\n\"]],[]],[[[1,\"      \"],[8,[39,8],[[24,1,\"field-display-name\"],[24,\"placeholder\",\"(Display Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"display_name\"]]]],null],[1,\"\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isDataNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Data Column Name\\n    \"],[8,[39,8],[[24,1,\"field-data-name\"],[24,\"placeholder\",\"(Data Column Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"data_name\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isSlugInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Slug\\n    \"],[8,[39,8],[[24,1,\"field-slug\"],[24,\"placeholder\",\"(field-name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"autoSlug\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,\"label\"],[12],[1,\"\\n  \"],[8,[39,8],[[24,1,\"field-required\"]],[[\"@type\",\"@checked\"],[\"checkbox\",[30,0,[\"model\",\"required\"]]]],null],[1,\"\\n  Required\\n\"],[13],[1,\"\\n\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isOptionListInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Option List\\n\"],[41,[30,0,[\"optionlistsReady\"]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm\"],[4,[38,5],[\"change\",[30,0,[\"optionListChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Option List`...\"],[13],[1,\"\\n\"],[42,[28,[37,12],[[28,[37,12],[[30,0,[\"optionlists\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,1,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,1,[\"id\"]],[30,0,[\"model\",\"option_list\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,1,[\"name\"]]],[13],[1,\"\\n\"]],[1]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],[[[1,\"      Loading\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[41,[30,0,[\"hasOptionGroups\"]],[[[1,\"  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Option Group\\n\"],[41,[30,0,[\"optiongroupsReady\"]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm\"],[4,[38,5],[\"change\",[30,0,[\"optionGroupChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Option Set`...\"],[13],[1,\"\\n\"],[42,[28,[37,12],[[28,[37,12],[[30,0,[\"optiongroups\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,2,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,2,[\"id\"]],[30,0,[\"model\",\"option_group\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,2,[\"name\"]]],[13],[1,\"\\n\"]],[2]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],[[[1,\"      Loading\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"]],[]],null],[10,\"label\"],[12],[1,\"\\n  Default Selected\\n\"],[41,[30,0,[\"optionlistsReady\"]],[[[41,[30,0,[\"supportsMultiValue\"]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm\"],[24,\"multiple\",\"multiple\"],[4,[38,5],[\"change\",[30,0,[\"defaultOptionChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Default Option`...\"],[13],[1,\"\\n\"],[42,[28,[37,12],[[28,[37,12],[[30,0,[\"modelOptions\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,3,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,3,[\"id\"]],[30,0,[\"model\",\"default_options\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,3,[\"name\"]]],[13],[1,\"\\n\"]],[3]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm\"],[4,[38,5],[\"change\",[30,0,[\"defaultOptionChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Default Option`...\"],[13],[1,\"\\n\"],[42,[28,[37,12],[[28,[37,12],[[30,0,[\"modelOptions\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,4,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,4,[\"id\"]],[30,0,[\"model\",\"default_options\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,4,[\"name\"]]],[13],[1,\"\\n\"]],[4]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]]]],[]],[[[1,\"    Loading\\n\"]],[]]],[13],[1,\"\\n\\n\"],[41,[30,0,[\"supportsMultiValue\"]],[[[1,\"  \"],[10,\"label\"],[12],[1,\"\\n    Minimum Selections\\n    \"],[8,[39,8],[[24,1,\"field-minimum-selections\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"minimum_selections\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    Maximum Selections\\n    \"],[8,[39,8],[[24,1,\"field-maximum-selections\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"maximum_selections\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"]],[]],[[[1,\"  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Default Text (unselected)\\n    \"],[8,[39,8],[[24,1,\"field-default-text\"],[24,\"placeholder\",\"(Choose one)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"default_text\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"]],[]]],[1,\"\\n\"],[10,0],[14,0,\"extras\"],[12],[1,\"\\n  \"],[10,\"h4\"],[12],[1,\"Extras\"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    Help Text\\n    \"],[8,[39,8],[[24,1,\"field-help-text\"],[24,\"placeholder\",\"\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"help_text\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    CSS Class\\n    \"],[8,[39,8],[[24,1,\"field-css-class\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"css_class\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\\n\"],[11,\"button\"],[24,0,\"btn btn-primary\"],[24,4,\"submit\"],[4,[38,5],[\"click\",[30,0,[\"doneEditingField\"]]],null],[12],[1,\"Done\"],[13],[1,\"\\n\"]],[\"optionlist\",\"optiongroup\",\"modelOption\",\"modelOption\"],false,[\"if\",\"p\",\"h2\",\"div\",\"button\",\"on\",\"label\",\"tinymce-editor\",\"input\",\"select\",\"option\",\"each\",\"-track-array\",\"h4\"]]",
+    "id": "8bHA6zS3",
+    "block": "[[[3,\" templates/form/fields/choicefield.hbs \"],[1,\"\\n\\n\"],[10,\"h2\"],[12],[1,\"Edit '\"],[1,[30,0,[\"subtypeName\"]]],[1,\"' field\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[\"textfield-container \",[52,[30,0,[\"validator\",\"isDisplayNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[11,\"button\"],[24,0,\"btn btn-link wysiwyg-toggle\"],[4,[38,4],[\"click\",[30,0,[\"toggleDisplayNameWYSIWYG\"]]],null],[12],[1,\"\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      TEXT\\n\"]],[]],[[[1,\"      WYSIWYG\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Display Name\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      \"],[8,[39,6],null,[[\"@options\",\"@value\",\"@onChange\"],[[30,0,[\"editorOptions\"]],[30,0,[\"model\",\"display_name\"]],[30,0,[\"updateDisplayName\"]]]],null],[1,\"\\n\"]],[]],[[[1,\"      \"],[8,[39,7],[[24,1,\"field-display-name\"],[24,\"placeholder\",\"(Display Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"display_name\"]]]],null],[1,\"\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isDataNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Data Column Name\\n    \"],[8,[39,7],[[24,1,\"field-data-name\"],[24,\"placeholder\",\"(Data Column Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"data_name\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isSlugInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Slug\\n    \"],[8,[39,7],[[24,1,\"field-slug\"],[24,\"placeholder\",\"(field-name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"autoSlug\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,\"label\"],[12],[1,\"\\n  \"],[8,[39,7],[[24,1,\"field-required\"]],[[\"@type\",\"@checked\"],[\"checkbox\",[30,0,[\"model\",\"required\"]]]],null],[1,\"\\n  Required\\n\"],[13],[1,\"\\n\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isOptionListInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Option List\\n\"],[41,[30,0,[\"optionlistsReady\"]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm\"],[4,[38,4],[\"change\",[30,0,[\"optionListChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Option List`...\"],[13],[1,\"\\n\"],[42,[28,[37,11],[[28,[37,11],[[30,0,[\"optionlists\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,1,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,1,[\"id\"]],[30,0,[\"model\",\"option_list\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,1,[\"name\"]]],[13],[1,\"\\n\"]],[1]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],[[[1,\"      Loading\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[41,[30,0,[\"hasOptionGroups\"]],[[[1,\"  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Option Group\\n\"],[41,[30,0,[\"optiongroupsReady\"]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm\"],[4,[38,4],[\"change\",[30,0,[\"optionGroupChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Option Set`...\"],[13],[1,\"\\n\"],[42,[28,[37,11],[[28,[37,11],[[30,0,[\"optiongroups\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,2,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,2,[\"id\"]],[30,0,[\"model\",\"option_group\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,2,[\"name\"]]],[13],[1,\"\\n\"]],[2]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],[[[1,\"      Loading\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"]],[]],null],[10,\"label\"],[12],[1,\"\\n  Default Selected\\n\"],[41,[30,0,[\"optionlistsReady\"]],[[[41,[30,0,[\"supportsMultiValue\"]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm select2\"],[24,\"multiple\",\"multiple\"],[4,[38,4],[\"change\",[30,0,[\"defaultOptionChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Default Option`...\"],[13],[1,\"\\n\"],[42,[28,[37,11],[[28,[37,11],[[30,0,[\"modelOptions\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,3,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,3,[\"id\"]],[30,0,[\"model\",\"default_options\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,3,[\"name\"]]],[13],[1,\"\\n\"]],[3]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm\"],[4,[38,4],[\"change\",[30,0,[\"defaultOptionChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Default Option`...\"],[13],[1,\"\\n\"],[42,[28,[37,11],[[28,[37,11],[[30,0,[\"modelOptions\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,4,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,4,[\"id\"]],[30,0,[\"model\",\"default_options\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,4,[\"name\"]]],[13],[1,\"\\n\"]],[4]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]]]],[]],[[[1,\"    Loading\\n\"]],[]]],[13],[1,\"\\n\\n\"],[41,[30,0,[\"supportsMultiValue\"]],[[[1,\"  \"],[10,\"label\"],[12],[1,\"\\n    Minimum Selections\\n    \"],[8,[39,7],[[24,1,\"field-minimum-selections\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"minimum_selections\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    Maximum Selections\\n    \"],[8,[39,7],[[24,1,\"field-maximum-selections\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"maximum_selections\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"]],[]],[[[1,\"  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Default Text (unselected)\\n    \"],[8,[39,7],[[24,1,\"field-default-text\"],[24,\"placeholder\",\"(Choose one)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"default_text\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"]],[]]],[1,\"\\n\"],[10,0],[14,0,\"extras\"],[12],[1,\"\\n  \"],[10,\"h4\"],[12],[1,\"Extras\"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    Help Text\\n    \"],[8,[39,7],[[24,1,\"field-help-text\"],[24,\"placeholder\",\"\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"help_text\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    CSS Class\\n    \"],[8,[39,7],[[24,1,\"field-css-class\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"css_class\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\\n\"],[11,\"button\"],[24,0,\"btn btn-primary\"],[24,4,\"submit\"],[4,[38,4],[\"click\",[30,0,[\"doneEditingField\"]]],null],[12],[1,\"Done\"],[13],[1,\"\\n\"]],[\"optionlist\",\"optiongroup\",\"modelOption\",\"modelOption\"],false,[\"h2\",\"div\",\"if\",\"button\",\"on\",\"label\",\"tinymce-editor\",\"input\",\"select\",\"option\",\"each\",\"-track-array\",\"h4\"]]",
     "moduleName": "ember-formulaic/templates/components/form/fields/choicefield.hbs",
     "isStrictMode": false
   });
@@ -7889,7 +7935,7 @@ catch(err) {
 
 ;
           if (!runningTests) {
-            require("ember-formulaic/app")["default"].create({"API_HOST":"","API_NAMESPACE":"formulaic/api","LOG_RESOLVER":true,"LOG_ACTIVE_GENERATION":true,"LOG_TRANSITIONS":true,"LOG_TRANSITIONS_INTERNAL":true,"LOG_VIEW_LOOKUPS":true,"name":"ember-formulaic","version":"0.0.0+d675ae48"});
+            require("ember-formulaic/app")["default"].create({"API_HOST":"","API_NAMESPACE":"formulaic/api","LOG_RESOLVER":true,"LOG_ACTIVE_GENERATION":true,"LOG_TRANSITIONS":true,"LOG_TRANSITIONS_INTERNAL":true,"LOG_VIEW_LOOKUPS":true,"name":"ember-formulaic","version":"0.0.0+b632c68a"});
           }
         
 //# sourceMappingURL=ember-formulaic.map

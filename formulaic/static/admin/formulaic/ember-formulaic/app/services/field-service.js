@@ -32,7 +32,6 @@ export default class FieldService extends Service {
 
   createBaseField(subtype, form, model_class) {
     const position = document.querySelectorAll('.field-sortable .item').length;
-    console.log("position : ", position);
     let field = this.store.createRecord('field', {
       display_name: null,
       data_name: null,
@@ -44,9 +43,7 @@ export default class FieldService extends Service {
       css_class: null,
       subtype: subtype,
       form: form
-    })
-
-    //console.warn(this.sortableVersion++);
+    });
 
     return field;
   }
@@ -99,9 +96,6 @@ export default class FieldService extends Service {
     }
 
     field[type + 'field'] = specificField;
-
-    console.warn("final-field : ", field);
-
     return field;
   }
 }

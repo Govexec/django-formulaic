@@ -1,52 +1,82 @@
 import JSONSerializer from '@ember-data/serializer/json';
 
-export default class OptionlistSerializer extends JSONSerializer {
+export default class OptionListSerializer extends JSONSerializer {
   normalizeResponse(store, primaryModelClass, payload, id, requestType) {
-    let data;
+    let data, included;
 
     if (Array.isArray(payload)) {
       data = payload.map((item) => this._normalizeItem(item));
+      included = this._extractIncluded(payload);
     } else {
       data = this._normalizeItem(payload);
+      included = this._extractIncluded([payload]);
     }
 
-    if (requestType === 'queryRecord' && Array.isArray(data) && data.length > 0) {
-      data = data[0];
-    }
+    included.forEach(record => {
+      store.push({ data: record });
+    });
 
     return { data };
   }
 
   _normalizeItem(item) {
     let attributes = {
-      name: item.name,
+      name: item.name
     };
 
     let relationships = {
-      options: {
-        data: (item.options || []).map((opt) => ({ type: 'option', id: String(opt.id) })),
-      },
-      groups: {
-        data: this._uniqueById(item.groups || []).map((grp) => ({ type: 'optiongroup', id: String(grp.id) })),
-      },
-      choice_fields: {
-        data: (item.choice_fields || []).map((cf) => ({ type: 'choicefield', id: String(cf.id) })),
-      },
+      options: item.options ? item.options.map(option => ({ data: { type: 'option', id: String(option.id) } })) : [],
+      groups: item.groups ? item.groups.map(group => ({ data: { type: 'optiongroup', id: String(group.id) } })) : []
     };
 
     return { id: String(item.id), type: 'optionlist', attributes, relationships };
   }
 
-  _uniqueById(array) {
-    const seen = new Set();
-    return array.filter(item => {
-      const id = item.id;
-      if (seen.has(id)) {
-        return false;
-      } else {
-        seen.add(id);
-        return true;
+  _extractIncluded(payload) {
+    let included = [];
+    let seenOptions = new Set();
+    let seenOptionGroups = new Set();
+
+    payload.forEach((item) => {
+      if (item.options && item.options.length) {
+        item.options.forEach(option => {
+          if (!seenOptions.has(option.id)) {
+            seenOptions.add(option.id);
+            included.push(this._createIncludedRecord('option', option, item));
+          }
+        });
+      }
+
+      if (item.groups && item.groups.length) {
+        item.groups.forEach(group => {
+          if (!seenOptionGroups.has(group.id)) {
+            seenOptionGroups.add(group.id);
+            included.push(this._createIncludedRecord('optiongroup', group, item));
+          }
+        });
       }
     });
+
+    return included;
+  }
+
+  _createIncludedRecord(type, item, parentItem) {
+    let attributes = {
+      name: item.name,
+      value: item.value,
+      position: item.position,
+      list: item.list
+    };
+
+    let relationships = {
+      list: { data: { type: 'optionlist', id: String(parentItem.id) } }
+    };
+
+    return {
+      id: String(item.id),
+      type: type,
+      attributes,
+      relationships
+    };
   }
 }

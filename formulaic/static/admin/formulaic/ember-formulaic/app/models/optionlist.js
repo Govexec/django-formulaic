@@ -2,7 +2,7 @@ import Model, { attr, hasMany } from '@ember-data/model';
 
 export default class OptionListModel extends Model {
     @attr('string') name;
-    @hasMany('option', { async: true, inverse: 'list' }) options;
-    @hasMany('optiongroup', { async: true, inverse: 'list' }) groups;
-    @hasMany('choicefield', { async: true, inverse: 'option_list' }) choice_fields;
+    @hasMany('option', { async: false, inverse: 'list' }) options;
+    @hasMany('optiongroup', { async: false, inverse: 'list' }) groups;
+    @hasMany('choicefield', { async: false, inverse: 'option_list' }) choicefield;
 }

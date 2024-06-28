@@ -12,25 +12,22 @@ export default class OptionGroupSerializer extends JSONSerializer {
       included = this._extractIncluded([payload]);
     }
 
-    if (requestType === 'queryRecord' && Array.isArray(data) && data.length > 0) {
-      data = data[0];
-    }
+    included.forEach(record => {
+      store.push({ data: record });
+    });
 
-    return { data, included };
+    return { data };
   }
 
   _normalizeItem(item) {
     let attributes = {
       name: item.name,
-      position: item.position,
+      position: item.position
     };
 
-    let uniqueOptions = this._uniqueById(item.options || []);
     let relationships = {
-      list: item.list ? { data: { type: 'optionlist', id: String(item.list) } } : null,
-      options: {
-        data: uniqueOptions.map((opt) => ({ type: 'option', id: String(opt.id) })),
-      },
+      options: item.options ? item.options.map(option => ({ data: { type: 'option', id: String(option.id) } })) : [],
+      list: item.list ? { data: { type: 'optionlist', id: String(item.list) } } : null
     };
 
     return { id: String(item.id), type: 'optiongroup', attributes, relationships };
@@ -41,39 +38,36 @@ export default class OptionGroupSerializer extends JSONSerializer {
     let seenOptions = new Set();
 
     payload.forEach((item) => {
-      this._uniqueById(item.options || []).forEach((opt) => {
-        if (!seenOptions.has(opt.id)) {
-          seenOptions.add(opt.id);
-          included.push({
-            type: 'option',
-            id: String(opt.id),
-            attributes: {
-              name: opt.name,
-              value: opt.value,
-              position: opt.position,
-            },
-            relationships: {
-              list: { data: { type: 'optionlist', id: String(opt.list) } },
-              option_group: { data: { type: 'optiongroup', id: String(item.id) } },
-            },
-          });
-        }
-      });
+      if (item.options && item.options.length) {
+        item.options.forEach(option => {
+          if (!seenOptions.has(option.id)) {
+            seenOptions.add(option.id);
+            included.push(this._createIncludedRecord('option', option, item));
+          }
+        });
+      }
     });
 
     return included;
   }
 
-  _uniqueById(array) {
-    const seen = new Set();
-    return array.filter(item => {
-      const id = item.id;
-      if (seen.has(id)) {
-        return false;
-      } else {
-        seen.add(id);
-        return true;
-      }
-    });
+  _createIncludedRecord(type, item, parentItem) {
+    let attributes = {
+      name: item.name,
+      value: item.value,
+      position: item.position
+    };
+
+    let relationships = {
+      group: { data: { type: 'optiongroup', id: String(parentItem.id) } },
+      list: { data: { type: 'optionlist', id: String(item.list) } }
+    };
+
+    return {
+      id: String(item.id),
+      type: type,
+      attributes,
+      relationships
+    };
   }
 }

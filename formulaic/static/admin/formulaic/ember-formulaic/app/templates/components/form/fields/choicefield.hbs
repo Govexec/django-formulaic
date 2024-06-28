@@ -1,11 +1,5 @@
 <!-- templates/form/fields/choicefield.hbs -->
 
-{{#if this.resolvedOptionList}}
-  <p>Option List: {{this.optionList.id}}</p>
-  {{else}}
-  <p>Loading option list...</p>
-{{/if}}
-
 <h2>Edit '{{this.subtypeName}}' field</h2>
 <div class="textfield-container {{if this.validator.isDisplayNameInvalid 'has-error'}}">
   <button class="btn btn-link wysiwyg-toggle" {{on "click" this.toggleDisplayNameWYSIWYG}}>
@@ -83,7 +77,7 @@
   Default Selected
   {{#if this.optionlistsReady}}
     {{#if this.supportsMultiValue}}
-      <select {{on "change" this.defaultOptionChanged}} class="form-control input-sm" multiple="multiple">
+      <select {{on "change" this.defaultOptionChanged}} class="form-control input-sm select2" multiple="multiple">
         <option value="">Choose `Default Option`...</option>
         {{#each this.modelOptions as |modelOption|}}
           <option value={{modelOption.id}} selected={{if
