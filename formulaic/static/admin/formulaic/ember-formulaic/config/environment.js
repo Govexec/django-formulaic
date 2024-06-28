@@ -7,9 +7,6 @@ module.exports = function (environment) {
     environment: environment,
     rootURL: '/athena/formulaic/form/',
     locationType: 'auto',
-    tinyMCE: {
-      version: 4 //default 4.4
-    },
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build

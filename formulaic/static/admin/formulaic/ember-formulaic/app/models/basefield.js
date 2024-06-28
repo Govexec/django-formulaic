@@ -10,7 +10,7 @@ export default class BaseFieldModel extends Model {
     @attr('string') model_class;
     @attr('number') position;
     @attr('string') css_class;
-    @belongsTo('form', { async: true, inverse: 'fields' }) form;
+    @belongsTo('form', { async: false, inverse: 'fields', as: 'field' }) form;
     @attr('boolean') enabled;
     @attr('string') subtype;
 }

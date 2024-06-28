@@ -1,6 +1,7 @@
 'use strict';
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
+const {resolve} = require("path");
 
 module.exports = function (defaults) {
   const app = new EmberApp(defaults, {
@@ -16,12 +17,12 @@ module.exports = function (defaults) {
       importBootstrapCSS: false,
       insertEmberWormholeElementToDom: false
     },
-     'ember-cli-babel': {
+    'ember-cli-babel': {
       includePolyfill: true
     },
     'ember-fetch': {
       preferNative: true
-    }
+    },
   });
 
   return app.toTree();

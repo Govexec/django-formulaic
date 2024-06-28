@@ -3,9 +3,9 @@ import validatorFactory from '../validators/factories';
 
 export default class RuleResultModel extends Model {
     @attr('string') action;
-    @belongsTo('field', { async: true, inverse: null }) field;
-    @belongsTo('rule', { async: true, inverse: 'results' }) rule;
-    @belongsTo('optiongroup', { async: true, inverse: null }) option_group;
+    @belongsTo('field', { async: false, inverse: null }) field;
+    @belongsTo('rule', { async: false, inverse: 'results' }) rule;
+    @belongsTo('optiongroup', { async: false, inverse: null }) option_group;
 
     constructor() {
         super(...arguments);

@@ -3,7 +3,7 @@ import BaseFieldModel from './basefield';
 import ChoiceFieldValidator from '../validators/fields/choicefield';
 
 export default class ChoiceFieldModel extends BaseFieldModel {
-    @belongsTo('field', { async: true, inverse: null }) field;
+    @belongsTo('field', { async: false, inverse: 'choicefield' }) field;
     @attr('string') minimum_selections;
     @attr('string') maximum_selections;
     @belongsTo('optionlist', { async: true, inverse: 'choice_fields' }) option_list;

@@ -1,0 +1,69 @@
+<!-- templates/form/fields/field.hbs -->
+
+{{#each this.model as |rule|}}
+  <div class="field-preview single-line-text form-group col-xs-12 item">
+    <Input @type="hidden" @value={{rule.position}} class="position" />
+    <ul class="controls list-inline">
+      <li>
+        <button class="btn btn-xs btn-link" {{on "click" (fn this.deleteRule rule)}}>
+          <span class="glyphicon glyphicon-trash"></span>
+        </button>
+      </li>
+    </ul>
+    <div class="col-xs-12">
+      {{#if rule.hasMultipleConditions}}
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-primary btn-xs {{if rule.isAnd "active"}}" {{on "click" (fn this.setOperator rule "and")}}>AND</button>
+          <button type="button" class="btn btn-primary btn-xs {{if rule.isOr "active"}}" {{on "click" (fn this.setOperator rule "or")}}>OR</button>
+        </div>
+      {{/if}}
+
+      <!-- Rule Conditions -->
+      <h4>
+        Conditions
+        <button class="btn btn-xs btn-link" {{on "click" (fn this.addCondition rule)}}>
+          <span class="glyphicon glyphicon-plus-sign text-success"></span>
+        </button>
+      </h4>
+      <ul class="rule-conditions list-unstyled form-inline {{if rule.isOr "or"}}">
+        {{#each rule.conditions as |condition|}}
+          <li>
+            <span class="glyphicon glyphicon-move"></span>
+            <Input @type="hidden" @value={{condition.position}} class="condition-position" />
+            {{#if condition.allFieldsReady}}
+              <Select @value={{condition.field.content}} @options={{condition.allFields}} @prompt="Choose Field" @optionValuePath="content" @optionLabelPath="content.name" class="form-control input-sm" />
+            {{else}}
+              Loading
+            {{/if}}
+            <Select @value={{condition.operator}} @options={{condition.availableOperators}} @optionValuePath="content.value" @optionLabelPath="content.name" class="form-control input-sm" />
+            <Input @type="text" @value="" class="form-control input-sm" />
+            <button class="btn btn-xs btn-link" {{on "click" (fn this.removeCondition condition)}}>
+              <span class="glyphicon glyphicon-trash"></span>
+            </button>
+          </li>
+        {{/each}}
+      </ul>
+
+      <!-- Rule Results -->
+      <h4>
+        Results
+        <button class="btn btn-xs btn-link" {{on "click" (fn this.addResult rule)}}>
+          <span class="glyphicon glyphicon-plus-sign text-success"></span>
+        </button>
+      </h4>
+      <ul class="rule-results list-unstyled form-inline">
+        {{#each rule.results as |result|}}
+          <li>
+            <span class="glyphicon glyphicon-circle-arrow-right"></span>
+            <Select @value={{result.action}} @options={{result.availableActions}} @optionValuePath="content.value" @optionLabelPath="content.name" class="form-control input-sm" />
+            {{#if result.allFieldsReady}}
+              <Select @value={{result.field.content}} @options={{result.allFields}} @prompt="Choose Field" @optionValuePath="content" @optionLabelPath="content.name" class="form-control input-sm" />
+            {{else}}
+              Loading
+            {{/if}}
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+{{/each}}

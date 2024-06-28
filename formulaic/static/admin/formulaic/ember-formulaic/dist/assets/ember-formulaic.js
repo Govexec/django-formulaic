@@ -988,6 +988,946 @@
   });
   0; //eaimeta@70e063a35619d71f0,"ember-bootstrap/components/bs-tooltip/element"eaimeta@70e063a35619d71f
 });
+;define("ember-formulaic/components/form", ["exports", "@glimmer/component", "@glimmer/tracking"], function (_exports, _component, _tracking) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  var _class, _descriptor; //components/form.js
+  0; //eaimeta@70e063a35619d71f0,"@glimmer/component",0,"@glimmer/tracking"eaimeta@70e063a35619d71f
+  function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
+  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
+  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
+  function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
+  let FormComponent = _exports.default = (_class = class FormComponent extends _component.default {
+    constructor(...args) {
+      super(...args);
+      _initializerDefineProperty(this, "isEditing", _descriptor, this);
+    }
+  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "isEditing", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return false;
+    }
+  })), _class);
+});
+;define("ember-formulaic/components/form/fields", ["exports", "@glimmer/component", "@ember/object", "@ember/service", "@glimmer/tracking", "rsvp", "ember-formulaic/utils/fields", "ember-formulaic/utils/slug"], function (_exports, _component, _object, _service, _tracking, _rsvp, _fields, _slug) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  var _dec, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9; //components/form/field.js
+  0; //eaimeta@70e063a35619d71f0,"@glimmer/component",0,"@ember/object",0,"@ember/service",0,"@glimmer/tracking",0,"rsvp",0,"ember-formulaic/utils/fields",0,"ember-formulaic/utils/slug"eaimeta@70e063a35619d71f
+  function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
+  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
+  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
+  function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
+  let FieldsComponent = _exports.default = (_dec = (0, _service.inject)('field-service'), (_class = class FieldsComponent extends _component.default {
+    constructor(...args) {
+      super(...args);
+      _initializerDefineProperty(this, "store", _descriptor, this);
+      _initializerDefineProperty(this, "router", _descriptor2, this);
+      _initializerDefineProperty(this, "fieldService", _descriptor3, this);
+      _initializerDefineProperty(this, "model", _descriptor4, this);
+      _initializerDefineProperty(this, "currentField", _descriptor5, this);
+      _initializerDefineProperty(this, "saveActive", _descriptor6, this);
+      _initializerDefineProperty(this, "saveContinueActive", _descriptor7, this);
+      _initializerDefineProperty(this, "fieldsPendingDeletion", _descriptor8, this);
+      _initializerDefineProperty(this, "validators", _descriptor9, this);
+    }
+    get activeFields() {
+      return this.model ? this.model.filter(item => !item.isDeleted) : [];
+    }
+    get controlsDisabled() {
+      return this.saveActive || this.saveContinueActive;
+    }
+    invalidateOrder() {
+      if (!this.controlsDisabled) {
+        this.orderInvalidated();
+      }
+    }
+    orderInvalidated() {
+      // Custom event handler logic
+    }
+    async saveFields(continueEditing) {
+      this.saveActive = !continueEditing;
+      this.saveContinueActive = continueEditing;
+      let validationErrors = [];
+      let actualFields = this.model.filter(field => !field.isDeleted).map(field => {
+        let actualField = _fields.default.getActualField(field);
+        if (!actualField.slug) {
+          actualField.slug = _slug.default.generateSlug(actualField.data_name);
+        }
+        let validator = this.validatorFor(actualField);
+        if (validator.isInvalid) {
+          validationErrors.push(`Field "${actualField.data_name}" is incomplete`);
+        }
+        return actualField;
+      });
+      if (validationErrors.length > 0) {
+        toastr.options.positionClass = "toast-bottom-center";
+        toastr.warning(`Unable to save because of these issues: <br>${validationErrors.join('<br>')}`);
+        this.saveActive = false;
+        this.saveContinueActive = false;
+        return;
+      }
+      let promises = [...this.fieldsPendingDeletion.map(field => field.deleteRecord().then(() => field.save())), ...actualFields.map(field => field.save())];
+      this.fieldsPendingDeletion.length = 0;
+      try {
+        let results = await (0, _rsvp.allSettled)(promises);
+        let saveErrors = results.filter(result => result.state === "rejected");
+        this.saveActive = false;
+        this.saveContinueActive = false;
+        if (saveErrors.length > 0) {
+          toastr.options.positionClass = "toast-bottom-center";
+          toastr.error('Save failed. Contact administrator.');
+        } else {
+          this.reloadFields();
+          toastr.options.positionClass = "toast-bottom-center";
+          toastr.success('Fields saved.');
+          if (!continueEditing) {
+            this.router.transitionTo('form');
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        this.saveActive = false;
+        this.saveContinueActive = false;
+      }
+    }
+    close() {
+      this.router.transitionTo('form');
+    }
+    editField(field) {
+      this.fieldService.openEditField(this, field);
+    }
+    deleteField(field, completeField) {
+      this.removeValidatorFor(field);
+      field.deleteRecord();
+      this.fieldsPendingDeletion.push(completeField);
+      this.invalidateOrder();
+      if (this.currentField === field) {
+        this.fieldService.closeEditField(this);
+      }
+    }
+    reloadFields() {
+      this.store.unloadAll('field');
+      this.refresh();
+    }
+  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "store", [_service.inject], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: null
+  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "router", [_service.inject], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: null
+  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "fieldService", [_dec], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: null
+  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "model", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return this.args.model || [];
+    }
+  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "currentField", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return this.fieldService.currentField;
+    }
+  }), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "saveActive", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return false;
+    }
+  }), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "saveContinueActive", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return false;
+    }
+  }), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "fieldsPendingDeletion", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return [];
+    }
+  }), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "validators", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return {};
+    }
+  }), _applyDecoratedDescriptor(_class.prototype, "invalidateOrder", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "invalidateOrder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "saveFields", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "saveFields"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "close", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "close"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "editField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "editField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "deleteField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "deleteField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "reloadFields", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "reloadFields"), _class.prototype)), _class));
+});
+;define("ember-formulaic/components/form/fields/basefield", ["exports", "@glimmer/component", "@ember/service", "@glimmer/tracking", "@ember/object", "ember-formulaic/utils/slug"], function (_exports, _component, _service, _tracking, _object, _slug) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  var _dec, _class, _descriptor, _descriptor2, _descriptor3; //components/form/fields/basefield.js
+  0; //eaimeta@70e063a35619d71f0,"@glimmer/component",0,"@ember/service",0,"@glimmer/tracking",0,"@ember/object",0,"ember-formulaic/utils/slug"eaimeta@70e063a35619d71f
+  function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
+  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
+  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
+  function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
+  let BaseFieldComponent = _exports.default = (_dec = (0, _service.inject)('field-service'), (_class = class BaseFieldComponent extends _component.default {
+    constructor() {
+      super(...arguments);
+      _initializerDefineProperty(this, "fieldService", _descriptor, this);
+      _initializerDefineProperty(this, "model", _descriptor2, this);
+      _initializerDefineProperty(this, "isDisplayNameWYSIWYGEnabled", _descriptor3, this);
+      _defineProperty(this, "editorOptions", {
+        height: 120,
+        force_br_newlines: false,
+        forced_root_block: '',
+        menubar: false,
+        plugins: ['link'],
+        toolbar: 'bold italic | link'
+      });
+      this.setupModelObserver();
+    }
+    setupModelObserver() {
+      if (this.model) {
+        this.isDisplayNameWYSIWYGEnabled = this.displayNameHasHtml;
+      }
+    }
+    get displayNameHasHtml() {
+      return this.model.display_name && this.model.display_name.match(/<([A-Z][A-Z0-9]*)\b[^>]*>/i);
+    }
+    get subtypeName() {
+      return this.model.subtype.replace('_', ' ');
+    }
+    get autoSlug() {
+      if (this.model.slug) {
+        return this.model.slug;
+      }
+      return _slug.default.generateSlug(this.model.data_name);
+    }
+    set autoSlug(value) {
+      this.model.slug = value;
+      return value;
+    }
+    get validator() {
+      return this.fieldService.validatorFor(this.model);
+    }
+    toggleDisplayNameWYSIWYG() {
+      this.isDisplayNameWYSIWYGEnabled = !this.isDisplayNameWYSIWYGEnabled;
+    }
+    updateDisplayName(newValue) {
+      this.model.display_name = newValue;
+    }
+    doneEditingField() {
+      this.fieldService.closeEditField(this);
+    }
+  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "fieldService", [_dec], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: null
+  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "model", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return this.args.model;
+    }
+  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "isDisplayNameWYSIWYGEnabled", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return false;
+    }
+  }), _applyDecoratedDescriptor(_class.prototype, "toggleDisplayNameWYSIWYG", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "toggleDisplayNameWYSIWYG"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "updateDisplayName", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "updateDisplayName"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "doneEditingField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "doneEditingField"), _class.prototype)), _class));
+});
+;define("ember-formulaic/components/form/fields/booleanfield", ["exports", "ember-formulaic/components/form/fields/basefield"], function (_exports, _basefield) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"ember-formulaic/components/form/fields/basefield"eaimeta@70e063a35619d71f
+  //components/form/fields/boolean.js
+  class BooleanFieldComponent extends _basefield.default {}
+  _exports.default = BooleanFieldComponent;
+});
+;define("ember-formulaic/components/form/fields/choicefield", ["exports", "@ember/object", "@glimmer/tracking", "@ember/service", "@ember/runloop", "ember-formulaic/components/form/fields/basefield"], function (_exports, _object, _tracking, _service, _runloop, _basefield) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6; //components/form/fields/choicefield.js
+  0; //eaimeta@70e063a35619d71f0,"@ember/object",0,"@glimmer/tracking",0,"@ember/service",0,"@ember/runloop",0,"ember-formulaic/components/form/fields/basefield"eaimeta@70e063a35619d71f
+  function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
+  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
+  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
+  function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
+  let ChoiceFieldComponent = _exports.default = (_class = class ChoiceFieldComponent extends _basefield.default {
+    constructor() {
+      super(...arguments);
+      _initializerDefineProperty(this, "store", _descriptor, this);
+      _initializerDefineProperty(this, "optionlists", _descriptor2, this);
+      _initializerDefineProperty(this, "optiongroups", _descriptor3, this);
+      _initializerDefineProperty(this, "resolvedOptionList", _descriptor4, this);
+      _initializerDefineProperty(this, "resolvedOptionGroup", _descriptor5, this);
+      _initializerDefineProperty(this, "resolvedDefaultOption", _descriptor6, this);
+      (0, _runloop.once)(this, this.loadOptionLists);
+      (0, _runloop.once)(this, this.loadOptionGroups);
+      this.resolvedOptionList = this.model.option_list;
+    }
+    async loadOptionLists() {
+      try {
+        let option_lists = await this.store.query('optionlist', {});
+        this.optionlists = option_lists.toArray();
+      } catch (error) {
+        console.error('Error loading option lists:', error);
+      }
+    }
+    async loadOptionGroups() {
+      if (this.model.option_list) {
+        try {
+          let option_groups = await this.store.query('optiongroup', {
+            list: this.model.option_list.id
+          });
+          this.optiongroups = option_groups.toArray();
+
+          // let option_list = await this.model.option_list;
+          // console.warn("option list : ", option_list);
+        } catch (error) {
+          console.error('Error loading option groups:', error);
+        }
+      }
+    }
+    get hasOptionGroups() {
+      return this.optiongroups && this.optiongroups.length > 0;
+    }
+    get modelOptions() {
+      // if (this.model.option_group?.content) {
+      //   return this.model.option_group.options;
+      // } else if (this.model.option_list?.content) {
+      //   return this.model.option_list.options;
+      // }
+
+      return this.optionlists;
+    }
+    get defaultOption() {
+      if (this.model.default_options.length > 0) {
+        return this.model.default_options.firstObject;
+      } else {
+        return null;
+      }
+    }
+    get defaultOptionList() {
+      return this.model.default_options;
+    }
+    get optiongroupsReady() {
+      return this.optiongroups != null; //&& this.model.option_group?.isFulfilled;
+    }
+    get optionlistsReady() {
+      return this.optionlists != null;
+    }
+    async optionsReady() {
+      return this.options != null; //&& this.model.default_options?.isFulfilled;
+    }
+    get supportsMultiValue() {
+      return ["checkbox_select_multiple", "select_multiple"].includes(this.model.subtype);
+    }
+    optionListChanged(value) {
+      if (this.model.option_list.content !== value) {
+        this.model.option_list = value;
+        this.loadOptionGroups(); // Reload option groups when the option list changes
+      }
+    }
+    optionGroupChanged(value) {
+      this.model.option_group = value;
+    }
+    defaultOptionChanged(value) {
+      this.model.default_option = value;
+    }
+  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "store", [_service.inject], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: null
+  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "optionlists", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "optiongroups", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "resolvedOptionList", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "resolvedOptionGroup", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "resolvedDefaultOption", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _applyDecoratedDescriptor(_class.prototype, "optionListChanged", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "optionListChanged"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "optionGroupChanged", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "optionGroupChanged"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "defaultOptionChanged", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "defaultOptionChanged"), _class.prototype)), _class);
+});
+;define("ember-formulaic/components/form/fields/hiddenfield", ["exports", "ember-formulaic/components/form/fields/basefield"], function (_exports, _basefield) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"ember-formulaic/components/form/fields/basefield"eaimeta@70e063a35619d71f
+  //components/form/fields/hiddenfield.js
+  class HiddenFieldComponent extends _basefield.default {
+    get dataNameChanged() {
+      // auto-populate `display_name`; doesn't display anywhere
+      if (this.model && this.model.data_name) {
+        this.model.display_name = this.model.data_name;
+      }
+      return this.model.data_name;
+    }
+    constructor() {
+      super(...arguments);
+      this.dataNameChanged; // Initialize the data name change logic
+    }
+  }
+  _exports.default = HiddenFieldComponent;
+});
+;define("ember-formulaic/components/form/fields/index", ["exports", "@glimmer/component", "@ember/object", "@ember/service"], function (_exports, _component, _object, _service) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  var _dec, _class, _descriptor, _descriptor2, _descriptor3;
+  0; //eaimeta@70e063a35619d71f0,"@glimmer/component",0,"@ember/object",0,"@ember/service"eaimeta@70e063a35619d71f
+  function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
+  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
+  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
+  function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
+  let IndexFieldsComponent = _exports.default = (_dec = (0, _service.inject)('field-service'), (_class = class IndexFieldsComponent extends _component.default {
+    constructor(...args) {
+      super(...args);
+      _initializerDefineProperty(this, "router", _descriptor, this);
+      _initializerDefineProperty(this, "store", _descriptor2, this);
+      _initializerDefineProperty(this, "fieldService", _descriptor3, this);
+    }
+    createTextField(subtype) {
+      let field = this.fieldService.createField(subtype, this.model, 'text');
+      this.fieldService.openEditField(this, field);
+    }
+    createChoiceField(subtype) {
+      let field = this.fieldService.createField(subtype, this.model, 'choice');
+      this.fieldService.openEditField(this, field);
+    }
+    createBooleanField(subtype) {
+      let field = this.fieldService.createField(subtype, this.model, 'boolean');
+      this.fieldService.openEditField(this, field);
+    }
+    createHiddenField(subtype) {
+      let field = this.fieldService.createField(subtype, this.model, 'hidden');
+      this.fieldService.openEditField(this, field);
+    }
+    reloadFields() {
+      this.store.unloadAll('field');
+      this.refresh();
+    }
+  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "router", [_service.inject], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: null
+  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "store", [_service.inject], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: null
+  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "fieldService", [_dec], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: null
+  }), _applyDecoratedDescriptor(_class.prototype, "createTextField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "createTextField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "createChoiceField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "createChoiceField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "createBooleanField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "createBooleanField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "createHiddenField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "createHiddenField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "reloadFields", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "reloadFields"), _class.prototype)), _class));
+});
+;define("ember-formulaic/components/form/fields/textfield", ["exports", "ember-formulaic/components/form/fields/basefield"], function (_exports, _basefield) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"ember-formulaic/components/form/fields/basefield"eaimeta@70e063a35619d71f
+  //components/form/fields/textfield.js
+  class TextfieldComponent extends _basefield.default {}
+  _exports.default = TextfieldComponent;
+});
+;define("ember-formulaic/components/form/index", ["exports", "@glimmer/component", "@ember/service", "@ember/object", "@glimmer/tracking", "@ember/runloop"], function (_exports, _component, _service, _object, _tracking, _runloop) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9; //components/form/index.js
+  0; //eaimeta@70e063a35619d71f0,"@glimmer/component",0,"@ember/service",0,"@ember/object",0,"@glimmer/tracking",0,"@ember/runloop"eaimeta@70e063a35619d71f
+  function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
+  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
+  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
+  function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
+  let FormIndexComponent = _exports.default = (_class = class FormIndexComponent extends _component.default {
+    constructor() {
+      super(...arguments);
+      _initializerDefineProperty(this, "store", _descriptor, this);
+      _initializerDefineProperty(this, "toast", _descriptor2, this);
+      _initializerDefineProperty(this, "router", _descriptor3, this);
+      _initializerDefineProperty(this, "inEditMode", _descriptor4, this);
+      _initializerDefineProperty(this, "saveActive", _descriptor5, this);
+      _initializerDefineProperty(this, "downloadInProgress", _descriptor6, this);
+      _initializerDefineProperty(this, "downloadFailed", _descriptor7, this);
+      _initializerDefineProperty(this, "privacyPolicies", _descriptor8, this);
+      _initializerDefineProperty(this, "model", _descriptor9, this);
+      console.warn("model : ", this.model);
+      (0, _runloop.once)(this, this.loadPrivacyPolicies);
+    }
+    get form() {
+      return this.model;
+    }
+    get formId() {
+      return this.model.id;
+    }
+    get privacyPoliciesReady() {
+      return Array.isArray(this.privacyPolicies);
+    }
+    eq(a, b) {
+      return a === b;
+    }
+    async loadPrivacyPolicies() {
+      try {
+        let policies = await this.store.query('privacypolicy', {});
+        this.privacyPolicies = policies.toArray();
+      } catch (error) {
+        console.error('Error loading privacy policies:', error);
+      }
+    }
+    privacyPolicyChanged(event) {
+      let selectedPolicyId = event.target.value;
+      this.model.privacy_policy = this.privacyPolicies.find(policy => policy.id === selectedPolicyId);
+    }
+    editForm() {
+      this.inEditMode = true;
+    }
+    async saveForm() {
+      this.saveActive = true;
+      try {
+        await this.model.save();
+        this.saveActive = false;
+        this.toast.success('Form saved.');
+        this.inEditMode = false;
+      } catch (error) {
+        console.error(error);
+        this.saveActive = false;
+      }
+    }
+    close() {
+      this.inEditMode = false;
+    }
+    editFields() {
+      this.router.transitionTo('form.fields');
+    }
+    editRules() {
+      this.router.transitionTo('form.rules');
+    }
+    viewSubmissions() {
+      this.router.transitionTo('form.submissions');
+    }
+    downloadSubmissions() {
+      const formElement = document.getElementById(`ld-submissions-dl-${this.formId}`);
+      if (!formElement) return;
+      this.downloadInProgress = true;
+      this.downloadFailed = false;
+      formElement.addEventListener('handl:form-unlocked', () => {
+        this.downloadInProgress = false;
+      });
+      formElement.submit();
+    }
+  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "store", [_service.inject], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: null
+  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "toast", [_service.inject], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: null
+  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "router", [_service.inject], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: null
+  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "inEditMode", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return false;
+    }
+  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "saveActive", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return false;
+    }
+  }), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "downloadInProgress", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return false;
+    }
+  }), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "downloadFailed", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return false;
+    }
+  }), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "privacyPolicies", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "model", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return this.args.model;
+    }
+  }), _applyDecoratedDescriptor(_class.prototype, "loadPrivacyPolicies", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "loadPrivacyPolicies"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "privacyPolicyChanged", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "privacyPolicyChanged"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "editForm", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "editForm"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "saveForm", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "saveForm"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "close", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "close"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "editFields", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "editFields"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "editRules", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "editRules"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "viewSubmissions", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "viewSubmissions"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "downloadSubmissions", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "downloadSubmissions"), _class.prototype)), _class);
+});
+;define("ember-formulaic/components/form/rules", ["exports", "@ember/controller", "@glimmer/tracking", "@ember/object", "@ember/service", "ember-formulaic/validators/factories"], function (_exports, _controller, _tracking, _object, _service, _factories) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5; //controllers/form/rule.js
+  0; //eaimeta@70e063a35619d71f0,"@ember/controller",0,"@glimmer/tracking",0,"@ember/object",0,"@ember/service",0,"ember-formulaic/validators/factories"eaimeta@70e063a35619d71f
+  function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
+  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
+  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
+  function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
+  let RulesController = _exports.default = (_class = class RulesController extends _controller.default {
+    constructor(...args) {
+      super(...args);
+      _initializerDefineProperty(this, "router", _descriptor, this);
+      // Injecting the router service
+      _initializerDefineProperty(this, "rulesPendingDeletion", _descriptor2, this);
+      _initializerDefineProperty(this, "saveActive", _descriptor3, this);
+      _initializerDefineProperty(this, "saveContinueActive", _descriptor4, this);
+      _initializerDefineProperty(this, "validators", _descriptor5, this);
+    }
+    get activeRules() {
+      return this.model.filter(item => !item.isDeleted);
+    }
+    get controlsDisabled() {
+      return this.saveActive || this.saveContinueActive;
+    }
+    validatorFor(obj) {
+      let validatorKey = obj.toString();
+      let validators = this.validators;
+      if (!(validatorKey in validators)) {
+        validators[validatorKey] = _factories.default.createRuleValidator(obj, this);
+      }
+      return validators[validatorKey];
+    }
+    removeValidatorFor(obj) {
+      let validatorKey = obj.toString();
+      let validators = this.validators;
+      if (validatorKey in validators) {
+        validators[validatorKey].destroy();
+        delete validators[validatorKey];
+      }
+    }
+    invalidateOrder() {
+      if (!this.controlsDisabled) {
+        this.orderInvalidated();
+      }
+    }
+    orderInvalidated() {
+      // Custom event handler logic
+    }
+    addRule(rule) {
+      this.addRuleToRoute(rule);
+    }
+    deleteRule(rule) {
+      this.deleteRuleToRoute(rule);
+    }
+    addCondition(rule) {
+      this.addConditionToRoute(rule);
+    }
+    deleteCondition(condition) {
+      this.deleteConditionToRoute(condition);
+    }
+    addResult(rule) {
+      this.addResultToRoute(rule);
+    }
+    deleteResult(result) {
+      this.deleteResultToRoute(result);
+    }
+    saveRules(continueEditing) {
+      this.saveActive = !continueEditing;
+      this.saveContinueActive = continueEditing;
+    }
+    closeRules() {
+      this.router.transitionTo('form'); // Using the injected router service
+    }
+  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "router", [_service.inject], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: null
+  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "rulesPendingDeletion", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return [];
+    }
+  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "saveActive", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return false;
+    }
+  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "saveContinueActive", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return false;
+    }
+  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "validators", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return {};
+    }
+  }), _applyDecoratedDescriptor(_class.prototype, "invalidateOrder", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "invalidateOrder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addRule", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "addRule"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "deleteRule", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "deleteRule"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addCondition", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "addCondition"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "deleteCondition", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "deleteCondition"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addResult", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "addResult"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "deleteResult", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "deleteResult"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "saveRules", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "saveRules"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "closeRules", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "closeRules"), _class.prototype)), _class);
+});
+;define("ember-formulaic/components/form/submissions", ["exports", "@ember/controller", "@glimmer/tracking", "@ember/object", "@ember/service"], function (_exports, _controller, _tracking, _object, _service) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5; //controllers/form/submissions.js
+  0; //eaimeta@70e063a35619d71f0,"@ember/controller",0,"@glimmer/tracking",0,"@ember/object",0,"@ember/service"eaimeta@70e063a35619d71f
+  function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
+  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
+  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
+  function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
+  let SubmissionsController = _exports.default = (_class = class SubmissionsController extends _controller.default {
+    constructor(...args) {
+      super(...args);
+      _initializerDefineProperty(this, "store", _descriptor, this);
+      _initializerDefineProperty(this, "router", _descriptor2, this);
+      // Injecting the router service
+      _defineProperty(this, "queryParams", ['page', 'source']);
+      _initializerDefineProperty(this, "formId", _descriptor3, this);
+      _initializerDefineProperty(this, "source", _descriptor4, this);
+      _initializerDefineProperty(this, "page", _descriptor5, this);
+    }
+    get fields() {
+      try {
+        return this.store.query('field', {
+          form: this.formId
+        });
+      } catch (error) {
+        console.error('Error fetching fields:', error);
+        throw error;
+      }
+    }
+    get columnHeaders() {
+      let headers = ['Date/Time', 'Source', 'Promo Source'];
+      if (this.fields.isFulfilled) {
+        this.fields.forEach(field => {
+          headers.push(field.data_name);
+        });
+      }
+      return headers;
+    }
+    get customColumnSlugs() {
+      let slugs = [];
+      if (this.fields.isFulfilled) {
+        this.fields.forEach(field => {
+          slugs.push(field.slug);
+        });
+      }
+      return slugs;
+    }
+    get submissionDataList() {
+      let rows = [];
+      let slugs = this.customColumnSlugs;
+      let submissions = this.model;
+      submissions.forEach(submission => {
+        let row = [submission.date_created, submission.source, submission.promo_source];
+        slugs.forEach(slug => {
+          row.push(submission.custom_data[slug]);
+        });
+        rows.push(row);
+      });
+      return rows;
+    }
+    get hasSubmissions() {
+      return this.submissionDataList.length > 0;
+    }
+    get metaData() {
+      return this.model.meta;
+    }
+    get count() {
+      return this.metaData ? this.metaData.count : null;
+    }
+    get currentPage() {
+      return this.page || 1;
+    }
+    get nextPage() {
+      return this.metaData ? this.metaData.next : null;
+    }
+    get previousPage() {
+      let previousPage = this.page - 1;
+      return previousPage > 0 ? previousPage : null;
+    }
+    get pageCount() {
+      return Math.ceil(this.count / this.page_size);
+    }
+    get sources() {
+      try {
+        return this.store.query('submissionsource', {
+          form: this.formId
+        });
+      } catch (error) {
+        console.error('Error fetching sources:', error);
+        throw error;
+      }
+    }
+    get selectedSource() {
+      return this.source;
+    }
+    changeSource(value) {
+      this.source = value;
+    }
+    gotoPreviousPage() {
+      if (this.page > 1) {
+        this.page -= 1;
+      }
+    }
+    gotoNextPage() {
+      this.page += 1;
+    }
+    closeSubmissions() {
+      this.router.transitionTo('form');
+    }
+  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "store", [_service.inject], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: null
+  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "router", [_service.inject], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: null
+  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "formId", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "source", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "page", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return 1;
+    }
+  }), _applyDecoratedDescriptor(_class.prototype, "changeSource", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "changeSource"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "gotoPreviousPage", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "gotoPreviousPage"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "gotoNextPage", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "gotoNextPage"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "closeSubmissions", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "closeSubmissions"), _class.prototype)), _class);
+});
 ;define("ember-formulaic/components/preview-checkbox-select-multiple", ["exports", "@glimmer/component"], function (_exports, _component) {
   "use strict";
 
@@ -1451,6 +2391,7 @@
       _initializerDefineProperty(this, "slug", _descriptor4, this);
       _initializerDefineProperty(this, "field", _descriptor5, this);
       this.field = this.args.field;
+      //this.completeField();
     }
     get previewComponent() {
       if (this.field && this.field.subtype) {
@@ -1460,24 +2401,10 @@
       }
     }
     get completeField() {
-      console.warn("field details : ", this.field);
       if (!this.field) {
         return null;
       }
-      return this.field;
-
-      // switch (this.field.model_class) {
-      //   case FIELD_TYPES.TEXTFIELD:
-      //     return this.field.textfield.data;
-      //   case FIELD_TYPES.CHOICEFIELD:
-      //     return this.field.choicefield.data;
-      //   case FIELD_TYPES.BOOLEANFIELD:
-      //     return this.field.booleanfield.data;
-      //   case FIELD_TYPES.HIDDENFIELD:
-      //     return this.field.hiddenfield.data;
-      //   default:
-      //     throw new Error('Field type not implemented');
-      // }
+      return this.field.get(this.field.model_class);
     }
     get isEditing() {
       return this.currentField === this.field;
@@ -1500,8 +2427,8 @@
     handlePositionChange() {
       this.completeField.position = this.field.position;
     }
-    handleClick() {
-      this.args.onClick(this.field);
+    handleEditClick() {
+      this.args.onEditClick(this.field);
     }
     willDestroy() {
       super.willDestroy(...arguments);
@@ -1535,7 +2462,7 @@
     enumerable: true,
     writable: true,
     initializer: null
-  }), _applyDecoratedDescriptor(_class.prototype, "isEditing", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "isEditing"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "showDisplayName", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "showDisplayName"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "invalidateOrder", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "invalidateOrder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleDisplayNameChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleDisplayNameChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleDataNameChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleDataNameChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleSlugChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleSlugChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handlePositionChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handlePositionChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleClick", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleClick"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clickedDeleteField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "clickedDeleteField"), _class.prototype)), _class));
+  }), _applyDecoratedDescriptor(_class.prototype, "isEditing", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "isEditing"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "showDisplayName", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "showDisplayName"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "invalidateOrder", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "invalidateOrder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleDisplayNameChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleDisplayNameChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleDataNameChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleDataNameChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleSlugChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleSlugChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handlePositionChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handlePositionChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleEditClick", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleEditClick"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clickedDeleteField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "clickedDeleteField"), _class.prototype)), _class));
 });
 ;define("ember-formulaic/components/sortable-fields", ["exports", "ember-formulaic/components/base-sortable", "@ember/object"], function (_exports, _baseSortable, _object) {
   "use strict";
@@ -1548,16 +2475,10 @@
   0; //eaimeta@70e063a35619d71f0,"ember-formulaic/components/base-sortable",0,"@ember/object"eaimeta@70e063a35619d71f
   function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
   let SortableFieldsComponent = _exports.default = (_class = class SortableFieldsComponent extends _baseSortable.default {
-    editField(field) {
-      this.args.onEditField(field);
-    }
-    deleteField(field) {
-      this.args.onDeleteField(field);
-    }
     triggerUpdateSortable() {
-      this.args.onTriggerUpdateSortable();
+      this.args.onOrderInvalidated();
     }
-  }, (_applyDecoratedDescriptor(_class.prototype, "editField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "editField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "deleteField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "deleteField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "triggerUpdateSortable", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "triggerUpdateSortable"), _class.prototype)), _class);
+  }, (_applyDecoratedDescriptor(_class.prototype, "triggerUpdateSortable", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "triggerUpdateSortable"), _class.prototype)), _class);
 });
 ;define("ember-formulaic/components/sortable-rule", ["exports", "@glimmer/component", "@ember/service", "@glimmer/tracking", "@ember/object"], function (_exports, _component, _service, _tracking, _object) {
   "use strict";
@@ -1658,6 +2579,47 @@
     initializer: null
   }), _applyDecoratedDescriptor(_class.prototype, "allFields", [_object.computed], Object.getOwnPropertyDescriptor(_class.prototype, "allFields"), _class.prototype)), _class);
 });
+;define("ember-formulaic/components/tinymce-editor", ["exports", "@glimmer/component", "@ember/object"], function (_exports, _component, _object) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  var _class;
+  0; //eaimeta@70e063a35619d71f0,"@glimmer/component",0,"@ember/object"eaimeta@70e063a35619d71f
+  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
+  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
+  let TinymceEditorComponent = _exports.default = (_class = class TinymceEditorComponent extends _component.default {
+    constructor(...args) {
+      super(...args);
+      _defineProperty(this, "editor", null);
+    }
+    setupEditor(element) {
+      const options = {
+        target: element,
+        ...this.args.options,
+        setup: editor => {
+          this.editor = editor;
+          editor.on('Change', () => {
+            if (this.args.onChange) {
+              this.args.onChange(editor.getContent());
+            }
+          });
+        }
+      };
+      tinymce.init(options);
+    }
+    willDestroy() {
+      super.willDestroy(...arguments);
+      if (this.editor) {
+        tinymce.remove(this.editor); // Use tinymce.remove to clean up the editor
+      }
+    }
+  }, (_applyDecoratedDescriptor(_class.prototype, "setupEditor", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "setupEditor"), _class.prototype)), _class);
+});
 ;define("ember-formulaic/components/welcome-page", ["exports", "ember-welcome-page/components/welcome-page"], function (_exports, _welcomePage) {
   "use strict";
 
@@ -1685,940 +2647,6 @@
     }
   });
   0; //eaimeta@70e063a35619d71f0,"ember-resolver/container-debug-adapter"eaimeta@70e063a35619d71f
-});
-;define("ember-formulaic/controllers/form", ["exports", "@ember/controller", "@glimmer/tracking"], function (_exports, _controller, _tracking) {
-  "use strict";
-
-  Object.defineProperty(_exports, "__esModule", {
-    value: true
-  });
-  _exports.default = void 0;
-  var _class, _descriptor; //controllers/form.js
-  0; //eaimeta@70e063a35619d71f0,"@ember/controller",0,"@glimmer/tracking"eaimeta@70e063a35619d71f
-  function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
-  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
-  function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
-  let FormController = _exports.default = (_class = class FormController extends _controller.default {
-    constructor(...args) {
-      super(...args);
-      _initializerDefineProperty(this, "isEditing", _descriptor, this);
-    }
-  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "isEditing", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return false;
-    }
-  })), _class);
-});
-;define("ember-formulaic/controllers/form/fields", ["exports", "@ember/controller", "@ember/object", "@ember/service", "@glimmer/tracking", "rsvp", "ember-formulaic/utils/fields", "ember-formulaic/utils/slug"], function (_exports, _controller, _object, _service, _tracking, _rsvp, _fields, _slug) {
-  "use strict";
-
-  Object.defineProperty(_exports, "__esModule", {
-    value: true
-  });
-  _exports.default = void 0;
-  var _dec, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9; //controllers/form/field.js
-  0; //eaimeta@70e063a35619d71f0,"@ember/controller",0,"@ember/object",0,"@ember/service",0,"@glimmer/tracking",0,"rsvp",0,"ember-formulaic/utils/fields",0,"ember-formulaic/utils/slug"eaimeta@70e063a35619d71f
-  function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
-  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
-  function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
-  let FieldsController = _exports.default = (_dec = (0, _service.inject)('field-service'), (_class = class FieldsController extends _controller.default {
-    constructor(...args) {
-      super(...args);
-      _initializerDefineProperty(this, "store", _descriptor, this);
-      _initializerDefineProperty(this, "router", _descriptor2, this);
-      _initializerDefineProperty(this, "fieldService", _descriptor3, this);
-      _initializerDefineProperty(this, "model", _descriptor4, this);
-      _initializerDefineProperty(this, "currentField", _descriptor5, this);
-      _initializerDefineProperty(this, "saveActive", _descriptor6, this);
-      _initializerDefineProperty(this, "saveContinueActive", _descriptor7, this);
-      _initializerDefineProperty(this, "fieldsPendingDeletion", _descriptor8, this);
-      _initializerDefineProperty(this, "validators", _descriptor9, this);
-    }
-    get activeFields() {
-      return this.model ? this.model.filter(item => !item.isDeleted) : [];
-    }
-    get controlsDisabled() {
-      return this.saveActive || this.saveContinueActive;
-    }
-    validatorFor(field) {
-      let actualField = _fields.default.getActualField(field);
-      let validatorKey = actualField.toString();
-      if (!this.validators[validatorKey]) {
-        this.validators[validatorKey] = actualField.validator;
-      }
-      return this.validators[validatorKey];
-    }
-    removeValidatorFor(field) {
-      let actualField = _fields.default.getActualField(field);
-      let validatorKey = actualField.toString();
-      if (this.validators[validatorKey]) {
-        this.validators[validatorKey].destroy();
-        delete this.validators[validatorKey];
-      }
-    }
-    invalidateOrder() {
-      if (!this.controlsDisabled) {
-        this.orderInvalidated();
-      }
-    }
-    orderInvalidated() {
-      // Custom event handler logic
-    }
-    async saveFields(continueEditing) {
-      this.saveActive = !continueEditing;
-      this.saveContinueActive = continueEditing;
-      let validationErrors = [];
-      let actualFields = this.model.filter(field => !field.isDeleted).map(field => {
-        let actualField = _fields.default.getActualField(field);
-        if (!actualField.slug) {
-          actualField.slug = _slug.default.generateSlug(actualField.data_name);
-        }
-        let validator = this.validatorFor(actualField);
-        if (validator.isInvalid) {
-          validationErrors.push(`Field "${actualField.data_name}" is incomplete`);
-        }
-        return actualField;
-      });
-      if (validationErrors.length > 0) {
-        toastr.options.positionClass = "toast-bottom-center";
-        toastr.warning(`Unable to save because of these issues: <br>${validationErrors.join('<br>')}`);
-        this.saveActive = false;
-        this.saveContinueActive = false;
-        return;
-      }
-      let promises = [...this.fieldsPendingDeletion.map(field => field.deleteRecord().then(() => field.save())), ...actualFields.map(field => field.save())];
-      this.fieldsPendingDeletion.length = 0;
-      try {
-        let results = await (0, _rsvp.allSettled)(promises);
-        let saveErrors = results.filter(result => result.state === "rejected");
-        this.saveActive = false;
-        this.saveContinueActive = false;
-        if (saveErrors.length > 0) {
-          toastr.options.positionClass = "toast-bottom-center";
-          toastr.error('Save failed. Contact administrator.');
-        } else {
-          this.reloadFields();
-          toastr.options.positionClass = "toast-bottom-center";
-          toastr.success('Fields saved.');
-          if (!continueEditing) {
-            this.router.transitionTo('form');
-          }
-        }
-      } catch (error) {
-        console.error(error);
-        this.saveActive = false;
-        this.saveContinueActive = false;
-      }
-    }
-    close() {
-      this.router.transitionTo('form');
-    }
-    editField(field) {
-      this.fieldService.openEditField(this, field);
-    }
-    deleteField(field, completeField) {
-      this.removeValidatorFor(field);
-      field.deleteRecord();
-      this.fieldsPendingDeletion.push(completeField);
-      this.invalidateOrder();
-      if (this.currentField === field) {
-        this.fieldService.closeEditField(this);
-      }
-    }
-    doneEditingField() {
-      this.fieldService.closeEditField(this);
-    }
-    createTextField(subtype) {
-      let field = this.fieldService.createField(subtype, this.model, 'text');
-      this.fieldService.openEditField(this, field);
-    }
-    createChoiceField(subtype) {
-      let field = this.fieldService.createField(subtype, this.model, 'choice');
-      this.fieldService.openEditField(this, field);
-    }
-    createBooleanField(subtype) {
-      let field = this.fieldService.createField(subtype, this.model, 'boolean');
-      this.fieldService.openEditField(this, field);
-    }
-    createHiddenField(subtype) {
-      let field = this.fieldService.createField(subtype, this.model, 'hidden');
-      this.fieldService.openEditField(this, field);
-    }
-    reloadFields() {
-      this.store.unloadAll('field');
-      this.refresh();
-    }
-  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "store", [_service.inject], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: null
-  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "router", [_service.inject], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: null
-  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "fieldService", [_dec], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: null
-  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "model", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return [];
-    }
-  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "currentField", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return null;
-    }
-  }), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "saveActive", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return false;
-    }
-  }), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "saveContinueActive", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return false;
-    }
-  }), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "fieldsPendingDeletion", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return [];
-    }
-  }), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "validators", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return {};
-    }
-  }), _applyDecoratedDescriptor(_class.prototype, "invalidateOrder", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "invalidateOrder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "saveFields", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "saveFields"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "close", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "close"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "editField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "editField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "deleteField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "deleteField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "doneEditingField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "doneEditingField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "createTextField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "createTextField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "createChoiceField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "createChoiceField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "createBooleanField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "createBooleanField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "createHiddenField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "createHiddenField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "reloadFields", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "reloadFields"), _class.prototype)), _class));
-});
-;define("ember-formulaic/controllers/form/fields/basefield", ["exports", "@ember/controller", "@glimmer/tracking", "@ember/object", "ember-formulaic/utils/slug"], function (_exports, _controller, _tracking, _object, _slug) {
-  "use strict";
-
-  Object.defineProperty(_exports, "__esModule", {
-    value: true
-  });
-  _exports.default = void 0;
-  var _dec, _class, _descriptor, _descriptor2; //controllers/form/fields/basefield.js
-  0; //eaimeta@70e063a35619d71f0,"@ember/controller",0,"@glimmer/tracking",0,"@ember/object",0,"ember-formulaic/utils/slug"eaimeta@70e063a35619d71f
-  function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
-  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
-  function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
-  let BaseFieldController = _exports.default = (_dec = (0, _controller.inject)('form.fields'), (_class = class BaseFieldController extends _controller.default {
-    constructor() {
-      super(...arguments);
-      _initializerDefineProperty(this, "fieldsController", _descriptor, this);
-      _initializerDefineProperty(this, "isDisplayNameWYSIWYGEnabled", _descriptor2, this);
-      _defineProperty(this, "editorOptions", {
-        height: 120,
-        force_br_newlines: false,
-        force_p_newlines: false,
-        forced_root_block: '',
-        menubar: false,
-        plugins: ['link'],
-        toolbar: 'bold italic | link'
-      });
-      this.setupModelObserver();
-    }
-    setupModelObserver() {
-      if (this.model) {
-        this.isDisplayNameWYSIWYGEnabled = this.displayNameHasHtml;
-      }
-    }
-    get displayNameHasHtml() {
-      return this.model.display_name && this.model.display_name.match(/<([A-Z][A-Z0-9]*)\b[^>]*>/i);
-    }
-    get subtypeName() {
-      return this.model.subtype.replace('_', ' ');
-    }
-    get autoSlug() {
-      if (this.model.slug) {
-        return this.model.slug;
-      }
-      return _slug.default.generateSlug(this.model.data_name);
-    }
-    set autoSlug(value) {
-      this.model.slug = value;
-      return value;
-    }
-    get validator() {
-      return this.fieldsController.validatorFor(this.model);
-    }
-    toggleDisplayNameWYSIWYG() {
-      this.isDisplayNameWYSIWYGEnabled = !this.isDisplayNameWYSIWYGEnabled;
-    }
-  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "fieldsController", [_dec], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: null
-  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "isDisplayNameWYSIWYGEnabled", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return false;
-    }
-  }), _applyDecoratedDescriptor(_class.prototype, "toggleDisplayNameWYSIWYG", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "toggleDisplayNameWYSIWYG"), _class.prototype)), _class));
-});
-;define("ember-formulaic/controllers/form/fields/booleanfield", ["exports", "ember-formulaic/controllers/form/fields/basefield"], function (_exports, _basefield) {
-  "use strict";
-
-  Object.defineProperty(_exports, "__esModule", {
-    value: true
-  });
-  _exports.default = void 0;
-  0; //eaimeta@70e063a35619d71f0,"ember-formulaic/controllers/form/fields/basefield"eaimeta@70e063a35619d71f
-  //controllers/form/fields/boolean.js
-  class BooleanFieldController extends _basefield.default {}
-  _exports.default = BooleanFieldController;
-});
-;define("ember-formulaic/controllers/form/fields/choicefield", ["exports", "@ember/object", "@glimmer/tracking", "@ember/service", "ember-formulaic/controllers/form/fields/basefield"], function (_exports, _object, _tracking, _service, _basefield) {
-  "use strict";
-
-  Object.defineProperty(_exports, "__esModule", {
-    value: true
-  });
-  _exports.default = void 0;
-  var _class, _descriptor, _descriptor2, _descriptor3; //controllers/form/fields/choicefield.js
-  0; //eaimeta@70e063a35619d71f0,"@ember/object",0,"@glimmer/tracking",0,"@ember/service",0,"ember-formulaic/controllers/form/fields/basefield"eaimeta@70e063a35619d71f
-  function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
-  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
-  function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
-  let ChoiceFieldController = _exports.default = (_class = class ChoiceFieldController extends _basefield.default {
-    constructor() {
-      super(...arguments);
-      _initializerDefineProperty(this, "store", _descriptor, this);
-      _initializerDefineProperty(this, "optionlists", _descriptor2, this);
-      _initializerDefineProperty(this, "optiongroups", _descriptor3, this);
-      this.loadOptionLists();
-      this.loadOptionGroups();
-    }
-    async loadOptionLists() {
-      try {
-        this.optionlists = await this.store.queryRecord('optionlist', {});
-      } catch (error) {
-        console.error('Error loading option lists:', error);
-      }
-    }
-    async loadOptionGroups() {
-      if (this.model.option_list) {
-        try {
-          this.optiongroups = await this.store.queryRecord('optiongroup', {
-            list: this.model.option_list.id
-          });
-        } catch (error) {
-          console.error('Error loading option groups:', error);
-        }
-      }
-    }
-    get hasOptionGroups() {
-      return this.optiongroups && this.optiongroups.length > 0;
-    }
-    get options() {
-      if (this.model.option_group?.content) {
-        return this.model.option_group.options;
-      } else if (this.model.option_list?.content) {
-        return this.model.option_list.options;
-      }
-      return null;
-    }
-    get defaultOption() {
-      if (this.model.default_options.length > 0) {
-        return this.model.default_options.firstObject;
-      } else {
-        return null;
-      }
-    }
-    get defaultOptionList() {
-      return this.model.default_options;
-    }
-    get optiongroupsReady() {
-      return this.optiongroups?.isFulfilled && this.model.option_group?.isFulfilled;
-    }
-    get optionlistsReady() {
-      return this.optionlists?.isFulfilled && this.model.option_list?.isFulfilled && this.optiongroups?.isFulfilled && this.model.option_group?.isFulfilled;
-    }
-    get optionsReady() {
-      return this.options != null && this.model.default_options?.isFulfilled;
-    }
-    get supportsMultiValue() {
-      return ["checkbox_select_multiple", "select_multiple"].includes(this.model.subtype);
-    }
-    optionListChanged(value) {
-      if (this.model.option_list.content !== value) {
-        this.model.option_list = value;
-        this.loadOptionGroups(); // Reload option groups when the option list changes
-      }
-    }
-    optionGroupChanged(value) {
-      this.model.option_group = value;
-    }
-    defaultOptionChanged(value) {
-      this.model.default_option = value;
-    }
-  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "store", [_service.inject], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: null
-  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "optionlists", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: null
-  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "optiongroups", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: null
-  }), _applyDecoratedDescriptor(_class.prototype, "optionListChanged", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "optionListChanged"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "optionGroupChanged", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "optionGroupChanged"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "defaultOptionChanged", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "defaultOptionChanged"), _class.prototype)), _class);
-});
-;define("ember-formulaic/controllers/form/fields/hiddenfield", ["exports", "@ember/object", "@glimmer/tracking", "ember-formulaic/controllers/form/fields/basefield"], function (_exports, _object, _tracking, _basefield) {
-  "use strict";
-
-  Object.defineProperty(_exports, "__esModule", {
-    value: true
-  });
-  _exports.default = void 0;
-  var _class, _descriptor; //controllers/form/fields/hiddenfield.js
-  0; //eaimeta@70e063a35619d71f0,"@ember/object",0,"@glimmer/tracking",0,"ember-formulaic/controllers/form/fields/basefield"eaimeta@70e063a35619d71f
-  function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
-  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
-  function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
-  let HiddenFieldController = _exports.default = (_class = class HiddenFieldController extends _basefield.default {
-    get dataNameChanged() {
-      // auto-populate `display_name`; doesn't display anywhere
-      if (this.model && this.model.data_name) {
-        this.model.display_name = this.model.data_name;
-      }
-      return this.model.data_name;
-    }
-    constructor() {
-      super(...arguments);
-      _initializerDefineProperty(this, "model", _descriptor, this);
-      this.dataNameChanged; // Initialize the data name change logic
-    }
-  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "model", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: null
-  })), _class);
-});
-;define("ember-formulaic/controllers/form/fields/index", ["exports", "@ember/controller", "@ember/object", "@ember/service"], function (_exports, _controller, _object, _service) {
-  "use strict";
-
-  Object.defineProperty(_exports, "__esModule", {
-    value: true
-  });
-  _exports.default = void 0;
-  var _dec, _class, _descriptor, _descriptor2, _descriptor3;
-  0; //eaimeta@70e063a35619d71f0,"@ember/controller",0,"@ember/object",0,"@ember/service"eaimeta@70e063a35619d71f
-  function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
-  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
-  function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
-  let IndexFieldsController = _exports.default = (_dec = (0, _service.inject)('field-service'), (_class = class IndexFieldsController extends _controller.default {
-    constructor(...args) {
-      super(...args);
-      _initializerDefineProperty(this, "router", _descriptor, this);
-      _initializerDefineProperty(this, "store", _descriptor2, this);
-      _initializerDefineProperty(this, "fieldService", _descriptor3, this);
-    }
-    createTextField(subtype) {
-      let field = this.fieldService.createField(subtype, this.model, 'text');
-      this.fieldService.openEditField(this, field);
-    }
-    createChoiceField(subtype) {
-      let field = this.fieldService.createField(subtype, this.model, 'choice');
-      this.fieldService.openEditField(this, field);
-    }
-    createBooleanField(subtype) {
-      let field = this.fieldService.createField(subtype, this.model, 'boolean');
-      this.fieldService.openEditField(this, field);
-    }
-    createHiddenField(subtype) {
-      let field = this.fieldService.createField(subtype, this.model, 'hidden');
-      this.fieldService.openEditField(this, field);
-    }
-  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "router", [_service.inject], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: null
-  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "store", [_service.inject], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: null
-  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "fieldService", [_dec], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: null
-  }), _applyDecoratedDescriptor(_class.prototype, "createTextField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "createTextField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "createChoiceField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "createChoiceField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "createBooleanField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "createBooleanField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "createHiddenField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "createHiddenField"), _class.prototype)), _class));
-});
-;define("ember-formulaic/controllers/form/fields/textfield", ["exports", "ember-formulaic/controllers/form/fields/basefield"], function (_exports, _basefield) {
-  "use strict";
-
-  Object.defineProperty(_exports, "__esModule", {
-    value: true
-  });
-  _exports.default = void 0;
-  0; //eaimeta@70e063a35619d71f0,"ember-formulaic/controllers/form/fields/basefield"eaimeta@70e063a35619d71f
-  //controllers/form/fields/textfield.js
-  class TextFieldController extends _basefield.default {}
-  _exports.default = TextFieldController;
-});
-;define("ember-formulaic/controllers/form/index", ["exports", "@ember/controller", "@ember/service", "@ember/object", "@glimmer/tracking"], function (_exports, _controller, _service, _object, _tracking) {
-  "use strict";
-
-  Object.defineProperty(_exports, "__esModule", {
-    value: true
-  });
-  _exports.default = void 0;
-  var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9;
-  0; //eaimeta@70e063a35619d71f0,"@ember/controller",0,"@ember/service",0,"@ember/object",0,"@glimmer/tracking"eaimeta@70e063a35619d71f
-  function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
-  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
-  function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
-  let FormIndexController = _exports.default = (_class = class FormIndexController extends _controller.default {
-    constructor(...args) {
-      super(...args);
-      _initializerDefineProperty(this, "store", _descriptor, this);
-      _initializerDefineProperty(this, "toast", _descriptor2, this);
-      _initializerDefineProperty(this, "router", _descriptor3, this);
-      _initializerDefineProperty(this, "inEditMode", _descriptor4, this);
-      _initializerDefineProperty(this, "saveActive", _descriptor5, this);
-      _initializerDefineProperty(this, "downloadInProgress", _descriptor6, this);
-      _initializerDefineProperty(this, "downloadFailed", _descriptor7, this);
-      _initializerDefineProperty(this, "privacyPolicies", _descriptor8, this);
-      _initializerDefineProperty(this, "model", _descriptor9, this);
-    }
-    get form() {
-      return this.model;
-    }
-    get formId() {
-      return this.model.id;
-    }
-    get privacyPoliciesReady() {
-      return this.privacyPolicies.length > 0;
-    }
-    eq(a, b) {
-      return a === b;
-    }
-    async loadPrivacyPolicies() {
-      try {
-        let policies = await this.store.query('privacypolicy', {});
-        this.privacyPolicies = policies.toArray();
-      } catch (error) {
-        console.error('Error loading privacy policies:', error);
-      }
-    }
-    privacyPolicyChanged(event) {
-      let selectedPolicyId = event.target.value;
-      this.model.privacy_policy = this.privacyPolicies.find(policy => policy.id === selectedPolicyId);
-    }
-    editForm() {
-      this.inEditMode = true;
-    }
-    async saveForm() {
-      this.saveActive = true;
-      try {
-        await this.model.save();
-        this.saveActive = false;
-        this.toast.success('Form saved.');
-        this.inEditMode = false;
-      } catch (error) {
-        console.error(error);
-        this.saveActive = false;
-      }
-    }
-    close() {
-      this.inEditMode = false;
-    }
-    editFields() {
-      this.router.transitionTo('form.fields');
-    }
-    editRules() {
-      this.router.transitionTo('form.rules');
-    }
-    viewSubmissions() {
-      this.router.transitionTo('form.submissions');
-    }
-    downloadSubmissions() {
-      const formElement = document.getElementById(`ld-submissions-dl-${this.formId}`);
-      if (!formElement) return;
-      this.downloadInProgress = true;
-      this.downloadFailed = false;
-      formElement.addEventListener('handl:form-unlocked', () => {
-        this.downloadInProgress = false;
-      });
-      formElement.submit();
-    }
-  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "store", [_service.inject], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: null
-  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "toast", [_service.inject], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: null
-  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "router", [_service.inject], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: null
-  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "inEditMode", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return false;
-    }
-  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "saveActive", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return false;
-    }
-  }), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "downloadInProgress", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return false;
-    }
-  }), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "downloadFailed", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return false;
-    }
-  }), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "privacyPolicies", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return [];
-    }
-  }), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "model", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return {
-        privacy_policy: null
-      };
-    }
-  }), _applyDecoratedDescriptor(_class.prototype, "loadPrivacyPolicies", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "loadPrivacyPolicies"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "privacyPolicyChanged", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "privacyPolicyChanged"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "editForm", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "editForm"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "saveForm", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "saveForm"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "close", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "close"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "editFields", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "editFields"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "editRules", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "editRules"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "viewSubmissions", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "viewSubmissions"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "downloadSubmissions", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "downloadSubmissions"), _class.prototype)), _class);
-});
-;define("ember-formulaic/controllers/form/rules", ["exports", "@ember/controller", "@glimmer/tracking", "@ember/object", "@ember/service", "ember-formulaic/validators/factories"], function (_exports, _controller, _tracking, _object, _service, _factories) {
-  "use strict";
-
-  Object.defineProperty(_exports, "__esModule", {
-    value: true
-  });
-  _exports.default = void 0;
-  var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5; //controllers/form/rule.js
-  0; //eaimeta@70e063a35619d71f0,"@ember/controller",0,"@glimmer/tracking",0,"@ember/object",0,"@ember/service",0,"ember-formulaic/validators/factories"eaimeta@70e063a35619d71f
-  function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
-  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
-  function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
-  let RulesController = _exports.default = (_class = class RulesController extends _controller.default {
-    constructor(...args) {
-      super(...args);
-      _initializerDefineProperty(this, "router", _descriptor, this);
-      // Injecting the router service
-      _initializerDefineProperty(this, "rulesPendingDeletion", _descriptor2, this);
-      _initializerDefineProperty(this, "saveActive", _descriptor3, this);
-      _initializerDefineProperty(this, "saveContinueActive", _descriptor4, this);
-      _initializerDefineProperty(this, "validators", _descriptor5, this);
-    }
-    get activeRules() {
-      return this.model.filter(item => !item.isDeleted);
-    }
-    get controlsDisabled() {
-      return this.saveActive || this.saveContinueActive;
-    }
-    validatorFor(obj) {
-      let validatorKey = obj.toString();
-      let validators = this.validators;
-      if (!(validatorKey in validators)) {
-        validators[validatorKey] = _factories.default.createRuleValidator(obj, this);
-      }
-      return validators[validatorKey];
-    }
-    removeValidatorFor(obj) {
-      let validatorKey = obj.toString();
-      let validators = this.validators;
-      if (validatorKey in validators) {
-        validators[validatorKey].destroy();
-        delete validators[validatorKey];
-      }
-    }
-    invalidateOrder() {
-      if (!this.controlsDisabled) {
-        this.orderInvalidated();
-      }
-    }
-    orderInvalidated() {
-      // Custom event handler logic
-    }
-    addRule(rule) {
-      this.addRuleToRoute(rule);
-    }
-    deleteRule(rule) {
-      this.deleteRuleToRoute(rule);
-    }
-    addCondition(rule) {
-      this.addConditionToRoute(rule);
-    }
-    deleteCondition(condition) {
-      this.deleteConditionToRoute(condition);
-    }
-    addResult(rule) {
-      this.addResultToRoute(rule);
-    }
-    deleteResult(result) {
-      this.deleteResultToRoute(result);
-    }
-    saveRules(continueEditing) {
-      this.saveActive = !continueEditing;
-      this.saveContinueActive = continueEditing;
-    }
-    closeRules() {
-      this.router.transitionTo('form'); // Using the injected router service
-    }
-  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "router", [_service.inject], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: null
-  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "rulesPendingDeletion", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return [];
-    }
-  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "saveActive", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return false;
-    }
-  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "saveContinueActive", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return false;
-    }
-  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "validators", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return {};
-    }
-  }), _applyDecoratedDescriptor(_class.prototype, "invalidateOrder", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "invalidateOrder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addRule", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "addRule"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "deleteRule", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "deleteRule"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addCondition", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "addCondition"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "deleteCondition", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "deleteCondition"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addResult", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "addResult"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "deleteResult", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "deleteResult"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "saveRules", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "saveRules"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "closeRules", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "closeRules"), _class.prototype)), _class);
-});
-;define("ember-formulaic/controllers/form/submissions", ["exports", "@ember/controller", "@glimmer/tracking", "@ember/object", "@ember/service"], function (_exports, _controller, _tracking, _object, _service) {
-  "use strict";
-
-  Object.defineProperty(_exports, "__esModule", {
-    value: true
-  });
-  _exports.default = void 0;
-  var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5; //controllers/form/submissions.js
-  0; //eaimeta@70e063a35619d71f0,"@ember/controller",0,"@glimmer/tracking",0,"@ember/object",0,"@ember/service"eaimeta@70e063a35619d71f
-  function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
-  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
-  function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
-  let SubmissionsController = _exports.default = (_class = class SubmissionsController extends _controller.default {
-    constructor(...args) {
-      super(...args);
-      _initializerDefineProperty(this, "store", _descriptor, this);
-      _initializerDefineProperty(this, "router", _descriptor2, this);
-      // Injecting the router service
-      _defineProperty(this, "queryParams", ['page', 'source']);
-      _initializerDefineProperty(this, "formId", _descriptor3, this);
-      _initializerDefineProperty(this, "source", _descriptor4, this);
-      _initializerDefineProperty(this, "page", _descriptor5, this);
-    }
-    get fields() {
-      try {
-        return this.store.query('field', {
-          form: this.formId
-        });
-      } catch (error) {
-        console.error('Error fetching fields:', error);
-        throw error;
-      }
-    }
-    get columnHeaders() {
-      let headers = ['Date/Time', 'Source', 'Promo Source'];
-      if (this.fields.isFulfilled) {
-        this.fields.forEach(field => {
-          headers.push(field.data_name);
-        });
-      }
-      return headers;
-    }
-    get customColumnSlugs() {
-      let slugs = [];
-      if (this.fields.isFulfilled) {
-        this.fields.forEach(field => {
-          slugs.push(field.slug);
-        });
-      }
-      return slugs;
-    }
-    get submissionDataList() {
-      let rows = [];
-      let slugs = this.customColumnSlugs;
-      let submissions = this.model;
-      submissions.forEach(submission => {
-        let row = [submission.date_created, submission.source, submission.promo_source];
-        slugs.forEach(slug => {
-          row.push(submission.custom_data[slug]);
-        });
-        rows.push(row);
-      });
-      return rows;
-    }
-    get hasSubmissions() {
-      return this.submissionDataList.length > 0;
-    }
-    get metaData() {
-      return this.model.meta;
-    }
-    get count() {
-      return this.metaData ? this.metaData.count : null;
-    }
-    get currentPage() {
-      return this.page || 1;
-    }
-    get nextPage() {
-      return this.metaData ? this.metaData.next : null;
-    }
-    get previousPage() {
-      let previousPage = this.page - 1;
-      return previousPage > 0 ? previousPage : null;
-    }
-    get pageCount() {
-      return Math.ceil(this.count / this.page_size);
-    }
-    get sources() {
-      try {
-        return this.store.query('submissionsource', {
-          form: this.formId
-        });
-      } catch (error) {
-        console.error('Error fetching sources:', error);
-        throw error;
-      }
-    }
-    get selectedSource() {
-      return this.source;
-    }
-    changeSource(value) {
-      this.source = value;
-    }
-    gotoPreviousPage() {
-      if (this.page > 1) {
-        this.page -= 1;
-      }
-    }
-    gotoNextPage() {
-      this.page += 1;
-    }
-    closeSubmissions() {
-      this.router.transitionTo('form');
-    }
-  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "store", [_service.inject], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: null
-  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "router", [_service.inject], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: null
-  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "formId", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return null;
-    }
-  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "source", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return null;
-    }
-  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "page", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return 1;
-    }
-  }), _applyDecoratedDescriptor(_class.prototype, "changeSource", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "changeSource"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "gotoPreviousPage", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "gotoPreviousPage"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "gotoNextPage", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "gotoNextPage"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "closeSubmissions", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "closeSubmissions"), _class.prototype)), _class);
 });
 ;define("ember-formulaic/data-adapter", ["exports", "@ember-data/debug"], function (_exports, _debug) {
   "use strict";
@@ -3307,8 +3335,9 @@
   function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
   function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
   let BaseFieldModel = _exports.default = (_dec = (0, _model.attr)('string'), _dec2 = (0, _model.attr)('string'), _dec3 = (0, _model.attr)('string'), _dec4 = (0, _model.attr)('string'), _dec5 = (0, _model.attr)('boolean'), _dec6 = (0, _model.attr)('string'), _dec7 = (0, _model.attr)('string'), _dec8 = (0, _model.attr)('number'), _dec9 = (0, _model.attr)('string'), _dec10 = (0, _model.belongsTo)('form', {
-    async: true,
-    inverse: 'fields'
+    async: false,
+    inverse: 'fields',
+    as: 'field'
   }), _dec11 = (0, _model.attr)('boolean'), _dec12 = (0, _model.attr)('string'), (_class = class BaseFieldModel extends _model.default {
     constructor(...args) {
       super(...args);
@@ -3403,8 +3432,8 @@
   function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
   function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
   let BooleanFieldModel = _exports.default = (_dec = (0, _model.belongsTo)('field', {
-    async: true,
-    inverse: null
+    async: false,
+    inverse: 'booleanfield'
   }), _dec2 = (0, _model.attr)('boolean'), (_class = class BooleanFieldModel extends _basefield.default {
     constructor() {
       super(...arguments);
@@ -3442,8 +3471,8 @@
   function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
   function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
   let ChoiceFieldModel = _exports.default = (_dec = (0, _model.belongsTo)('field', {
-    async: true,
-    inverse: null
+    async: false,
+    inverse: 'choicefield'
   }), _dec2 = (0, _model.attr)('string'), _dec3 = (0, _model.attr)('string'), _dec4 = (0, _model.belongsTo)('optionlist', {
     async: true,
     inverse: 'choice_fields'
@@ -3595,10 +3624,11 @@
     async: true,
     inverse: 'forms'
   }), _dec5 = (0, _model.hasMany)('field', {
-    async: true,
+    async: false,
+    polymorphic: true,
     inverse: 'form'
   }), _dec6 = (0, _model.hasMany)('rule', {
-    async: true,
+    async: false,
     inverse: 'form'
   }), (_class = class FormModel extends _model.default {
     constructor(...args) {
@@ -3658,8 +3688,8 @@
   function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
   function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
   let HiddenFieldModel = _exports.default = (_dec = (0, _model.belongsTo)('field', {
-    async: true,
-    inverse: null
+    async: false,
+    inverse: 'hiddenfield'
   }), _dec2 = (0, _model.attr)('string'), (_class = class HiddenFieldModel extends _basefield.default {
     constructor() {
       super(...arguments);
@@ -3688,7 +3718,7 @@
     value: true
   });
   _exports.default = void 0;
-  var _dec, _dec2, _dec3, _dec4, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4;
+  var _dec, _dec2, _dec3, _dec4, _dec5, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5;
   0; //eaimeta@70e063a35619d71f0,"@ember-data/model"eaimeta@70e063a35619d71f
   function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
   function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -3697,7 +3727,10 @@
   function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
   function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
   let OptionModel = _exports.default = (_dec = (0, _model.attr)('string'), _dec2 = (0, _model.attr)('string'), _dec3 = (0, _model.attr)('number'), _dec4 = (0, _model.belongsTo)('optionlist', {
-    async: true,
+    async: false,
+    inverse: 'options'
+  }), _dec5 = (0, _model.belongsTo)('optiongroup', {
+    async: false,
     inverse: 'options'
   }), (_class = class OptionModel extends _model.default {
     constructor(...args) {
@@ -3706,6 +3739,7 @@
       _initializerDefineProperty(this, "value", _descriptor2, this);
       _initializerDefineProperty(this, "position", _descriptor3, this);
       _initializerDefineProperty(this, "list", _descriptor4, this);
+      _initializerDefineProperty(this, "option_group", _descriptor5, this);
     }
   }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "name", [_dec], {
     configurable: true,
@@ -3723,6 +3757,11 @@
     writable: true,
     initializer: null
   }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "list", [_dec4], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: null
+  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "option_group", [_dec5], {
     configurable: true,
     enumerable: true,
     writable: true,
@@ -3745,10 +3784,10 @@
   function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
   function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
   let OptionGroupModel = _exports.default = (_dec = (0, _model.attr)('string'), _dec2 = (0, _model.attr)('number'), _dec3 = (0, _model.belongsTo)('optionlist', {
-    async: true,
+    async: false,
     inverse: 'groups'
   }), _dec4 = (0, _model.hasMany)('option', {
-    async: true,
+    async: false,
     inverse: 'option_group'
   }), (_class = class OptionGroupModel extends _model.default {
     constructor(...args) {
@@ -3787,7 +3826,7 @@
     value: true
   });
   _exports.default = void 0;
-  var _dec, _dec2, _dec3, _class, _descriptor, _descriptor2, _descriptor3;
+  var _dec, _dec2, _dec3, _dec4, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4;
   0; //eaimeta@70e063a35619d71f0,"@ember-data/model"eaimeta@70e063a35619d71f
   function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
   function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -3801,12 +3840,16 @@
   }), _dec3 = (0, _model.hasMany)('optiongroup', {
     async: true,
     inverse: 'list'
+  }), _dec4 = (0, _model.hasMany)('choicefield', {
+    async: true,
+    inverse: 'option_list'
   }), (_class = class OptionListModel extends _model.default {
     constructor(...args) {
       super(...args);
       _initializerDefineProperty(this, "name", _descriptor, this);
       _initializerDefineProperty(this, "options", _descriptor2, this);
       _initializerDefineProperty(this, "groups", _descriptor3, this);
+      _initializerDefineProperty(this, "choice_fields", _descriptor4, this);
     }
   }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "name", [_dec], {
     configurable: true,
@@ -3819,6 +3862,11 @@
     writable: true,
     initializer: null
   }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "groups", [_dec3], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: null
+  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "choice_fields", [_dec4], {
     configurable: true,
     enumerable: true,
     writable: true,
@@ -3841,7 +3889,7 @@
   function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
   function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
   let PrivacyPolicyModel = _exports.default = (_dec = (0, _model.attr)('string'), _dec2 = (0, _model.attr)('string'), _dec3 = (0, _model.hasMany)('form', {
-    async: true,
+    async: false,
     inverse: 'privacy_policy'
   }), (_class = class PrivacyPolicyModel extends _model.default {
     constructor(...args) {
@@ -3883,13 +3931,13 @@
   function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
   function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
   let RuleModel = _exports.default = (_dec = (0, _model.belongsTo)('form', {
-    async: true,
+    async: false,
     inverse: 'rules'
   }), _dec2 = (0, _model.attr)('string'), _dec3 = (0, _model.attr)('number'), _dec4 = (0, _model.hasMany)('rulecondition', {
-    async: true,
+    async: false,
     inverse: 'rule'
   }), _dec5 = (0, _model.hasMany)('ruleresult', {
-    async: true,
+    async: false,
     inverse: 'rule'
   }), (_class = class RuleModel extends _model.default {
     constructor(...args) {
@@ -3943,10 +3991,10 @@
   function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
   function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
   let RuleConditionModel = _exports.default = (_dec = (0, _model.attr)('number'), _dec2 = (0, _model.belongsTo)('rule', {
-    async: true,
+    async: false,
     inverse: 'conditions'
   }), _dec3 = (0, _model.belongsTo)('field', {
-    async: true,
+    async: false,
     inverse: null
   }), _dec4 = (0, _model.attr)('string'), _dec5 = (0, _model.attr)('json'), (_class = class RuleConditionModel extends _model.default {
     constructor() {
@@ -4001,13 +4049,13 @@
   function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
   function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
   let RuleResultModel = _exports.default = (_dec = (0, _model.attr)('string'), _dec2 = (0, _model.belongsTo)('field', {
-    async: true,
+    async: false,
     inverse: null
   }), _dec3 = (0, _model.belongsTo)('rule', {
-    async: true,
+    async: false,
     inverse: 'results'
   }), _dec4 = (0, _model.belongsTo)('optiongroup', {
-    async: true,
+    async: false,
     inverse: null
   }), (_class = class RuleResultModel extends _model.default {
     constructor() {
@@ -4056,7 +4104,7 @@
   function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
   function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
   let SubmissionModel = _exports.default = (_dec = (0, _model.attr)('string'), _dec2 = (0, _model.attr)('string'), _dec3 = (0, _model.attr)('string'), _dec4 = (0, _model.belongsTo)('form', {
-    async: true,
+    async: false,
     inverse: 'submission'
   }), _dec5 = (0, _model.attr)('json'), (_class = class SubmissionModel extends _model.default {
     constructor(...args) {
@@ -4138,8 +4186,8 @@
   function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
   function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
   let TextFieldModel = _exports.default = (_dec = (0, _model.belongsTo)('field', {
-    async: true,
-    inverse: null
+    async: false,
+    inverse: 'textfield'
   }), (_class = class TextFieldModel extends _basefield.default {
     constructor() {
       super(...arguments);
@@ -4253,6 +4301,48 @@
   });
   0; //eaimeta@70e063a35619d71f0,"ember-popper-modifier/modifiers/popper"eaimeta@70e063a35619d71f
 });
+;define("ember-formulaic/modifiers/sortable-group", ["exports", "ember-sortable/modifiers/sortable-group"], function (_exports, _sortableGroup) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(_exports, "default", {
+    enumerable: true,
+    get: function () {
+      return _sortableGroup.default;
+    }
+  });
+  0; //eaimeta@70e063a35619d71f0,"ember-sortable/modifiers/sortable-group"eaimeta@70e063a35619d71f
+});
+;define("ember-formulaic/modifiers/sortable-handle", ["exports", "ember-sortable/modifiers/sortable-handle"], function (_exports, _sortableHandle) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(_exports, "default", {
+    enumerable: true,
+    get: function () {
+      return _sortableHandle.default;
+    }
+  });
+  0; //eaimeta@70e063a35619d71f0,"ember-sortable/modifiers/sortable-handle"eaimeta@70e063a35619d71f
+});
+;define("ember-formulaic/modifiers/sortable-item", ["exports", "ember-sortable/modifiers/sortable-item"], function (_exports, _sortableItem) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(_exports, "default", {
+    enumerable: true,
+    get: function () {
+      return _sortableItem.default;
+    }
+  });
+  0; //eaimeta@70e063a35619d71f0,"ember-sortable/modifiers/sortable-item"eaimeta@70e063a35619d71f
+});
 ;define("ember-formulaic/modifiers/style", ["exports", "ember-style-modifier/modifiers/style"], function (_exports, _style) {
   "use strict";
 
@@ -4351,7 +4441,7 @@
     initializer: null
   })), _class);
 });
-;define("ember-formulaic/routes/form/fields", ["exports", "@ember/routing/route", "@ember/service", "@ember/object"], function (_exports, _route, _service, _object) {
+;define("ember-formulaic/routes/form/fields", ["exports", "@ember/routing/route", "@ember/service"], function (_exports, _route, _service) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
@@ -4359,7 +4449,7 @@
   });
   _exports.default = void 0;
   var _dec, _class, _descriptor, _descriptor2; //routes/form/field.js
-  0; //eaimeta@70e063a35619d71f0,"@ember/routing/route",0,"@ember/service",0,"@ember/object"eaimeta@70e063a35619d71f
+  0; //eaimeta@70e063a35619d71f0,"@ember/routing/route",0,"@ember/service"eaimeta@70e063a35619d71f
   function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
   function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
   function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
@@ -4380,62 +4470,31 @@
     }
     async model() {
       try {
-        let fieldsData = await this.store.query('field', {
+        let fieldRecords = await this.store.query('field', {
           form: this.formId
         });
-        console.log("fieldsData:", fieldsData.toArray());
-        return fieldsData.toArray();
-      } catch (error) {
-        console.error('Error fetching fields:', error);
-        throw error;
-      }
-    }
-    setupController(controller, model) {
-      super.setupController(controller, model);
-      controller.setProperties({
-        saveActive: false,
-        saveContinueActive: false,
-        model: model
-      });
+        let updatedFieldRecords = await Promise.all(fieldRecords.map(async field => {
+          if (field.model_class === 'choicefield') {
+            // Ensure option_list is loaded
+            await field.choicefield.option_list;
+
+            // Update other relationships if needed
+            await field.choicefield.default_option;
+            await field.choicefield.option_group;
+            await field.choicefield.default_options;
+          }
+          console.warn("field : ", field);
+          return field;
+        }));
+
+        //console.warn("updatedFieldRecords : ", updatedFieldRecords);
+
+        return updatedFieldRecords; // Return the updated field records
+      } catch (error) {}
     }
     renderTemplate() {
       this.render('form.fields');
-      this.fieldService.renderDefaultSidebar(this.controller);
-    }
-    editFieldToRoute(field) {
-      this.fieldService.openEditField(this.controller, field);
-    }
-    deleteFieldToRoute(field, completeField) {
-      this.controller.removeValidatorFor(field);
-      field.deleteRecord();
-      this.controller.fieldsPendingDeletion.push(completeField);
-      this.controller.invalidateOrder();
-      if (this.controller.currentField === field) {
-        this.fieldService.closeEditField(this.controller);
-      }
-    }
-    doneEditingField() {
-      this.fieldService.closeEditField(this.controller);
-    }
-    createTextField(subtype) {
-      let field = this.fieldService.createField(subtype, this.form, 'text');
-      this.fieldService.openEditField(this.controller, field);
-    }
-    createChoiceField(subtype) {
-      let field = this.fieldService.createField(subtype, this.form, 'choice');
-      this.fieldService.openEditField(this.controller, field);
-    }
-    createBooleanField(subtype) {
-      let field = this.fieldService.createField(subtype, this.form, 'boolean');
-      this.fieldService.openEditField(this.controller, field);
-    }
-    createHiddenField(subtype) {
-      let field = this.fieldService.createField(subtype, this.form, 'hidden');
-      this.fieldService.openEditField(this.controller, field);
-    }
-    reloadFields() {
-      this.store.unloadAll('field');
-      this.refresh();
+      //this.fieldService.renderDefaultSidebar(this.controller);
     }
   }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "store", [_service.inject], {
     configurable: true,
@@ -4447,7 +4506,7 @@
     enumerable: true,
     writable: true,
     initializer: null
-  }), _applyDecoratedDescriptor(_class.prototype, "editFieldToRoute", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "editFieldToRoute"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "deleteFieldToRoute", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "deleteFieldToRoute"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "doneEditingField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "doneEditingField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "createTextField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "createTextField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "createChoiceField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "createChoiceField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "createBooleanField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "createBooleanField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "createHiddenField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "createHiddenField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "reloadFields", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "reloadFields"), _class.prototype)), _class));
+  })), _class));
 });
 ;define("ember-formulaic/routes/form/index", ["exports", "@ember/routing/route"], function (_exports, _route) {
   "use strict";
@@ -4457,13 +4516,10 @@
   });
   _exports.default = void 0;
   0; //eaimeta@70e063a35619d71f0,"@ember/routing/route"eaimeta@70e063a35619d71f
+  //routes/form/index.js
   class IndexRoute extends _route.default {
     model() {
       return this.modelFor('form');
-    }
-    async setupController(controller, model) {
-      super.setupController(controller, model);
-      await controller.loadPrivacyPolicies();
     }
   }
   _exports.default = IndexRoute;
@@ -4766,30 +4822,32 @@
   });
   _exports.default = void 0;
   0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/json"eaimeta@70e063a35619d71f
-  // app/serializers/field.js
   class FieldSerializer extends _json.default {
     normalizeResponse(store, primaryModelClass, payload, id, requestType) {
-      // Check if payload is an array
+      let data, included;
+
+      // Normalize each item in the payload and extract included records
       if (Array.isArray(payload)) {
-        // Wrap the array in a 'data' key
-        return {
-          data: payload.map(item => this.normalize(primaryModelClass, item))
-        };
+        data = payload.map(item => this._normalizeItem(item));
+        included = this._extractIncluded(payload);
       } else {
-        // Wrap the object in a 'data' key
-        return {
-          data: this.normalize(primaryModelClass, payload)
-        };
+        data = this._normalizeItem(payload);
+        included = this._extractIncluded([payload]);
       }
+
+      // Push included records into the store before the main data
+      included.forEach(record => {
+        store.push({
+          data: record
+        });
+      });
+
+      // Return the main data
+      return {
+        data
+      };
     }
-    normalize(primaryModelClass, payload) {
-      if (Array.isArray(payload)) {
-        return payload.map(item => this.normalizeItem(item));
-      } else {
-        return this.normalizeItem(payload);
-      }
-    }
-    normalizeItem(item) {
+    _normalizeItem(item) {
       let attributes = {
         display_name: item.display_name,
         data_name: item.data_name,
@@ -4800,41 +4858,123 @@
         position: item.position,
         css_class: item.css_class,
         form: item.form,
-        subtype: item.subtype
+        subtype: item.subtype,
+        enabled: item.enabled,
+        content_type: item.content_type
       };
       let relationships = {
-        textfield: {
+        textfield: item.textfield ? {
           data: {
-            embedded: 'always',
             type: 'textfield',
-            id: String(item.id)
+            id: String(item.textfield.id)
           }
-        },
-        booleanfield: {
+        } : null,
+        booleanfield: item.booleanfield ? {
           data: {
-            embedded: 'always',
             type: 'booleanfield',
-            id: String(item.id)
+            id: String(item.booleanfield.id)
           }
-        },
-        choicefield: {
+        } : null,
+        choicefield: item.choicefield ? {
           data: {
-            embedded: 'always',
             type: 'choicefield',
-            id: String(item.id)
+            id: String(item.choicefield.id)
+          }
+        } : null,
+        hiddenfield: item.hiddenfield ? {
+          data: {
+            type: 'hiddenfield',
+            id: String(item.hiddenfield.id)
+          }
+        } : null,
+        form: item.form ? {
+          data: {
+            type: 'form',
+            id: String(item.form)
+          }
+        } : null
+      };
+      return {
+        id: String(item.id),
+        type: 'field',
+        attributes,
+        relationships
+      };
+    }
+    _extractIncluded(payload) {
+      let included = [];
+      let seenTextfields = new Set();
+      let seenBooleanfields = new Set();
+      let seenChoicefields = new Set();
+      let seenHiddenfields = new Set();
+      let seenOptionLists = new Set();
+      let seenOptionGroups = new Set();
+      let seenOptions = new Set();
+      payload.forEach(item => {
+        if (item.textfield && !seenTextfields.has(item.textfield.id)) {
+          seenTextfields.add(item.textfield.id);
+          included.push(this._createIncludedRecord('textfield', item.textfield, item));
+        }
+        if (item.booleanfield && !seenBooleanfields.has(item.booleanfield.id)) {
+          seenBooleanfields.add(item.booleanfield.id);
+          included.push(this._createIncludedRecord('booleanfield', item.booleanfield, item));
+        }
+        if (item.choicefield && !seenChoicefields.has(item.choicefield.id)) {
+          seenChoicefields.add(item.choicefield.id);
+          included.push(this._createIncludedRecord('choicefield', item.choicefield, item));
+          if (item.choicefield.option_list && !seenOptionLists.has(item.choicefield.option_list.id)) {
+            seenOptionLists.add(item.choicefield.option_list.id);
+            included.push(this._createIncludedRecord('optionlist', item.choicefield.option_list, item.choicefield));
+          }
+          if (item.choicefield.option_group && !seenOptionGroups.has(item.choicefield.option_group.id)) {
+            seenOptionGroups.add(item.choicefield.option_group.id);
+            included.push(this._createIncludedRecord('optiongroup', item.choicefield.option_group, item.choicefield));
+          }
+          if (item.choicefield.default_option && !seenOptions.has(item.choicefield.default_option.id)) {
+            seenOptions.add(item.choicefield.default_option.id);
+            included.push(this._createIncludedRecord('option', item.choicefield.default_option, item.choicefield));
+          }
+          if (item.choicefield.default_options && item.choicefield.default_options.length) {
+            item.choicefield.default_options.forEach(option => {
+              if (!seenOptions.has(option.id)) {
+                seenOptions.add(option.id);
+                included.push(this._createIncludedRecord('option', option, item.choicefield));
+              }
+            });
+          }
+        }
+        if (item.hiddenfield && !seenHiddenfields.has(item.hiddenfield.id)) {
+          seenHiddenfields.add(item.hiddenfield.id);
+          included.push(this._createIncludedRecord('hiddenfield', item.hiddenfield, item));
+        }
+        if (item.option_list && !seenOptionLists.has(item.option_list)) {
+          seenOptionLists.add(item.option_list);
+          included.push(this._createIncludedRecord('optionlist', {
+            id: item.option_list
+          }, item));
+        }
+      });
+      return included;
+    }
+    _createIncludedRecord(type, item, parentItem) {
+      let attributes = item;
+      let relationships = {
+        field: {
+          data: {
+            type: 'field',
+            id: String(parentItem.id)
           }
         },
-        hiddenfield: {
+        form: {
           data: {
-            embedded: 'always',
-            type: 'hiddenfield',
-            id: String(item.id)
+            type: 'form',
+            id: String(item.form)
           }
         }
       };
       return {
         id: String(item.id),
-        type: 'field',
+        type: type,
         attributes,
         relationships
       };
@@ -4858,6 +4998,178 @@
   }
   _exports.default = FormSerializer;
 });
+;define("ember-formulaic/serializers/optiongroup", ["exports", "@ember-data/serializer/json"], function (_exports, _json) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/json"eaimeta@70e063a35619d71f
+  class OptionGroupSerializer extends _json.default {
+    normalizeResponse(store, primaryModelClass, payload, id, requestType) {
+      let data, included;
+      if (Array.isArray(payload)) {
+        data = payload.map(item => this._normalizeItem(item));
+        included = this._extractIncluded(payload);
+      } else {
+        data = this._normalizeItem(payload);
+        included = this._extractIncluded([payload]);
+      }
+      if (requestType === 'queryRecord' && Array.isArray(data) && data.length > 0) {
+        data = data[0];
+      }
+      return {
+        data,
+        included
+      };
+    }
+    _normalizeItem(item) {
+      let attributes = {
+        name: item.name,
+        position: item.position
+      };
+      let uniqueOptions = this._uniqueById(item.options || []);
+      let relationships = {
+        list: item.list ? {
+          data: {
+            type: 'optionlist',
+            id: String(item.list)
+          }
+        } : null,
+        options: {
+          data: uniqueOptions.map(opt => ({
+            type: 'option',
+            id: String(opt.id)
+          }))
+        }
+      };
+      return {
+        id: String(item.id),
+        type: 'optiongroup',
+        attributes,
+        relationships
+      };
+    }
+    _extractIncluded(payload) {
+      let included = [];
+      let seenOptions = new Set();
+      payload.forEach(item => {
+        this._uniqueById(item.options || []).forEach(opt => {
+          if (!seenOptions.has(opt.id)) {
+            seenOptions.add(opt.id);
+            included.push({
+              type: 'option',
+              id: String(opt.id),
+              attributes: {
+                name: opt.name,
+                value: opt.value,
+                position: opt.position
+              },
+              relationships: {
+                list: {
+                  data: {
+                    type: 'optionlist',
+                    id: String(opt.list)
+                  }
+                },
+                option_group: {
+                  data: {
+                    type: 'optiongroup',
+                    id: String(item.id)
+                  }
+                }
+              }
+            });
+          }
+        });
+      });
+      return included;
+    }
+    _uniqueById(array) {
+      const seen = new Set();
+      return array.filter(item => {
+        const id = item.id;
+        if (seen.has(id)) {
+          return false;
+        } else {
+          seen.add(id);
+          return true;
+        }
+      });
+    }
+  }
+  _exports.default = OptionGroupSerializer;
+});
+;define("ember-formulaic/serializers/optionlist", ["exports", "@ember-data/serializer/json"], function (_exports, _json) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/json"eaimeta@70e063a35619d71f
+  class OptionlistSerializer extends _json.default {
+    normalizeResponse(store, primaryModelClass, payload, id, requestType) {
+      let data;
+      if (Array.isArray(payload)) {
+        data = payload.map(item => this._normalizeItem(item));
+      } else {
+        data = this._normalizeItem(payload);
+      }
+      if (requestType === 'queryRecord' && Array.isArray(data) && data.length > 0) {
+        data = data[0];
+      }
+      return {
+        data
+      };
+    }
+    _normalizeItem(item) {
+      let attributes = {
+        name: item.name
+      };
+      let relationships = {
+        options: {
+          data: (item.options || []).map(opt => ({
+            type: 'option',
+            id: String(opt.id)
+          }))
+        },
+        groups: {
+          data: this._uniqueById(item.groups || []).map(grp => ({
+            type: 'optiongroup',
+            id: String(grp.id)
+          }))
+        },
+        choice_fields: {
+          data: (item.choice_fields || []).map(cf => ({
+            type: 'choicefield',
+            id: String(cf.id)
+          }))
+        }
+      };
+      return {
+        id: String(item.id),
+        type: 'optionlist',
+        attributes,
+        relationships
+      };
+    }
+    _uniqueById(array) {
+      const seen = new Set();
+      return array.filter(item => {
+        const id = item.id;
+        if (seen.has(id)) {
+          return false;
+        } else {
+          seen.add(id);
+          return true;
+        }
+      });
+    }
+  }
+  _exports.default = OptionlistSerializer;
+});
 ;define("ember-formulaic/serializers/privacypolicy", ["exports", "@ember-data/serializer/json"], function (_exports, _json) {
   "use strict";
 
@@ -4868,7 +5180,6 @@
   0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/json"eaimeta@70e063a35619d71f
   class PrivacyPolicySerializer extends _json.default {
     normalizeResponse(store, primaryModelClass, payload, id, requestType) {
-      console.warn('Received payload:', payload);
       let data = payload.map(policy => ({
         id: String(policy.id),
         type: 'privacypolicy',
@@ -4946,15 +5257,29 @@
     initializer: null
   })), _class));
 });
-;define("ember-formulaic/services/field-service", ["exports", "@ember/service"], function (_exports, _service) {
+;define("ember-formulaic/services/ember-sortable-internal-state", ["exports", "ember-sortable/services/ember-sortable-internal-state"], function (_exports, _emberSortableInternalState) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(_exports, "default", {
+    enumerable: true,
+    get: function () {
+      return _emberSortableInternalState.default;
+    }
+  });
+  0; //eaimeta@70e063a35619d71f0,"ember-sortable/services/ember-sortable-internal-state"eaimeta@70e063a35619d71f
+});
+;define("ember-formulaic/services/field-service", ["exports", "@glimmer/tracking", "@ember/service"], function (_exports, _tracking, _service) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
     value: true
   });
   _exports.default = void 0;
-  var _class, _descriptor, _descriptor2;
-  0; //eaimeta@70e063a35619d71f0,"@ember/service",0,"@ember/service"eaimeta@70e063a35619d71f
+  var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4; //services/field-service.js
+  0; //eaimeta@70e063a35619d71f0,"@glimmer/tracking",0,"@ember/service",0,"@ember/service"eaimeta@70e063a35619d71f
   function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
   function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
   function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
@@ -4966,47 +5291,55 @@
       super(...args);
       _initializerDefineProperty(this, "store", _descriptor, this);
       _initializerDefineProperty(this, "router", _descriptor2, this);
+      _initializerDefineProperty(this, "currentField", _descriptor3, this);
+      _initializerDefineProperty(this, "validators", _descriptor4, this);
     }
-    createBaseField(subtype, form) {
+    eq(a, b) {
+      return a === b;
+    }
+    async validatorFor(field) {
+      let validatorKey = field.toString();
+      if (!this.validators[validatorKey]) {
+        this.validators[validatorKey] = field.validator;
+      }
+      return this.validators[validatorKey];
+    }
+    removeValidatorFor(field) {
+      let validatorKey = field.toString();
+      if (this.validators[validatorKey]) {
+        this.validators[validatorKey].destroy();
+        delete this.validators[validatorKey];
+      }
+    }
+    createBaseField(subtype, form, model_class) {
       const position = document.querySelectorAll('.field-sortable .item').length;
-      return this.store.createRecord('field', {
+      console.log("position : ", position);
+      let field = this.store.createRecord('field', {
         display_name: null,
         data_name: null,
         slug: null,
         required: false,
         help_text: null,
-        model_class: 'textfield',
+        model_class: model_class,
         position: position,
         css_class: null,
         subtype: subtype,
         form: form
       });
-    }
-    renderFieldSidebar(context, field) {
-      const fieldType = field.textfield || field.choicefield || field.booleanfield || field.hiddenfield;
-      if (!fieldType) {
-        throw new Error("Formulaic: field type not implemented");
-      }
-      const templateName = `form/fields/${fieldType.modelName}`;
-      const controllerName = `form/fields/${fieldType.modelName}`;
-      context.render(templateName, {
-        into: 'form.fields',
-        outlet: 'sidebar',
-        model: fieldType,
-        controller: controllerName
-      });
+
+      //console.warn(this.sortableVersion++);
+
+      return field;
     }
     openEditField(context, field) {
-      context.set('currentField', field);
-      this.renderFieldSidebar(context, field);
+      this.currentField = field.get(field.model_class);
+      console.warn("this.currentField : ", this.currentField);
     }
-    closeEditField(context) {
-      context.set('currentField', null);
-      context.render('form.fields.index', {
-        into: 'form.fields',
-        outlet: 'sidebar'
-      });
+    closeEditField() {
+      this.currentField = null;
     }
+
+    // this will return generic FieldModel ::: not specific model
     createField(subtype, form, type) {
       const validSubtypes = {
         text: ["text", "textarea", "email", "phone_number", "integer", "full_name"],
@@ -5017,7 +5350,7 @@
       if (!validSubtypes[type].includes(subtype)) {
         throw new Error(`Formulaic: ${type} field subtype \`${subtype}\` not implemented`);
       }
-      let field = this.createBaseField(subtype, form);
+      let field = this.createBaseField(subtype, form, type + "field");
       let specificField;
       switch (type) {
         case 'text':
@@ -5051,6 +5384,7 @@
           break;
       }
       field[type + 'field'] = specificField;
+      console.warn("final-field : ", field);
       return field;
     }
   }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "store", [_service.inject], {
@@ -5063,6 +5397,20 @@
     enumerable: true,
     writable: true,
     initializer: null
+  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "currentField", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "validators", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return {};
+    }
   })), _class);
 });
 ;define("ember-formulaic/services/page-title", ["exports", "ember-page-title/services/page-title"], function (_exports, _pageTitle) {
@@ -5179,6 +5527,659 @@
     "id": "tcAZ7ZWT",
     "block": "[[[3,\" templates/components/base-sortable.hbs \"],[1,\"\\n\"],[10,0],[14,0,\"sortable\"],[12],[1,\"\\n  \"],[8,[39,1],null,[[\"@onChange\"],[[30,0,[\"updateSortable\"]]]],[[\"default\"],[[[[1,\"\\n\"],[42,[28,[37,3],[[28,[37,3],[[30,1]],null]],null],null,[[[1,\"      \"],[8,[39,4],null,[[\"@model\"],[[30,2]]],[[\"default\"],[[[[1,\"\\n        \"],[10,0],[14,0,\"item handle\"],[12],[1,\"\\n          \"],[18,4,[[30,3]]],[1,\"\\n        \"],[13],[1,\"\\n      \"]],[3]]]]],[1,\"\\n\"]],[2]],null],[1,\"  \"]],[]]]]],[1,\"\\n\"],[13],[1,\"\\n\"]],[\"@items\",\"item\",\"item\",\"&default\"],false,[\"div\",\"sortable-group\",\"each\",\"-track-array\",\"sortable-item\",\"yield\"]]",
     "moduleName": "ember-formulaic/templates/components/base-sortable.hbs",
+    "isStrictMode": false
+  });
+});
+;define("ember-formulaic/templates/components/form/fields", ["exports", "@ember/template-factory"], function (_exports, _templateFactory) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"@ember/template-factory"eaimeta@70e063a35619d71f
+  var _default = _exports.default = (0, _templateFactory.createTemplateFactory)(
+  /*
+    <!-- templates/components/form/fields.hbs -->
+  
+  <div class="row formulaic-row edit-fields">
+    <div class="col-xs-8 preview-column">
+      <h2>Editing Fields</h2>
+      <div class="custom-edit-block">
+        {{!-- Ensure SortableFields component is available --}}
+        <SortableFields
+          @items={{this.activeFields}}
+          @targetController={{this}}
+          @currentField={{this.currentField}}
+          @editField={{this.editField}}
+          @deleteField={{this.deleteField}}
+          @invalidateOrder={{this.invalidateOrder}}  />
+      </div>
+  
+      <div class="row formulaic-controls">
+        <div class="col-xs-12">
+          {{!-- Save & Continue Editing Button --}}
+          <button class="btn btn-primary" type="submit" {{on "click" (fn this.saveFields true)}}
+                  disabled={{this.controlsDisabled}}>
+            {{#if this.saveContinueActive}}Saving...{{else}}Save & Continue Editing{{/if}}
+          </button>
+          {{!-- Save Button --}}
+          <button class="btn btn-primary" type="submit" {{on "click" (fn this.saveFields false)}}
+                  disabled={{this.controlsDisabled}}>
+            {{#if this.saveActive}}Saving...{{else}}Save{{/if}}
+          </button>
+          {{!-- Close Button --}}
+          <button class="btn btn-danger" type="submit" {{on "click" this.close}} disabled={{this.controlsDisabled}}>
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="col-xs-4">
+      <div class="edit-column">
+        <Sidebar @field={{this.fieldService.currentField}} />
+      </div>
+    </div>
+  </div>
+  
+  */
+  {
+    "id": "+GZLvZuH",
+    "block": "[[[3,\" templates/components/form/fields.hbs \"],[1,\"\\n\\n\"],[10,0],[14,0,\"row formulaic-row edit-fields\"],[12],[1,\"\\n  \"],[10,0],[14,0,\"col-xs-8 preview-column\"],[12],[1,\"\\n    \"],[10,\"h2\"],[12],[1,\"Editing Fields\"],[13],[1,\"\\n    \"],[10,0],[14,0,\"custom-edit-block\"],[12],[1,\"\\n\"],[1,\"      \"],[8,[39,2],null,[[\"@items\",\"@targetController\",\"@currentField\",\"@editField\",\"@deleteField\",\"@invalidateOrder\"],[[30,0,[\"activeFields\"]],[30,0],[30,0,[\"currentField\"]],[30,0,[\"editField\"]],[30,0,[\"deleteField\"]],[30,0,[\"invalidateOrder\"]]]],null],[1,\"\\n    \"],[13],[1,\"\\n\\n    \"],[10,0],[14,0,\"row formulaic-controls\"],[12],[1,\"\\n      \"],[10,0],[14,0,\"col-xs-12\"],[12],[1,\"\\n\"],[1,\"        \"],[11,\"button\"],[24,0,\"btn btn-primary\"],[16,\"disabled\",[30,0,[\"controlsDisabled\"]]],[24,4,\"submit\"],[4,[38,4],[\"click\",[28,[37,5],[[30,0,[\"saveFields\"]],true],null]],null],[12],[1,\"\\n          \"],[41,[30,0,[\"saveContinueActive\"]],[[[1,\"Saving...\"]],[]],[[[1,\"Save & Continue Editing\"]],[]]],[1,\"\\n        \"],[13],[1,\"\\n\"],[1,\"        \"],[11,\"button\"],[24,0,\"btn btn-primary\"],[16,\"disabled\",[30,0,[\"controlsDisabled\"]]],[24,4,\"submit\"],[4,[38,4],[\"click\",[28,[37,5],[[30,0,[\"saveFields\"]],false],null]],null],[12],[1,\"\\n          \"],[41,[30,0,[\"saveActive\"]],[[[1,\"Saving...\"]],[]],[[[1,\"Save\"]],[]]],[1,\"\\n        \"],[13],[1,\"\\n\"],[1,\"        \"],[11,\"button\"],[24,0,\"btn btn-danger\"],[16,\"disabled\",[30,0,[\"controlsDisabled\"]]],[24,4,\"submit\"],[4,[38,4],[\"click\",[30,0,[\"close\"]]],null],[12],[1,\"\\n          Close\\n        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n    \"],[13],[1,\"\\n  \"],[13],[1,\"\\n\\n  \"],[10,0],[14,0,\"col-xs-4\"],[12],[1,\"\\n    \"],[10,0],[14,0,\"edit-column\"],[12],[1,\"\\n      \"],[8,[39,7],null,[[\"@field\"],[[30,0,[\"fieldService\",\"currentField\"]]]],null],[1,\"\\n    \"],[13],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"]],[],false,[\"div\",\"h2\",\"sortable-fields\",\"button\",\"on\",\"fn\",\"if\",\"sidebar\"]]",
+    "moduleName": "ember-formulaic/templates/components/form/fields.hbs",
+    "isStrictMode": false
+  });
+});
+;define("ember-formulaic/templates/components/form/fields/booleanfield", ["exports", "@ember/template-factory"], function (_exports, _templateFactory) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"@ember/template-factory"eaimeta@70e063a35619d71f
+  var _default = _exports.default = (0, _templateFactory.createTemplateFactory)(
+  /*
+    <!-- templates/form/fields/booleanfield.hbs -->
+  
+  <h2>Edit '{{this.subtypeName}}' field</h2>
+  <div class="textfield-container {{if this.validator.isDisplayNameInvalid 'has-error'}}">
+    <button class="btn btn-link wysiwyg-toggle" {{on "click" this.toggleDisplayNameWYSIWYG}}>
+      {{#if this.isDisplayNameWYSIWYGEnabled}}
+        TEXT
+      {{else}}
+        WYSIWYG
+      {{/if}}
+    </button>
+    <label class="control-label">
+      Display Name
+      {{#if this.isDisplayNameWYSIWYGEnabled}}
+        <TinymceEditor @options={{this.editorOptions}} @value={{this.model.display_name}} @onChange={{this.updateDisplayName}} />
+      {{else}}
+        <Input @type="text" id="field-display-name" placeholder="(Display Name)" @value={{this.model.display_name}} class="form-control input-sm" />
+      {{/if}}
+    </label>
+  </div>
+  <div class="{{if this.validator.isDataNameInvalid 'has-error'}}">
+    <label class="control-label">
+      Data Column Name
+      <Input @type="text" id="field-data-name" placeholder="(Data Column Name)" @value={{this.model.data_name}} class="form-control input-sm" />
+    </label>
+  </div>
+  <div class="{{if this.validator.isSlugInvalid 'has-error'}}">
+    <label class="control-label">
+      Slug
+      <Input @type="text" id="field-slug" placeholder="(field-name)" @value={{this.autoSlug}} class="form-control input-sm" />
+    </label>
+  </div>
+  <label>
+    <Input @type="checkbox" id="field-required" @checked={{this.model.required}} />
+    Required
+  </label>
+  <label>
+    <Input @type="checkbox" id="field-default-checked" @checked={{this.model.default_checked}} />
+    Checked by Default
+  </label>
+  
+  <div class="extras">
+    <h4>Extras</h4>
+    <label>
+      Help Text
+      <Input @type="text" id="field-help-text" placeholder="" @value={{this.model.help_text}} class="form-control input-sm" />
+    </label>
+    <label>
+      CSS Class
+      <Input @type="text" id="field-css-class" @value={{this.model.css_class}} class="form-control input-sm" />
+    </label>
+  </div>
+  
+  <button class="btn btn-primary" type="submit" {{on "click" this.doneEditingField}}>Done</button>
+  
+  */
+  {
+    "id": "nuhOm7mP",
+    "block": "[[[3,\" templates/form/fields/booleanfield.hbs \"],[1,\"\\n\\n\"],[10,\"h2\"],[12],[1,\"Edit '\"],[1,[30,0,[\"subtypeName\"]]],[1,\"' field\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[\"textfield-container \",[52,[30,0,[\"validator\",\"isDisplayNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[11,\"button\"],[24,0,\"btn btn-link wysiwyg-toggle\"],[4,[38,4],[\"click\",[30,0,[\"toggleDisplayNameWYSIWYG\"]]],null],[12],[1,\"\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      TEXT\\n\"]],[]],[[[1,\"      WYSIWYG\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Display Name\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      \"],[8,[39,6],null,[[\"@options\",\"@value\",\"@onChange\"],[[30,0,[\"editorOptions\"]],[30,0,[\"model\",\"display_name\"]],[30,0,[\"updateDisplayName\"]]]],null],[1,\"\\n\"]],[]],[[[1,\"      \"],[8,[39,7],[[24,1,\"field-display-name\"],[24,\"placeholder\",\"(Display Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"display_name\"]]]],null],[1,\"\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isDataNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Data Column Name\\n    \"],[8,[39,7],[[24,1,\"field-data-name\"],[24,\"placeholder\",\"(Data Column Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"data_name\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isSlugInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Slug\\n    \"],[8,[39,7],[[24,1,\"field-slug\"],[24,\"placeholder\",\"(field-name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"autoSlug\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,\"label\"],[12],[1,\"\\n  \"],[8,[39,7],[[24,1,\"field-required\"]],[[\"@type\",\"@checked\"],[\"checkbox\",[30,0,[\"model\",\"required\"]]]],null],[1,\"\\n  Required\\n\"],[13],[1,\"\\n\"],[10,\"label\"],[12],[1,\"\\n  \"],[8,[39,7],[[24,1,\"field-default-checked\"]],[[\"@type\",\"@checked\"],[\"checkbox\",[30,0,[\"model\",\"default_checked\"]]]],null],[1,\"\\n  Checked by Default\\n\"],[13],[1,\"\\n\\n\"],[10,0],[14,0,\"extras\"],[12],[1,\"\\n  \"],[10,\"h4\"],[12],[1,\"Extras\"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    Help Text\\n    \"],[8,[39,7],[[24,1,\"field-help-text\"],[24,\"placeholder\",\"\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"help_text\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    CSS Class\\n    \"],[8,[39,7],[[24,1,\"field-css-class\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"css_class\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\\n\"],[11,\"button\"],[24,0,\"btn btn-primary\"],[24,4,\"submit\"],[4,[38,4],[\"click\",[30,0,[\"doneEditingField\"]]],null],[12],[1,\"Done\"],[13],[1,\"\\n\"]],[],false,[\"h2\",\"div\",\"if\",\"button\",\"on\",\"label\",\"tinymce-editor\",\"input\",\"h4\"]]",
+    "moduleName": "ember-formulaic/templates/components/form/fields/booleanfield.hbs",
+    "isStrictMode": false
+  });
+});
+;define("ember-formulaic/templates/components/form/fields/choicefield", ["exports", "@ember/template-factory"], function (_exports, _templateFactory) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"@ember/template-factory"eaimeta@70e063a35619d71f
+  var _default = _exports.default = (0, _templateFactory.createTemplateFactory)(
+  /*
+    <!-- templates/form/fields/choicefield.hbs -->
+  
+  {{#if this.resolvedOptionList}}
+    <p>Option List: {{this.optionList.id}}</p>
+    {{else}}
+    <p>Loading option list...</p>
+  {{/if}}
+  
+  <h2>Edit '{{this.subtypeName}}' field</h2>
+  <div class="textfield-container {{if this.validator.isDisplayNameInvalid 'has-error'}}">
+    <button class="btn btn-link wysiwyg-toggle" {{on "click" this.toggleDisplayNameWYSIWYG}}>
+      {{#if this.isDisplayNameWYSIWYGEnabled}}
+        TEXT
+      {{else}}
+        WYSIWYG
+      {{/if}}
+    </button>
+    <label class="control-label">
+      Display Name
+      {{#if this.isDisplayNameWYSIWYGEnabled}}
+        <TinymceEditor @options={{this.editorOptions}} @value={{this.model.display_name}} @onChange={{this.updateDisplayName}} />
+      {{else}}
+        <Input @type="text" id="field-display-name" placeholder="(Display Name)" @value={{this.model.display_name}}
+               class="form-control input-sm"/>
+      {{/if}}
+    </label>
+  </div>
+  <div class="{{if this.validator.isDataNameInvalid 'has-error'}}">
+    <label class="control-label">
+      Data Column Name
+      <Input @type="text" id="field-data-name" placeholder="(Data Column Name)" @value={{this.model.data_name}}
+             class="form-control input-sm"/>
+    </label>
+  </div>
+  <div class="{{if this.validator.isSlugInvalid 'has-error'}}">
+    <label class="control-label">
+      Slug
+      <Input @type="text" id="field-slug" placeholder="(field-name)" @value={{this.autoSlug}}
+             class="form-control input-sm"/>
+    </label>
+  </div>
+  <label>
+    <Input @type="checkbox" id="field-required" @checked={{this.model.required}} />
+    Required
+  </label>
+  
+  <div class="{{if this.validator.isOptionListInvalid 'has-error'}}">
+    <label class="control-label">
+      Option List
+      {{#if this.optionlistsReady}}
+        <select {{on "change" this.optionListChanged}} class="form-control input-sm">
+          <option value="">Choose `Option List`...</option>
+          {{#each this.optionlists as |optionlist|}}
+            <option value={{optionlist.id}} selected={{if (this.fieldService.eq optionlist.id this.model.option_list.id)
+                                                          "selected"
+                                                          null}}>{{optionlist.name}}</option>
+          {{/each}}
+        </select>
+      {{else}}
+        Loading
+      {{/if}}
+    </label>
+  </div>
+  {{#if this.hasOptionGroups}}
+    <label class="control-label">
+      Option Group
+      {{#if this.optiongroupsReady}}
+        <select {{on "change" this.optionGroupChanged}} class="form-control input-sm">
+          <option value="">Choose `Option Set`...</option>
+          {{#each this.optiongroups as |optiongroup|}}
+            <option value={{optiongroup.id}} selected={{if
+              (this.fieldService.eq optiongroup.id this.model.option_group.id)
+              "selected"
+              null}}>{{optiongroup.name}}</option>
+          {{/each}}
+        </select>
+      {{else}}
+        Loading
+      {{/if}}
+    </label>
+  {{/if}}
+  <label>
+    Default Selected
+    {{#if this.optionlistsReady}}
+      {{#if this.supportsMultiValue}}
+        <select {{on "change" this.defaultOptionChanged}} class="form-control input-sm" multiple="multiple">
+          <option value="">Choose `Default Option`...</option>
+          {{#each this.modelOptions as |modelOption|}}
+            <option value={{modelOption.id}} selected={{if
+              (this.fieldService.eq modelOption.id this.model.default_options.id)
+              "selected"
+              null}}>{{modelOption.name}}</option>
+          {{/each}}
+        </select>
+      {{else}}
+        <select {{on "change" this.defaultOptionChanged}} class="form-control input-sm">
+          <option value="">Choose `Default Option`...</option>
+          {{#each this.modelOptions as |modelOption|}}
+            <option value={{modelOption.id}} selected={{if
+              (this.fieldService.eq modelOption.id this.model.default_options.id)
+              "selected"
+              null}}>{{modelOption.name}}</option>
+          {{/each}}
+        </select>
+      {{/if}}
+    {{else}}
+      Loading
+    {{/if}}
+  </label>
+  
+  {{#if this.supportsMultiValue}}
+    <label>
+      Minimum Selections
+      <Input @type="text" id="field-minimum-selections" @value={{this.model.minimum_selections}}
+             class="form-control input-sm"/>
+    </label>
+    <label>
+      Maximum Selections
+      <Input @type="text" id="field-maximum-selections" @value={{this.model.maximum_selections}}
+             class="form-control input-sm"/>
+    </label>
+  {{else}}
+    <label class="control-label">
+      Default Text (unselected)
+      <Input @type="text" id="field-default-text" placeholder="(Choose one)" @value={{this.model.default_text}}
+             class="form-control input-sm"/>
+    </label>
+  {{/if}}
+  
+  <div class="extras">
+    <h4>Extras</h4>
+    <label>
+      Help Text
+      <Input @type="text" id="field-help-text" placeholder="" @value={{this.model.help_text}}
+             class="form-control input-sm"/>
+    </label>
+    <label>
+      CSS Class
+      <Input @type="text" id="field-css-class" @value={{this.model.css_class}} class="form-control input-sm"/>
+    </label>
+  </div>
+  
+  <button class="btn btn-primary" type="submit" {{on "click" this.doneEditingField}}>Done</button>
+  
+  */
+  {
+    "id": "wXlLaxQv",
+    "block": "[[[3,\" templates/form/fields/choicefield.hbs \"],[1,\"\\n\\n\"],[41,[30,0,[\"resolvedOptionList\"]],[[[1,\"  \"],[10,2],[12],[1,\"Option List: \"],[1,[30,0,[\"optionList\",\"id\"]]],[13],[1,\"\\n\"]],[]],[[[1,\"  \"],[10,2],[12],[1,\"Loading option list...\"],[13],[1,\"\\n\"]],[]]],[1,\"\\n\"],[10,\"h2\"],[12],[1,\"Edit '\"],[1,[30,0,[\"subtypeName\"]]],[1,\"' field\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[\"textfield-container \",[52,[30,0,[\"validator\",\"isDisplayNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[11,\"button\"],[24,0,\"btn btn-link wysiwyg-toggle\"],[4,[38,5],[\"click\",[30,0,[\"toggleDisplayNameWYSIWYG\"]]],null],[12],[1,\"\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      TEXT\\n\"]],[]],[[[1,\"      WYSIWYG\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Display Name\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      \"],[8,[39,7],null,[[\"@options\",\"@value\",\"@onChange\"],[[30,0,[\"editorOptions\"]],[30,0,[\"model\",\"display_name\"]],[30,0,[\"updateDisplayName\"]]]],null],[1,\"\\n\"]],[]],[[[1,\"      \"],[8,[39,8],[[24,1,\"field-display-name\"],[24,\"placeholder\",\"(Display Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"display_name\"]]]],null],[1,\"\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isDataNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Data Column Name\\n    \"],[8,[39,8],[[24,1,\"field-data-name\"],[24,\"placeholder\",\"(Data Column Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"data_name\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isSlugInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Slug\\n    \"],[8,[39,8],[[24,1,\"field-slug\"],[24,\"placeholder\",\"(field-name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"autoSlug\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,\"label\"],[12],[1,\"\\n  \"],[8,[39,8],[[24,1,\"field-required\"]],[[\"@type\",\"@checked\"],[\"checkbox\",[30,0,[\"model\",\"required\"]]]],null],[1,\"\\n  Required\\n\"],[13],[1,\"\\n\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isOptionListInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Option List\\n\"],[41,[30,0,[\"optionlistsReady\"]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm\"],[4,[38,5],[\"change\",[30,0,[\"optionListChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Option List`...\"],[13],[1,\"\\n\"],[42,[28,[37,12],[[28,[37,12],[[30,0,[\"optionlists\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,1,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,1,[\"id\"]],[30,0,[\"model\",\"option_list\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,1,[\"name\"]]],[13],[1,\"\\n\"]],[1]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],[[[1,\"      Loading\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[41,[30,0,[\"hasOptionGroups\"]],[[[1,\"  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Option Group\\n\"],[41,[30,0,[\"optiongroupsReady\"]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm\"],[4,[38,5],[\"change\",[30,0,[\"optionGroupChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Option Set`...\"],[13],[1,\"\\n\"],[42,[28,[37,12],[[28,[37,12],[[30,0,[\"optiongroups\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,2,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,2,[\"id\"]],[30,0,[\"model\",\"option_group\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,2,[\"name\"]]],[13],[1,\"\\n\"]],[2]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],[[[1,\"      Loading\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"]],[]],null],[10,\"label\"],[12],[1,\"\\n  Default Selected\\n\"],[41,[30,0,[\"optionlistsReady\"]],[[[41,[30,0,[\"supportsMultiValue\"]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm\"],[24,\"multiple\",\"multiple\"],[4,[38,5],[\"change\",[30,0,[\"defaultOptionChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Default Option`...\"],[13],[1,\"\\n\"],[42,[28,[37,12],[[28,[37,12],[[30,0,[\"modelOptions\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,3,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,3,[\"id\"]],[30,0,[\"model\",\"default_options\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,3,[\"name\"]]],[13],[1,\"\\n\"]],[3]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm\"],[4,[38,5],[\"change\",[30,0,[\"defaultOptionChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Default Option`...\"],[13],[1,\"\\n\"],[42,[28,[37,12],[[28,[37,12],[[30,0,[\"modelOptions\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,4,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,4,[\"id\"]],[30,0,[\"model\",\"default_options\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,4,[\"name\"]]],[13],[1,\"\\n\"]],[4]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]]]],[]],[[[1,\"    Loading\\n\"]],[]]],[13],[1,\"\\n\\n\"],[41,[30,0,[\"supportsMultiValue\"]],[[[1,\"  \"],[10,\"label\"],[12],[1,\"\\n    Minimum Selections\\n    \"],[8,[39,8],[[24,1,\"field-minimum-selections\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"minimum_selections\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    Maximum Selections\\n    \"],[8,[39,8],[[24,1,\"field-maximum-selections\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"maximum_selections\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"]],[]],[[[1,\"  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Default Text (unselected)\\n    \"],[8,[39,8],[[24,1,\"field-default-text\"],[24,\"placeholder\",\"(Choose one)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"default_text\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"]],[]]],[1,\"\\n\"],[10,0],[14,0,\"extras\"],[12],[1,\"\\n  \"],[10,\"h4\"],[12],[1,\"Extras\"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    Help Text\\n    \"],[8,[39,8],[[24,1,\"field-help-text\"],[24,\"placeholder\",\"\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"help_text\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    CSS Class\\n    \"],[8,[39,8],[[24,1,\"field-css-class\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"css_class\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\\n\"],[11,\"button\"],[24,0,\"btn btn-primary\"],[24,4,\"submit\"],[4,[38,5],[\"click\",[30,0,[\"doneEditingField\"]]],null],[12],[1,\"Done\"],[13],[1,\"\\n\"]],[\"optionlist\",\"optiongroup\",\"modelOption\",\"modelOption\"],false,[\"if\",\"p\",\"h2\",\"div\",\"button\",\"on\",\"label\",\"tinymce-editor\",\"input\",\"select\",\"option\",\"each\",\"-track-array\",\"h4\"]]",
+    "moduleName": "ember-formulaic/templates/components/form/fields/choicefield.hbs",
+    "isStrictMode": false
+  });
+});
+;define("ember-formulaic/templates/components/form/fields/field", ["exports", "@ember/template-factory"], function (_exports, _templateFactory) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"@ember/template-factory"eaimeta@70e063a35619d71f
+  var _default = _exports.default = (0, _templateFactory.createTemplateFactory)(
+  /*
+    <!-- templates/form/fields/field.hbs -->
+  
+  {{#each this.model as |rule|}}
+    <div class="field-preview single-line-text form-group col-xs-12 item">
+      <Input @type="hidden" @value={{rule.position}} class="position" />
+      <ul class="controls list-inline">
+        <li>
+          <button class="btn btn-xs btn-link" {{on "click" (fn this.deleteRule rule)}}>
+            <span class="glyphicon glyphicon-trash"></span>
+          </button>
+        </li>
+      </ul>
+      <div class="col-xs-12">
+        {{#if rule.hasMultipleConditions}}
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-primary btn-xs {{if rule.isAnd "active"}}" {{on "click" (fn this.setOperator rule "and")}}>AND</button>
+            <button type="button" class="btn btn-primary btn-xs {{if rule.isOr "active"}}" {{on "click" (fn this.setOperator rule "or")}}>OR</button>
+          </div>
+        {{/if}}
+  
+        <!-- Rule Conditions -->
+        <h4>
+          Conditions
+          <button class="btn btn-xs btn-link" {{on "click" (fn this.addCondition rule)}}>
+            <span class="glyphicon glyphicon-plus-sign text-success"></span>
+          </button>
+        </h4>
+        <ul class="rule-conditions list-unstyled form-inline {{if rule.isOr "or"}}">
+          {{#each rule.conditions as |condition|}}
+            <li>
+              <span class="glyphicon glyphicon-move"></span>
+              <Input @type="hidden" @value={{condition.position}} class="condition-position" />
+              {{#if condition.allFieldsReady}}
+                <Select @value={{condition.field.content}} @options={{condition.allFields}} @prompt="Choose Field" @optionValuePath="content" @optionLabelPath="content.name" class="form-control input-sm" />
+              {{else}}
+                Loading
+              {{/if}}
+              <Select @value={{condition.operator}} @options={{condition.availableOperators}} @optionValuePath="content.value" @optionLabelPath="content.name" class="form-control input-sm" />
+              <Input @type="text" @value="" class="form-control input-sm" />
+              <button class="btn btn-xs btn-link" {{on "click" (fn this.removeCondition condition)}}>
+                <span class="glyphicon glyphicon-trash"></span>
+              </button>
+            </li>
+          {{/each}}
+        </ul>
+  
+        <!-- Rule Results -->
+        <h4>
+          Results
+          <button class="btn btn-xs btn-link" {{on "click" (fn this.addResult rule)}}>
+            <span class="glyphicon glyphicon-plus-sign text-success"></span>
+          </button>
+        </h4>
+        <ul class="rule-results list-unstyled form-inline">
+          {{#each rule.results as |result|}}
+            <li>
+              <span class="glyphicon glyphicon-circle-arrow-right"></span>
+              <Select @value={{result.action}} @options={{result.availableActions}} @optionValuePath="content.value" @optionLabelPath="content.name" class="form-control input-sm" />
+              {{#if result.allFieldsReady}}
+                <Select @value={{result.field.content}} @options={{result.allFields}} @prompt="Choose Field" @optionValuePath="content" @optionLabelPath="content.name" class="form-control input-sm" />
+              {{else}}
+                Loading
+              {{/if}}
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  {{/each}}
+  
+  */
+  {
+    "id": "+UYJ86jx",
+    "block": "[[[3,\" templates/form/fields/field.hbs \"],[1,\"\\n\\n\"],[42,[28,[37,1],[[28,[37,1],[[30,0,[\"model\"]]],null]],null],null,[[[1,\"  \"],[10,0],[14,0,\"field-preview single-line-text form-group col-xs-12 item\"],[12],[1,\"\\n    \"],[8,[39,3],[[24,0,\"position\"]],[[\"@type\",\"@value\"],[\"hidden\",[30,1,[\"position\"]]]],null],[1,\"\\n    \"],[10,\"ul\"],[14,0,\"controls list-inline\"],[12],[1,\"\\n      \"],[10,\"li\"],[12],[1,\"\\n        \"],[11,\"button\"],[24,0,\"btn btn-xs btn-link\"],[4,[38,7],[\"click\",[28,[37,8],[[30,0,[\"deleteRule\"]],[30,1]],null]],null],[12],[1,\"\\n          \"],[10,1],[14,0,\"glyphicon glyphicon-trash\"],[12],[13],[1,\"\\n        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n    \"],[13],[1,\"\\n    \"],[10,0],[14,0,\"col-xs-12\"],[12],[1,\"\\n\"],[41,[30,1,[\"hasMultipleConditions\"]],[[[1,\"        \"],[10,0],[14,0,\"btn-group\"],[14,\"role\",\"group\"],[12],[1,\"\\n          \"],[11,\"button\"],[16,0,[29,[\"btn btn-primary btn-xs \",[52,[30,1,[\"isAnd\"]],\"active\"]]]],[24,4,\"button\"],[4,[38,7],[\"click\",[28,[37,8],[[30,0,[\"setOperator\"]],[30,1],\"and\"],null]],null],[12],[1,\"AND\"],[13],[1,\"\\n          \"],[11,\"button\"],[16,0,[29,[\"btn btn-primary btn-xs \",[52,[30,1,[\"isOr\"]],\"active\"]]]],[24,4,\"button\"],[4,[38,7],[\"click\",[28,[37,8],[[30,0,[\"setOperator\"]],[30,1],\"or\"],null]],null],[12],[1,\"OR\"],[13],[1,\"\\n        \"],[13],[1,\"\\n\"]],[]],null],[1,\"\\n      \"],[3,\" Rule Conditions \"],[1,\"\\n      \"],[10,\"h4\"],[12],[1,\"\\n        Conditions\\n        \"],[11,\"button\"],[24,0,\"btn btn-xs btn-link\"],[4,[38,7],[\"click\",[28,[37,8],[[30,0,[\"addCondition\"]],[30,1]],null]],null],[12],[1,\"\\n          \"],[10,1],[14,0,\"glyphicon glyphicon-plus-sign text-success\"],[12],[13],[1,\"\\n        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n      \"],[10,\"ul\"],[15,0,[29,[\"rule-conditions list-unstyled form-inline \",[52,[30,1,[\"isOr\"]],\"or\"]]]],[12],[1,\"\\n\"],[42,[28,[37,1],[[28,[37,1],[[30,1,[\"conditions\"]]],null]],null],null,[[[1,\"          \"],[10,\"li\"],[12],[1,\"\\n            \"],[10,1],[14,0,\"glyphicon glyphicon-move\"],[12],[13],[1,\"\\n            \"],[8,[39,3],[[24,0,\"condition-position\"]],[[\"@type\",\"@value\"],[\"hidden\",[30,2,[\"position\"]]]],null],[1,\"\\n\"],[41,[30,2,[\"allFieldsReady\"]],[[[1,\"              \"],[8,[39,12],[[24,0,\"form-control input-sm\"]],[[\"@value\",\"@options\",\"@prompt\",\"@optionValuePath\",\"@optionLabelPath\"],[[30,2,[\"field\",\"content\"]],[30,2,[\"allFields\"]],\"Choose Field\",\"content\",\"content.name\"]],null],[1,\"\\n\"]],[]],[[[1,\"              Loading\\n\"]],[]]],[1,\"            \"],[8,[39,12],[[24,0,\"form-control input-sm\"]],[[\"@value\",\"@options\",\"@optionValuePath\",\"@optionLabelPath\"],[[30,2,[\"operator\"]],[30,2,[\"availableOperators\"]],\"content.value\",\"content.name\"]],null],[1,\"\\n            \"],[8,[39,3],[[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",\"\"]],null],[1,\"\\n            \"],[11,\"button\"],[24,0,\"btn btn-xs btn-link\"],[4,[38,7],[\"click\",[28,[37,8],[[30,0,[\"removeCondition\"]],[30,2]],null]],null],[12],[1,\"\\n              \"],[10,1],[14,0,\"glyphicon glyphicon-trash\"],[12],[13],[1,\"\\n            \"],[13],[1,\"\\n          \"],[13],[1,\"\\n\"]],[2]],null],[1,\"      \"],[13],[1,\"\\n\\n      \"],[3,\" Rule Results \"],[1,\"\\n      \"],[10,\"h4\"],[12],[1,\"\\n        Results\\n        \"],[11,\"button\"],[24,0,\"btn btn-xs btn-link\"],[4,[38,7],[\"click\",[28,[37,8],[[30,0,[\"addResult\"]],[30,1]],null]],null],[12],[1,\"\\n          \"],[10,1],[14,0,\"glyphicon glyphicon-plus-sign text-success\"],[12],[13],[1,\"\\n        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n      \"],[10,\"ul\"],[14,0,\"rule-results list-unstyled form-inline\"],[12],[1,\"\\n\"],[42,[28,[37,1],[[28,[37,1],[[30,1,[\"results\"]]],null]],null],null,[[[1,\"          \"],[10,\"li\"],[12],[1,\"\\n            \"],[10,1],[14,0,\"glyphicon glyphicon-circle-arrow-right\"],[12],[13],[1,\"\\n            \"],[8,[39,12],[[24,0,\"form-control input-sm\"]],[[\"@value\",\"@options\",\"@optionValuePath\",\"@optionLabelPath\"],[[30,3,[\"action\"]],[30,3,[\"availableActions\"]],\"content.value\",\"content.name\"]],null],[1,\"\\n\"],[41,[30,3,[\"allFieldsReady\"]],[[[1,\"              \"],[8,[39,12],[[24,0,\"form-control input-sm\"]],[[\"@value\",\"@options\",\"@prompt\",\"@optionValuePath\",\"@optionLabelPath\"],[[30,3,[\"field\",\"content\"]],[30,3,[\"allFields\"]],\"Choose Field\",\"content\",\"content.name\"]],null],[1,\"\\n\"]],[]],[[[1,\"              Loading\\n\"]],[]]],[1,\"          \"],[13],[1,\"\\n\"]],[3]],null],[1,\"      \"],[13],[1,\"\\n    \"],[13],[1,\"\\n  \"],[13],[1,\"\\n\"]],[1]],null]],[\"rule\",\"condition\",\"result\"],false,[\"each\",\"-track-array\",\"div\",\"input\",\"ul\",\"li\",\"button\",\"on\",\"fn\",\"span\",\"if\",\"h4\",\"select\"]]",
+    "moduleName": "ember-formulaic/templates/components/form/fields/field.hbs",
+    "isStrictMode": false
+  });
+});
+;define("ember-formulaic/templates/components/form/fields/hiddenfield", ["exports", "@ember/template-factory"], function (_exports, _templateFactory) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"@ember/template-factory"eaimeta@70e063a35619d71f
+  var _default = _exports.default = (0, _templateFactory.createTemplateFactory)(
+  /*
+    <!-- templates/form/fields/hiddenfield.hbs -->
+  
+  <h2>Edit '{{this.subtypeName}}' field</h2>
+  <div class="{{if this.validator.isDataNameInvalid 'has-error'}}">
+    <label class="control-label">
+      Data Column Name
+      <Input @type="text" id="field-data-name" placeholder="(Data Column Name)" @value={{this.model.data_name}} class="form-control input-sm" />
+    </label>
+  </div>
+  <div class="{{if this.validator.isSlugInvalid 'has-error'}}">
+    <label class="control-label">
+      Slug
+      <Input @type="text" id="field-slug" placeholder="(field-name)" @value={{this.autoSlug}} class="form-control input-sm" />
+    </label>
+  </div>
+  <label>
+    Value
+    <Input @type="text" id="field-value" placeholder="" @value={{this.model.value}} class="form-control input-sm" />
+  </label>
+  
+  <button class="btn btn-primary" type="submit" {{on "click" this.doneEditingField}}>Done</button>
+  
+  */
+  {
+    "id": "zab5fQr2",
+    "block": "[[[3,\" templates/form/fields/hiddenfield.hbs \"],[1,\"\\n\\n\"],[10,\"h2\"],[12],[1,\"Edit '\"],[1,[30,0,[\"subtypeName\"]]],[1,\"' field\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isDataNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Data Column Name\\n    \"],[8,[39,4],[[24,1,\"field-data-name\"],[24,\"placeholder\",\"(Data Column Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"data_name\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isSlugInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Slug\\n    \"],[8,[39,4],[[24,1,\"field-slug\"],[24,\"placeholder\",\"(field-name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"autoSlug\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,\"label\"],[12],[1,\"\\n  Value\\n  \"],[8,[39,4],[[24,1,\"field-value\"],[24,\"placeholder\",\"\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"value\"]]]],null],[1,\"\\n\"],[13],[1,\"\\n\\n\"],[11,\"button\"],[24,0,\"btn btn-primary\"],[24,4,\"submit\"],[4,[38,6],[\"click\",[30,0,[\"doneEditingField\"]]],null],[12],[1,\"Done\"],[13],[1,\"\\n\"]],[],false,[\"h2\",\"div\",\"if\",\"label\",\"input\",\"button\",\"on\"]]",
+    "moduleName": "ember-formulaic/templates/components/form/fields/hiddenfield.hbs",
+    "isStrictMode": false
+  });
+});
+;define("ember-formulaic/templates/components/form/fields/index", ["exports", "@ember/template-factory"], function (_exports, _templateFactory) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"@ember/template-factory"eaimeta@70e063a35619d71f
+  var _default = _exports.default = (0, _templateFactory.createTemplateFactory)(
+  /*
+    <!-- templates/form/fields/index.hbs -->
+  
+  <h2>Add Fields</h2>
+  <h3>Basic</h3>
+  <button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createTextField "text")}}>Text (Single Line)</button>
+  <button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createTextField "textarea")}}>Text (Multi Line)</button>
+  <button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createChoiceField "select")}}>Dropdown List</button>
+  <button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createChoiceField "radio_select")}}>Radio List</button>
+  <button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createChoiceField "checkbox_select_multiple")}}>Checkbox List</button>
+  <button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createBooleanField "checkbox")}}>Checkbox</button>
+  <button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createChoiceField "select_multiple")}}>Multi-select List</button>
+  <button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createHiddenField "hidden")}}>Hidden Field</button>
+  
+  <h3>Typed</h3>
+  <button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createTextField "full_name")}}>Full Name</button>
+  <button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createTextField "email")}}>Email</button>
+  <button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createTextField "phone_number")}}>Phone Number</button>
+  <button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createTextField "integer")}}>Integer</button>
+  
+  */
+  {
+    "id": "68gZbcyk",
+    "block": "[[[3,\" templates/form/fields/index.hbs \"],[1,\"\\n\\n\"],[10,\"h2\"],[12],[1,\"Add Fields\"],[13],[1,\"\\n\"],[10,\"h3\"],[12],[1,\"Basic\"],[13],[1,\"\\n\"],[11,\"button\"],[24,0,\"btn btn-default btn-block\"],[24,4,\"submit\"],[4,[38,3],[\"click\",[28,[37,4],[[30,0,[\"createTextField\"]],\"text\"],null]],null],[12],[1,\"Text (Single Line)\"],[13],[1,\"\\n\"],[11,\"button\"],[24,0,\"btn btn-default btn-block\"],[24,4,\"submit\"],[4,[38,3],[\"click\",[28,[37,4],[[30,0,[\"createTextField\"]],\"textarea\"],null]],null],[12],[1,\"Text (Multi Line)\"],[13],[1,\"\\n\"],[11,\"button\"],[24,0,\"btn btn-default btn-block\"],[24,4,\"submit\"],[4,[38,3],[\"click\",[28,[37,4],[[30,0,[\"createChoiceField\"]],\"select\"],null]],null],[12],[1,\"Dropdown List\"],[13],[1,\"\\n\"],[11,\"button\"],[24,0,\"btn btn-default btn-block\"],[24,4,\"submit\"],[4,[38,3],[\"click\",[28,[37,4],[[30,0,[\"createChoiceField\"]],\"radio_select\"],null]],null],[12],[1,\"Radio List\"],[13],[1,\"\\n\"],[11,\"button\"],[24,0,\"btn btn-default btn-block\"],[24,4,\"submit\"],[4,[38,3],[\"click\",[28,[37,4],[[30,0,[\"createChoiceField\"]],\"checkbox_select_multiple\"],null]],null],[12],[1,\"Checkbox List\"],[13],[1,\"\\n\"],[11,\"button\"],[24,0,\"btn btn-default btn-block\"],[24,4,\"submit\"],[4,[38,3],[\"click\",[28,[37,4],[[30,0,[\"createBooleanField\"]],\"checkbox\"],null]],null],[12],[1,\"Checkbox\"],[13],[1,\"\\n\"],[11,\"button\"],[24,0,\"btn btn-default btn-block\"],[24,4,\"submit\"],[4,[38,3],[\"click\",[28,[37,4],[[30,0,[\"createChoiceField\"]],\"select_multiple\"],null]],null],[12],[1,\"Multi-select List\"],[13],[1,\"\\n\"],[11,\"button\"],[24,0,\"btn btn-default btn-block\"],[24,4,\"submit\"],[4,[38,3],[\"click\",[28,[37,4],[[30,0,[\"createHiddenField\"]],\"hidden\"],null]],null],[12],[1,\"Hidden Field\"],[13],[1,\"\\n\\n\"],[10,\"h3\"],[12],[1,\"Typed\"],[13],[1,\"\\n\"],[11,\"button\"],[24,0,\"btn btn-default btn-block\"],[24,4,\"submit\"],[4,[38,3],[\"click\",[28,[37,4],[[30,0,[\"createTextField\"]],\"full_name\"],null]],null],[12],[1,\"Full Name\"],[13],[1,\"\\n\"],[11,\"button\"],[24,0,\"btn btn-default btn-block\"],[24,4,\"submit\"],[4,[38,3],[\"click\",[28,[37,4],[[30,0,[\"createTextField\"]],\"email\"],null]],null],[12],[1,\"Email\"],[13],[1,\"\\n\"],[11,\"button\"],[24,0,\"btn btn-default btn-block\"],[24,4,\"submit\"],[4,[38,3],[\"click\",[28,[37,4],[[30,0,[\"createTextField\"]],\"phone_number\"],null]],null],[12],[1,\"Phone Number\"],[13],[1,\"\\n\"],[11,\"button\"],[24,0,\"btn btn-default btn-block\"],[24,4,\"submit\"],[4,[38,3],[\"click\",[28,[37,4],[[30,0,[\"createTextField\"]],\"integer\"],null]],null],[12],[1,\"Integer\"],[13],[1,\"\\n\"]],[],false,[\"h2\",\"h3\",\"button\",\"on\",\"fn\"]]",
+    "moduleName": "ember-formulaic/templates/components/form/fields/index.hbs",
+    "isStrictMode": false
+  });
+});
+;define("ember-formulaic/templates/components/form/fields/textfield", ["exports", "@ember/template-factory"], function (_exports, _templateFactory) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"@ember/template-factory"eaimeta@70e063a35619d71f
+  var _default = _exports.default = (0, _templateFactory.createTemplateFactory)(
+  /*
+    <!-- templates/form/fields/textfield.hbs -->
+  
+  <h2>Edit '{{this.subtypeName}}' field</h2>
+  <div class="textfield-container {{if this.validator.isDisplayNameInvalid 'has-error'}}">
+    <button class="btn btn-link wysiwyg-toggle" {{on "click" this.toggleDisplayNameWYSIWYG}}>
+      {{#if this.isDisplayNameWYSIWYGEnabled}}
+        TEXT
+      {{else}}
+        WYSIWYG
+      {{/if}}
+    </button>
+    <label class="control-label">
+      Display Name
+      {{#if this.isDisplayNameWYSIWYGEnabled}}
+        <TinymceEditor @options={{this.editorOptions}} @value={{this.model.display_name}} @onChange={{this.updateDisplayName}}  />
+      {{else}}
+        <Input @type="text" id="field-display-name" placeholder="(Display Name)" @value={{this.model.display_name}}
+               class="form-control input-sm"/>
+      {{/if}}
+    </label>
+  </div>
+  <div class="{{if this.validator.isDataNameInvalid 'has-error'}}">
+    <label class="control-label">
+      Data Column Name
+      <Input @type="text" id="field-data-name" placeholder="(Data Column Name)" @value={{this.model.data_name}}
+             class="form-control input-sm"/>
+    </label>
+  </div>
+  <div class="{{if this.validator.isSlugInvalid 'has-error'}}">
+    <label class="control-label">
+      Slug
+      <Input @type="text" id="field-slug" placeholder="(field-name)" @value={{this.autoSlug}}
+             class="form-control input-sm"/>
+    </label>
+  </div>
+  <label>
+    <Input @type="checkbox" id="field-required" @checked={{this.model.required}} />
+    Required
+  </label>
+  
+  <div class="extras">
+    <h4>Extras</h4>
+    <label>
+      Help Text
+      <Input @type="text" id="field-help-text" placeholder="" @value={{this.model.help_text}}
+             class="form-control input-sm"/>
+    </label>
+    <label>
+      CSS Class
+      <Input @type="text" id="field-css-class" @value={{this.model.css_class}} class="form-control input-sm"/>
+    </label>
+  </div>
+  
+  <button class="btn btn-primary" type="submit" {{on "click" this.doneEditingField}}>Done</button>
+  
+  */
+  {
+    "id": "TXyWRWYI",
+    "block": "[[[3,\" templates/form/fields/textfield.hbs \"],[1,\"\\n\\n\"],[10,\"h2\"],[12],[1,\"Edit '\"],[1,[30,0,[\"subtypeName\"]]],[1,\"' field\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[\"textfield-container \",[52,[30,0,[\"validator\",\"isDisplayNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[11,\"button\"],[24,0,\"btn btn-link wysiwyg-toggle\"],[4,[38,4],[\"click\",[30,0,[\"toggleDisplayNameWYSIWYG\"]]],null],[12],[1,\"\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      TEXT\\n\"]],[]],[[[1,\"      WYSIWYG\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Display Name\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      \"],[8,[39,6],null,[[\"@options\",\"@value\",\"@onChange\"],[[30,0,[\"editorOptions\"]],[30,0,[\"model\",\"display_name\"]],[30,0,[\"updateDisplayName\"]]]],null],[1,\"\\n\"]],[]],[[[1,\"      \"],[8,[39,7],[[24,1,\"field-display-name\"],[24,\"placeholder\",\"(Display Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"display_name\"]]]],null],[1,\"\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isDataNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Data Column Name\\n    \"],[8,[39,7],[[24,1,\"field-data-name\"],[24,\"placeholder\",\"(Data Column Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"data_name\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isSlugInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Slug\\n    \"],[8,[39,7],[[24,1,\"field-slug\"],[24,\"placeholder\",\"(field-name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"autoSlug\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,\"label\"],[12],[1,\"\\n  \"],[8,[39,7],[[24,1,\"field-required\"]],[[\"@type\",\"@checked\"],[\"checkbox\",[30,0,[\"model\",\"required\"]]]],null],[1,\"\\n  Required\\n\"],[13],[1,\"\\n\\n\"],[10,0],[14,0,\"extras\"],[12],[1,\"\\n  \"],[10,\"h4\"],[12],[1,\"Extras\"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    Help Text\\n    \"],[8,[39,7],[[24,1,\"field-help-text\"],[24,\"placeholder\",\"\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"help_text\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    CSS Class\\n    \"],[8,[39,7],[[24,1,\"field-css-class\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"css_class\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\\n\"],[11,\"button\"],[24,0,\"btn btn-primary\"],[24,4,\"submit\"],[4,[38,4],[\"click\",[30,0,[\"doneEditingField\"]]],null],[12],[1,\"Done\"],[13],[1,\"\\n\"]],[],false,[\"h2\",\"div\",\"if\",\"button\",\"on\",\"label\",\"tinymce-editor\",\"input\",\"h4\"]]",
+    "moduleName": "ember-formulaic/templates/components/form/fields/textfield.hbs",
+    "isStrictMode": false
+  });
+});
+;define("ember-formulaic/templates/components/form/index", ["exports", "@ember/template-factory"], function (_exports, _templateFactory) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"@ember/template-factory"eaimeta@70e063a35619d71f
+  var _default = _exports.default = (0, _templateFactory.createTemplateFactory)(
+  /*
+    <!-- templates/components/form/index.hbs -->
+  
+  <div class="row formulaic-row form-row">
+    <div class="col-xs-8 preview-column edit-menu">
+      <h2>Modify Form</h2>
+      {{#if this.inEditMode}}
+        <div class="edit-menu-item row">
+          <div class="col-xs-2">
+            <label for="form-name">Form Name</label>
+          </div>
+          <div class="col-xs-10">
+            <Input @type="text" id="form-name" placeholder="" @value={{this.model.name}} class="form-control input-sm"/>
+          </div>
+        </div>
+        <div class="edit-menu-item row">
+          <div class="col-xs-2">
+            <label for="form-slug">Slug</label>
+          </div>
+          <div class="col-xs-10">
+            <Input @type="text" id="form-slug" placeholder="" @value={{this.model.slug}} class="form-control input-sm"/>
+          </div>
+        </div>
+        <div class="edit-menu-item row">
+          <div class="col-xs-2">
+            <label for="form-privacy-policy">Privacy Policy</label>
+          </div>
+          <div class="col-xs-10">
+            {{#if this.privacyPoliciesReady}}
+              <select {{on "change" this.privacyPolicyChanged}} id="form-privacy-policy" class="form-control input-sm">
+                <option value="">Choose Privacy Policy...</option>
+                {{#each this.privacyPolicies as |policy|}}
+                  <option value={{policy.id}} selected={{if (this.eq policy.id this.model.privacy_policy.id) "selected"
+                                                            null}}>{{policy.name}}</option>
+                {{/each}}
+              </select>
+            {{else}}
+              <p>Loading ...</p>
+            {{/if}}
+          </div>
+  
+        </div>
+        <div class="edit-menu-item row">
+          <div class="col-xs-2">
+            <label for="form-success-message">Success Message</label>
+          </div>
+          <div class="col-xs-10">
+            <Textarea id="form-success-message" placeholder="" @value={{this.model.success_message}} rows={{6}}
+                      class="form-control input-sm text-block"/>
+          </div>
+        </div>
+  
+        <div class="row formulaic-controls">
+          <div class="col-xs-10 col-xs-offset-2">
+            <button class="btn btn-primary" type="submit" {{on "click" this.saveForm}}>Save</button>
+            <button class="btn btn-danger" type="submit" {{on "click" this.close}}>Close</button>
+          </div>
+        </div>
+      {{else}}
+        <div class="row">
+          <div class="edit-menu-item col-xs-12">
+            <div {{on "click" this.editForm}} role="button" tabindex="0">Form Details</div>
+            <span class="edit-menu-controls">
+              <div {{on "click" this.editForm}} role="button" tabindex="0">
+                <span class="glyphicon glyphicon-menu-hamburger"></span>
+                Change
+              </div>
+            </span>
+          </div>
+  
+          <div class="edit-menu-item col-xs-12">
+            <div {{on "click" this.editFields}} role="button" tabindex="0">Fields</div>
+            <span class="edit-menu-controls">
+              <div {{on "click" this.editFields}} role="button" tabindex="0">
+                <span class="glyphicon glyphicon-menu-hamburger"></span>
+                Change
+              </div>
+            </span>
+          </div>
+  
+          <div class="edit-menu-item col-xs-12">
+            <div {{on "click" this.editRules}} role="button" tabindex="0">Rules</div>
+            <span class="edit-menu-controls">
+              <div {{on "click" this.editRules}} role="button" tabindex="0"><span
+                class="glyphicon glyphicon-menu-hamburger"></span> Change</div>
+            </span>
+          </div>
+  
+          <div class="edit-menu-item col-xs-12">
+            <div {{on "click" this.viewSubmissions}} role="button" tabindex="0">Submissions</div>
+            <span class="edit-menu-controls">
+              <div {{on "click" this.viewSubmissions}} role="button" tabindex="0">
+                <span class="glyphicon glyphicon-th-list"></span>
+                View
+              </div>
+            </span>
+          </div>
+        </div>
+      {{/if}}
+    </div>
+  </div>
+  
+  */
+  {
+    "id": "eUfVn0Tz",
+    "block": "[[[3,\" templates/components/form/index.hbs \"],[1,\"\\n\\n\"],[10,0],[14,0,\"row formulaic-row form-row\"],[12],[1,\"\\n  \"],[10,0],[14,0,\"col-xs-8 preview-column edit-menu\"],[12],[1,\"\\n    \"],[10,\"h2\"],[12],[1,\"Modify Form\"],[13],[1,\"\\n\"],[41,[30,0,[\"inEditMode\"]],[[[1,\"      \"],[10,0],[14,0,\"edit-menu-item row\"],[12],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-2\"],[12],[1,\"\\n          \"],[10,\"label\"],[14,\"for\",\"form-name\"],[12],[1,\"Form Name\"],[13],[1,\"\\n        \"],[13],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-10\"],[12],[1,\"\\n          \"],[8,[39,4],[[24,1,\"form-name\"],[24,\"placeholder\",\"\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"name\"]]]],null],[1,\"\\n        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n      \"],[10,0],[14,0,\"edit-menu-item row\"],[12],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-2\"],[12],[1,\"\\n          \"],[10,\"label\"],[14,\"for\",\"form-slug\"],[12],[1,\"Slug\"],[13],[1,\"\\n        \"],[13],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-10\"],[12],[1,\"\\n          \"],[8,[39,4],[[24,1,\"form-slug\"],[24,\"placeholder\",\"\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"slug\"]]]],null],[1,\"\\n        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n      \"],[10,0],[14,0,\"edit-menu-item row\"],[12],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-2\"],[12],[1,\"\\n          \"],[10,\"label\"],[14,\"for\",\"form-privacy-policy\"],[12],[1,\"Privacy Policy\"],[13],[1,\"\\n        \"],[13],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-10\"],[12],[1,\"\\n\"],[41,[30,0,[\"privacyPoliciesReady\"]],[[[1,\"            \"],[11,\"select\"],[24,1,\"form-privacy-policy\"],[24,0,\"form-control input-sm\"],[4,[38,6],[\"change\",[30,0,[\"privacyPolicyChanged\"]]],null],[12],[1,\"\\n              \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose Privacy Policy...\"],[13],[1,\"\\n\"],[42,[28,[37,9],[[28,[37,9],[[30,0,[\"privacyPolicies\"]]],null]],null],null,[[[1,\"                \"],[10,\"option\"],[15,2,[30,1,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"eq\"]],[[30,1,[\"id\"]],[30,0,[\"model\",\"privacy_policy\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,1,[\"name\"]]],[13],[1,\"\\n\"]],[1]],null],[1,\"            \"],[13],[1,\"\\n\"]],[]],[[[1,\"            \"],[10,2],[12],[1,\"Loading ...\"],[13],[1,\"\\n\"]],[]]],[1,\"        \"],[13],[1,\"\\n\\n      \"],[13],[1,\"\\n      \"],[10,0],[14,0,\"edit-menu-item row\"],[12],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-2\"],[12],[1,\"\\n          \"],[10,\"label\"],[14,\"for\",\"form-success-message\"],[12],[1,\"Success Message\"],[13],[1,\"\\n        \"],[13],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-10\"],[12],[1,\"\\n          \"],[8,[39,11],[[24,1,\"form-success-message\"],[24,\"placeholder\",\"\"],[16,\"rows\",6],[24,0,\"form-control input-sm text-block\"]],[[\"@value\"],[[30,0,[\"model\",\"success_message\"]]]],null],[1,\"        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n\\n      \"],[10,0],[14,0,\"row formulaic-controls\"],[12],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-10 col-xs-offset-2\"],[12],[1,\"\\n          \"],[11,\"button\"],[24,0,\"btn btn-primary\"],[24,4,\"submit\"],[4,[38,6],[\"click\",[30,0,[\"saveForm\"]]],null],[12],[1,\"Save\"],[13],[1,\"\\n          \"],[11,\"button\"],[24,0,\"btn btn-danger\"],[24,4,\"submit\"],[4,[38,6],[\"click\",[30,0,[\"close\"]]],null],[12],[1,\"Close\"],[13],[1,\"\\n        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n\"]],[]],[[[1,\"      \"],[10,0],[14,0,\"row\"],[12],[1,\"\\n        \"],[10,0],[14,0,\"edit-menu-item col-xs-12\"],[12],[1,\"\\n          \"],[11,0],[24,\"role\",\"button\"],[24,\"tabindex\",\"0\"],[4,[38,6],[\"click\",[30,0,[\"editForm\"]]],null],[12],[1,\"Form Details\"],[13],[1,\"\\n          \"],[10,1],[14,0,\"edit-menu-controls\"],[12],[1,\"\\n            \"],[11,0],[24,\"role\",\"button\"],[24,\"tabindex\",\"0\"],[4,[38,6],[\"click\",[30,0,[\"editForm\"]]],null],[12],[1,\"\\n              \"],[10,1],[14,0,\"glyphicon glyphicon-menu-hamburger\"],[12],[13],[1,\"\\n              Change\\n            \"],[13],[1,\"\\n          \"],[13],[1,\"\\n        \"],[13],[1,\"\\n\\n        \"],[10,0],[14,0,\"edit-menu-item col-xs-12\"],[12],[1,\"\\n          \"],[11,0],[24,\"role\",\"button\"],[24,\"tabindex\",\"0\"],[4,[38,6],[\"click\",[30,0,[\"editFields\"]]],null],[12],[1,\"Fields\"],[13],[1,\"\\n          \"],[10,1],[14,0,\"edit-menu-controls\"],[12],[1,\"\\n            \"],[11,0],[24,\"role\",\"button\"],[24,\"tabindex\",\"0\"],[4,[38,6],[\"click\",[30,0,[\"editFields\"]]],null],[12],[1,\"\\n              \"],[10,1],[14,0,\"glyphicon glyphicon-menu-hamburger\"],[12],[13],[1,\"\\n              Change\\n            \"],[13],[1,\"\\n          \"],[13],[1,\"\\n        \"],[13],[1,\"\\n\\n        \"],[10,0],[14,0,\"edit-menu-item col-xs-12\"],[12],[1,\"\\n          \"],[11,0],[24,\"role\",\"button\"],[24,\"tabindex\",\"0\"],[4,[38,6],[\"click\",[30,0,[\"editRules\"]]],null],[12],[1,\"Rules\"],[13],[1,\"\\n          \"],[10,1],[14,0,\"edit-menu-controls\"],[12],[1,\"\\n            \"],[11,0],[24,\"role\",\"button\"],[24,\"tabindex\",\"0\"],[4,[38,6],[\"click\",[30,0,[\"editRules\"]]],null],[12],[10,1],[14,0,\"glyphicon glyphicon-menu-hamburger\"],[12],[13],[1,\" Change\"],[13],[1,\"\\n          \"],[13],[1,\"\\n        \"],[13],[1,\"\\n\\n        \"],[10,0],[14,0,\"edit-menu-item col-xs-12\"],[12],[1,\"\\n          \"],[11,0],[24,\"role\",\"button\"],[24,\"tabindex\",\"0\"],[4,[38,6],[\"click\",[30,0,[\"viewSubmissions\"]]],null],[12],[1,\"Submissions\"],[13],[1,\"\\n          \"],[10,1],[14,0,\"edit-menu-controls\"],[12],[1,\"\\n            \"],[11,0],[24,\"role\",\"button\"],[24,\"tabindex\",\"0\"],[4,[38,6],[\"click\",[30,0,[\"viewSubmissions\"]]],null],[12],[1,\"\\n              \"],[10,1],[14,0,\"glyphicon glyphicon-th-list\"],[12],[13],[1,\"\\n              View\\n            \"],[13],[1,\"\\n          \"],[13],[1,\"\\n        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"]],[\"policy\"],false,[\"div\",\"h2\",\"if\",\"label\",\"input\",\"select\",\"on\",\"option\",\"each\",\"-track-array\",\"p\",\"textarea\",\"button\",\"span\"]]",
+    "moduleName": "ember-formulaic/templates/components/form/index.hbs",
     "isStrictMode": false
   });
 });
@@ -5597,11 +6598,36 @@
   0; //eaimeta@70e063a35619d71f0,"@ember/template-factory"eaimeta@70e063a35619d71f
   var _default = _exports.default = (0, _templateFactory.createTemplateFactory)(
   /*
-    {{yield}}
+    {{#if @field}}
+    {{#if @field.model_class}}
+      {{#let (concat "form/fields/" @field.model_class) as |componentName|}}
+        {{#if (component componentName)}}
+          {{component componentName model=@field}}
+        {{else}}
+          <div>Template for {{componentName}} not found.</div>
+          <div>Check if the template exists and is correctly named.</div>
+        {{/if}}
+      {{/let}}
+    {{else if @field.field.model_class}}
+      {{#let (concat "form/fields/" @field.field.model_class) as |componentName|}}
+        {{#if (component componentName)}}
+          {{component componentName model=@field}}
+        {{else}}
+          <div>Template for {{componentName}} not found.</div>
+          <div>Check if the template exists and is correctly named.</div>
+        {{/if}}
+      {{/let}}
+    {{else}}
+      <div>No model_class found.</div>
+    {{/if}}
+  {{else}}
+    {{component "form/fields/index"}}
+  {{/if}}
+  
   */
   {
-    "id": "x3QcTAx1",
-    "block": "[[[18,1,null]],[\"&default\"],false,[\"yield\"]]",
+    "id": "F/GXRy10",
+    "block": "[[[41,[30,1],[[[41,[30,1,[\"model_class\"]],[[[44,[[28,[37,2],[\"form/fields/\",[30,1,[\"model_class\"]]],null]],[[[41,[50,[30,2],0,null,null],[[[1,\"        \"],[46,[30,2],null,[[\"model\"],[[30,1]]],null],[1,\"\\n\"]],[]],[[[1,\"        \"],[10,0],[12],[1,\"Template for \"],[1,[30,2]],[1,\" not found.\"],[13],[1,\"\\n        \"],[10,0],[12],[1,\"Check if the template exists and is correctly named.\"],[13],[1,\"\\n\"]],[]]]],[2]]]],[]],[[[41,[30,1,[\"field\",\"model_class\"]],[[[44,[[28,[37,2],[\"form/fields/\",[30,1,[\"field\",\"model_class\"]]],null]],[[[41,[50,[30,3],0,null,null],[[[1,\"        \"],[46,[30,3],null,[[\"model\"],[[30,1]]],null],[1,\"\\n\"]],[]],[[[1,\"        \"],[10,0],[12],[1,\"Template for \"],[1,[30,3]],[1,\" not found.\"],[13],[1,\"\\n        \"],[10,0],[12],[1,\"Check if the template exists and is correctly named.\"],[13],[1,\"\\n\"]],[]]]],[3]]]],[]],[[[1,\"    \"],[10,0],[12],[1,\"No model_class found.\"],[13],[1,\"\\n  \"]],[]]]],[]]]],[]],[[[1,\"  \"],[46,\"form/fields/index\",null,null,null],[1,\"\\n\"]],[]]]],[\"@field\",\"componentName\",\"componentName\"],false,[\"if\",\"let\",\"concat\",\"component\",\"div\"]]",
     "moduleName": "ember-formulaic/templates/components/sidebar.hbs",
     "isStrictMode": false
   });
@@ -5620,7 +6646,7 @@
   
   <div
     class="field-preview single-line-text form-group col-xs-12 item {{if this.isEditing "editing"}} {{if this.completeField.validator.isInvalid "warning"}}"
-    {{on "click" this.handleClick}}
+    {{on "click" this.handleEditClick}}
   >
     <input type="hidden" value={{this.field.position}} class="position" />
     <ul class="controls list-inline">
@@ -5654,8 +6680,8 @@
   
   */
   {
-    "id": "5c/jAeix",
-    "block": "[[[3,\"templates/components/sortable-field.hbs \"],[1,\"\\n\\n\"],[11,0],[16,0,[29,[\"field-preview single-line-text form-group col-xs-12 item \",[52,[30,0,[\"isEditing\"]],\"editing\"],\" \",[52,[30,0,[\"completeField\",\"validator\",\"isInvalid\"]],\"warning\"]]]],[4,[38,2],[\"click\",[30,0,[\"handleClick\"]]],null],[12],[1,\"\\n  \"],[10,\"input\"],[15,2,[30,0,[\"field\",\"position\"]]],[14,0,\"position\"],[14,4,\"hidden\"],[12],[13],[1,\"\\n  \"],[10,\"ul\"],[14,0,\"controls list-inline\"],[12],[1,\"\\n    \"],[10,\"li\"],[12],[1,\"\\n      \"],[11,\"button\"],[24,0,\"btn btn-xs btn-link\"],[4,[38,2],[\"click\",[28,[37,7],[[30,0,[\"clickedDeleteField\"]],[30,0,[\"field\"]],[30,0,[\"completeField\"]]],null]],null],[12],[1,\"\\n        \"],[10,1],[14,0,\"glyphicon glyphicon-trash\"],[12],[13],[1,\"\\n      \"],[13],[1,\"\\n    \"],[13],[1,\"\\n  \"],[13],[1,\"\\n\\n\"],[41,[30,0,[\"completeField\",\"data_name\"]],[[[1,\"    \"],[10,1],[14,0,\"data-name\"],[12],[1,\"(\"],[1,[30,0,[\"completeField\",\"data_name\"]]],[1,\")\"],[13],[1,\"\\n\"]],[]],null],[1,\"\\n  \"],[10,0],[14,0,\"col-xs-6\"],[12],[1,\"\\n\"],[41,[30,0,[\"showDisplayName\"]],[[[1,\"      \"],[10,\"label\"],[12],[1,\"\\n\"],[41,[30,0,[\"completeField\",\"display_name\"]],[[[1,\"          \"],[2,[30,0,[\"completeField\",\"display_name\"]]],[1,\"\\n\"]],[]],[[[1,\"          \"],[10,1],[14,0,\"empty\"],[12],[1,\"(Field Name)\"],[13],[1,\"\\n\"]],[]]],[41,[30,0,[\"completeField\",\"required\"]],[[[1,\"          \"],[10,1],[14,0,\"text-danger\"],[12],[1,\"*\"],[13],[1,\"\\n\"]],[]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],null],[1,\"    \"],[46,[30,0,[\"previewComponent\"]],null,[[\"completeField\"],[[30,0,[\"completeField\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"]],[],false,[\"div\",\"if\",\"on\",\"input\",\"ul\",\"li\",\"button\",\"fn\",\"span\",\"label\",\"component\"]]",
+    "id": "59xB9WTi",
+    "block": "[[[3,\"templates/components/sortable-field.hbs \"],[1,\"\\n\\n\"],[11,0],[16,0,[29,[\"field-preview single-line-text form-group col-xs-12 item \",[52,[30,0,[\"isEditing\"]],\"editing\"],\" \",[52,[30,0,[\"completeField\",\"validator\",\"isInvalid\"]],\"warning\"]]]],[4,[38,2],[\"click\",[30,0,[\"handleEditClick\"]]],null],[12],[1,\"\\n  \"],[10,\"input\"],[15,2,[30,0,[\"field\",\"position\"]]],[14,0,\"position\"],[14,4,\"hidden\"],[12],[13],[1,\"\\n  \"],[10,\"ul\"],[14,0,\"controls list-inline\"],[12],[1,\"\\n    \"],[10,\"li\"],[12],[1,\"\\n      \"],[11,\"button\"],[24,0,\"btn btn-xs btn-link\"],[4,[38,2],[\"click\",[28,[37,7],[[30,0,[\"clickedDeleteField\"]],[30,0,[\"field\"]],[30,0,[\"completeField\"]]],null]],null],[12],[1,\"\\n        \"],[10,1],[14,0,\"glyphicon glyphicon-trash\"],[12],[13],[1,\"\\n      \"],[13],[1,\"\\n    \"],[13],[1,\"\\n  \"],[13],[1,\"\\n\\n\"],[41,[30,0,[\"completeField\",\"data_name\"]],[[[1,\"    \"],[10,1],[14,0,\"data-name\"],[12],[1,\"(\"],[1,[30,0,[\"completeField\",\"data_name\"]]],[1,\")\"],[13],[1,\"\\n\"]],[]],null],[1,\"\\n  \"],[10,0],[14,0,\"col-xs-6\"],[12],[1,\"\\n\"],[41,[30,0,[\"showDisplayName\"]],[[[1,\"      \"],[10,\"label\"],[12],[1,\"\\n\"],[41,[30,0,[\"completeField\",\"display_name\"]],[[[1,\"          \"],[2,[30,0,[\"completeField\",\"display_name\"]]],[1,\"\\n\"]],[]],[[[1,\"          \"],[10,1],[14,0,\"empty\"],[12],[1,\"(Field Name)\"],[13],[1,\"\\n\"]],[]]],[41,[30,0,[\"completeField\",\"required\"]],[[[1,\"          \"],[10,1],[14,0,\"text-danger\"],[12],[1,\"*\"],[13],[1,\"\\n\"]],[]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],null],[1,\"    \"],[46,[30,0,[\"previewComponent\"]],null,[[\"completeField\"],[[30,0,[\"completeField\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"]],[],false,[\"div\",\"if\",\"on\",\"input\",\"ul\",\"li\",\"button\",\"fn\",\"span\",\"label\",\"component\"]]",
     "moduleName": "ember-formulaic/templates/components/sortable-field.hbs",
     "isStrictMode": false
   });
@@ -5677,9 +6703,10 @@
       {{#if field}}
         <SortableField
           @field={{field}}
+          @currentController={{@targetController}}
           @currentField={{@currentField}}
-          @onClick={{this.editField}}
-          @onDeleteClick={{this.deleteField}}
+          @onEditClick={{@editField}}
+          @onDeleteClick={{@deleteField}}
           @onOrderInvalidated={{this.triggerUpdateSortable}}
         />
       {{else}}
@@ -5695,8 +6722,8 @@
   
   */
   {
-    "id": "FyCa6920",
-    "block": "[[[3,\"templates/components/sortable-fields.hbs\"],[1,\"\\n\\n\"],[10,0],[14,0,\"field-sortable\"],[12],[1,\"\\n\"],[42,[28,[37,2],[[28,[37,2],[[30,1]],null]],null],null,[[[41,[30,2],[[[1,\"      \"],[8,[39,4],null,[[\"@field\",\"@currentField\",\"@onClick\",\"@onDeleteClick\",\"@onOrderInvalidated\"],[[30,2],[30,3],[30,0,[\"editField\"]],[30,0,[\"deleteField\"]],[30,0,[\"triggerUpdateSortable\"]]]],null],[1,\"\\n\"]],[]],[[[1,\"      \"],[10,0],[14,0,\"row\"],[12],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-12 no-records\"],[12],[1,\"\\n          \"],[10,\"h4\"],[12],[1,\"This form doesn't have any fields\"],[13],[1,\"\\n          \"],[10,2],[12],[1,\"Click on the options in the 'Add Fields' panel to the right to add one\"],[13],[1,\"\\n        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n\"]],[]]]],[2]],null],[13],[1,\"\\n\"]],[\"@items\",\"field\",\"@currentField\"],false,[\"div\",\"each\",\"-track-array\",\"if\",\"sortable-field\",\"h4\",\"p\"]]",
+    "id": "8KS6a/oB",
+    "block": "[[[3,\"templates/components/sortable-fields.hbs\"],[1,\"\\n\\n\"],[10,0],[14,0,\"field-sortable\"],[12],[1,\"\\n\"],[42,[28,[37,2],[[28,[37,2],[[30,1]],null]],null],null,[[[41,[30,2],[[[1,\"      \"],[8,[39,4],null,[[\"@field\",\"@currentController\",\"@currentField\",\"@onEditClick\",\"@onDeleteClick\",\"@onOrderInvalidated\"],[[30,2],[30,3],[30,4],[30,5],[30,6],[30,0,[\"triggerUpdateSortable\"]]]],null],[1,\"\\n\"]],[]],[[[1,\"      \"],[10,0],[14,0,\"row\"],[12],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-12 no-records\"],[12],[1,\"\\n          \"],[10,\"h4\"],[12],[1,\"This form doesn't have any fields\"],[13],[1,\"\\n          \"],[10,2],[12],[1,\"Click on the options in the 'Add Fields' panel to the right to add one\"],[13],[1,\"\\n        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n\"]],[]]]],[2]],null],[13],[1,\"\\n\"]],[\"@items\",\"field\",\"@targetController\",\"@currentField\",\"@editField\",\"@deleteField\"],false,[\"div\",\"each\",\"-track-array\",\"if\",\"sortable-field\",\"h4\",\"p\"]]",
     "moduleName": "ember-formulaic/templates/components/sortable-fields.hbs",
     "isStrictMode": false
   });
@@ -5806,6 +6833,26 @@
     "isStrictMode": false
   });
 });
+;define("ember-formulaic/templates/components/tinymce-editor", ["exports", "@ember/template-factory"], function (_exports, _templateFactory) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"@ember/template-factory"eaimeta@70e063a35619d71f
+  var _default = _exports.default = (0, _templateFactory.createTemplateFactory)(
+  /*
+    <textarea {{did-insert this.setupEditor}}>{{@value}}</textarea>
+  
+  */
+  {
+    "id": "WAMNlV2/",
+    "block": "[[[11,\"textarea\"],[4,[38,1],[[30,0,[\"setupEditor\"]]],null],[12],[1,[30,1]],[13],[1,\"\\n\"]],[\"@value\"],false,[\"textarea\",\"did-insert\"]]",
+    "moduleName": "ember-formulaic/templates/components/tinymce-editor.hbs",
+    "isStrictMode": false
+  });
+});
 ;define("ember-formulaic/templates/form", ["exports", "@ember/template-factory"], function (_exports, _templateFactory) {
   "use strict";
 
@@ -5820,8 +6867,8 @@
   
   <div class="row formulaic-row">
     <header class="col-xs-8 preview-column">
-        <h1>{{@model.name}}</h1>
-        <p>{{@model.slug}}</p>
+        <h1>{{this.model.name}}</h1>
+        <p>{{this.model.slug}}</p>
       </header>
   </div>
   {{outlet}}
@@ -5829,8 +6876,8 @@
   
   */
   {
-    "id": "Kf5J3nXh",
-    "block": "[[[3,\" templates/form.hbs \"],[1,\"\\n\\n\"],[10,0],[14,0,\"row formulaic-row\"],[12],[1,\"\\n  \"],[10,\"header\"],[14,0,\"col-xs-8 preview-column\"],[12],[1,\"\\n      \"],[10,\"h1\"],[12],[1,[30,1,[\"name\"]]],[13],[1,\"\\n      \"],[10,2],[12],[1,[30,1,[\"slug\"]]],[13],[1,\"\\n    \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[46,[28,[37,5],null,null],null,null,null],[1,\"\\n\\n\"]],[\"@model\"],false,[\"div\",\"header\",\"h1\",\"p\",\"component\",\"-outlet\"]]",
+    "id": "Ww5o7Mi3",
+    "block": "[[[3,\" templates/form.hbs \"],[1,\"\\n\\n\"],[10,0],[14,0,\"row formulaic-row\"],[12],[1,\"\\n  \"],[10,\"header\"],[14,0,\"col-xs-8 preview-column\"],[12],[1,\"\\n      \"],[10,\"h1\"],[12],[1,[30,0,[\"model\",\"name\"]]],[13],[1,\"\\n      \"],[10,2],[12],[1,[30,0,[\"model\",\"slug\"]]],[13],[1,\"\\n    \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[46,[28,[37,5],null,null],null,null,null],[1,\"\\n\\n\"]],[],false,[\"div\",\"header\",\"h1\",\"p\",\"component\",\"-outlet\"]]",
     "moduleName": "ember-formulaic/templates/form.hbs",
     "isStrictMode": false
   });
@@ -5847,42 +6894,11 @@
   /*
     <!-- templates/form/fields.hbs -->
   
-  <div class="row formulaic-row edit-fields">
-    <div class="col-xs-8 preview-column">
-      <h2>Editing Fields</h2>
-      <div class="custom-edit-block">
-        {{!-- Ensure SortableFields component is available --}}
-        <SortableFields @items={{this.activeFields}} @targetController={{this}} />
-      </div>
-  
-      <div class="row formulaic-controls">
-        <div class="col-xs-12">
-          {{!-- Save & Continue Editing Button --}}
-          <button class="btn btn-primary" type="submit" {{on "click" (fn this.saveFields true)}} disabled={{this.controlsDisabled}}>
-            {{#if this.saveContinueActive}}Saving...{{else}}Save & Continue Editing{{/if}}
-          </button>
-          {{!-- Save Button --}}
-          <button class="btn btn-primary" type="submit" {{on "click" (fn this.saveFields false)}} disabled={{this.controlsDisabled}}>
-            {{#if this.saveActive}}Saving...{{else}}Save{{/if}}
-          </button>
-          {{!-- Close Button --}}
-          <button class="btn btn-danger" type="submit" {{on "click" this.close}} disabled={{this.controlsDisabled}}>Close</button>
-        </div>
-      </div>
-    </div>
-  
-    <div class="col-xs-4">
-      <div class="edit-column">
-        {{!-- Ensure Sidebar component is available --}}
-        <Sidebar />
-      </div>
-    </div>
-  </div>
-  
+  <Form::Fields @model={{this.model}} />
   */
   {
-    "id": "Li8E9xkk",
-    "block": "[[[3,\" templates/form/fields.hbs \"],[1,\"\\n\\n\"],[10,0],[14,0,\"row formulaic-row edit-fields\"],[12],[1,\"\\n  \"],[10,0],[14,0,\"col-xs-8 preview-column\"],[12],[1,\"\\n    \"],[10,\"h2\"],[12],[1,\"Editing Fields\"],[13],[1,\"\\n    \"],[10,0],[14,0,\"custom-edit-block\"],[12],[1,\"\\n\"],[1,\"      \"],[8,[39,2],null,[[\"@items\",\"@targetController\"],[[30,0,[\"activeFields\"]],[30,0]]],null],[1,\"\\n    \"],[13],[1,\"\\n\\n    \"],[10,0],[14,0,\"row formulaic-controls\"],[12],[1,\"\\n      \"],[10,0],[14,0,\"col-xs-12\"],[12],[1,\"\\n\"],[1,\"        \"],[11,\"button\"],[24,0,\"btn btn-primary\"],[16,\"disabled\",[30,0,[\"controlsDisabled\"]]],[24,4,\"submit\"],[4,[38,4],[\"click\",[28,[37,5],[[30,0,[\"saveFields\"]],true],null]],null],[12],[1,\"\\n          \"],[41,[30,0,[\"saveContinueActive\"]],[[[1,\"Saving...\"]],[]],[[[1,\"Save & Continue Editing\"]],[]]],[1,\"\\n        \"],[13],[1,\"\\n\"],[1,\"        \"],[11,\"button\"],[24,0,\"btn btn-primary\"],[16,\"disabled\",[30,0,[\"controlsDisabled\"]]],[24,4,\"submit\"],[4,[38,4],[\"click\",[28,[37,5],[[30,0,[\"saveFields\"]],false],null]],null],[12],[1,\"\\n          \"],[41,[30,0,[\"saveActive\"]],[[[1,\"Saving...\"]],[]],[[[1,\"Save\"]],[]]],[1,\"\\n        \"],[13],[1,\"\\n\"],[1,\"        \"],[11,\"button\"],[24,0,\"btn btn-danger\"],[16,\"disabled\",[30,0,[\"controlsDisabled\"]]],[24,4,\"submit\"],[4,[38,4],[\"click\",[30,0,[\"close\"]]],null],[12],[1,\"Close\"],[13],[1,\"\\n      \"],[13],[1,\"\\n    \"],[13],[1,\"\\n  \"],[13],[1,\"\\n\\n  \"],[10,0],[14,0,\"col-xs-4\"],[12],[1,\"\\n    \"],[10,0],[14,0,\"edit-column\"],[12],[1,\"\\n\"],[1,\"      \"],[8,[39,7],null,null,null],[1,\"\\n    \"],[13],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"]],[],false,[\"div\",\"h2\",\"sortable-fields\",\"button\",\"on\",\"fn\",\"if\",\"sidebar\"]]",
+    "id": "Dv9/POUX",
+    "block": "[[[3,\" templates/form/fields.hbs \"],[1,\"\\n\\n\"],[8,[39,0],null,[[\"@model\"],[[30,0,[\"model\"]]]],null]],[],false,[\"form/fields\"]]",
     "moduleName": "ember-formulaic/templates/form/fields.hbs",
     "isStrictMode": false
   });
@@ -6275,59 +7291,11 @@
   /*
     <!-- templates/form/fields/textfield.hbs -->
   
-  <h2>Edit '{{this.subtypeName}}' field</h2>
-  <div class="textfield-container {{if this.validator.isDisplayNameInvalid 'has-error'}}">
-    <button class="btn btn-link wysiwyg-toggle" {{on "click" this.toggleDisplayNameWYSIWYG}}>
-      {{#if this.isDisplayNameWYSIWYGEnabled}}
-        TEXT
-      {{else}}
-        WYSIWYG
-      {{/if}}
-    </button>
-    <label class="control-label">
-      Display Name
-      {{#if this.isDisplayNameWYSIWYGEnabled}}
-        <TinymceEditor @options={{this.editorOptions}} @value={{this.model.display_name}} />
-      {{else}}
-        <Input @type="text" id="field-display-name" placeholder="(Display Name)" @value={{this.model.display_name}} class="form-control input-sm" />
-      {{/if}}
-    </label>
-  </div>
-  <div class="{{if this.validator.isDataNameInvalid 'has-error'}}">
-    <label class="control-label">
-      Data Column Name
-      <Input @type="text" id="field-data-name" placeholder="(Data Column Name)" @value={{this.model.data_name}} class="form-control input-sm" />
-    </label>
-  </div>
-  <div class="{{if this.validator.isSlugInvalid 'has-error'}}">
-    <label class="control-label">
-      Slug
-      <Input @type="text" id="field-slug" placeholder="(field-name)" @value={{this.autoSlug}} class="form-control input-sm" />
-    </label>
-  </div>
-  <label>
-    <Input @type="checkbox" id="field-required" @checked={{this.model.required}} />
-    Required
-  </label>
-  
-  <div class="extras">
-    <h4>Extras</h4>
-    <label>
-      Help Text
-      <Input @type="text" id="field-help-text" placeholder="" @value={{this.model.help_text}} class="form-control input-sm" />
-    </label>
-    <label>
-      CSS Class
-      <Input @type="text" id="field-css-class" @value={{this.model.css_class}} class="form-control input-sm" />
-    </label>
-  </div>
-  
-  <button class="btn btn-primary" type="submit" {{on "click" this.doneEditingField}}>Done</button>
-  
+  <Form::Fields::TextField @model={{this.model}} />
   */
   {
-    "id": "mbh6zqvn",
-    "block": "[[[3,\" templates/form/fields/textfield.hbs \"],[1,\"\\n\\n\"],[10,\"h2\"],[12],[1,\"Edit '\"],[1,[30,0,[\"subtypeName\"]]],[1,\"' field\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[\"textfield-container \",[52,[30,0,[\"validator\",\"isDisplayNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[11,\"button\"],[24,0,\"btn btn-link wysiwyg-toggle\"],[4,[38,4],[\"click\",[30,0,[\"toggleDisplayNameWYSIWYG\"]]],null],[12],[1,\"\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      TEXT\\n\"]],[]],[[[1,\"      WYSIWYG\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Display Name\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      \"],[8,[39,6],null,[[\"@options\",\"@value\"],[[30,0,[\"editorOptions\"]],[30,0,[\"model\",\"display_name\"]]]],null],[1,\"\\n\"]],[]],[[[1,\"      \"],[8,[39,7],[[24,1,\"field-display-name\"],[24,\"placeholder\",\"(Display Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"display_name\"]]]],null],[1,\"\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isDataNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Data Column Name\\n    \"],[8,[39,7],[[24,1,\"field-data-name\"],[24,\"placeholder\",\"(Data Column Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"data_name\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isSlugInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Slug\\n    \"],[8,[39,7],[[24,1,\"field-slug\"],[24,\"placeholder\",\"(field-name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"autoSlug\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,\"label\"],[12],[1,\"\\n  \"],[8,[39,7],[[24,1,\"field-required\"]],[[\"@type\",\"@checked\"],[\"checkbox\",[30,0,[\"model\",\"required\"]]]],null],[1,\"\\n  Required\\n\"],[13],[1,\"\\n\\n\"],[10,0],[14,0,\"extras\"],[12],[1,\"\\n  \"],[10,\"h4\"],[12],[1,\"Extras\"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    Help Text\\n    \"],[8,[39,7],[[24,1,\"field-help-text\"],[24,\"placeholder\",\"\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"help_text\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    CSS Class\\n    \"],[8,[39,7],[[24,1,\"field-css-class\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"css_class\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\\n\"],[11,\"button\"],[24,0,\"btn btn-primary\"],[24,4,\"submit\"],[4,[38,4],[\"click\",[30,0,[\"doneEditingField\"]]],null],[12],[1,\"Done\"],[13],[1,\"\\n\"]],[],false,[\"h2\",\"div\",\"if\",\"button\",\"on\",\"label\",\"tinymce-editor\",\"input\",\"h4\"]]",
+    "id": "/mLJ5CcS",
+    "block": "[[[3,\" templates/form/fields/textfield.hbs \"],[1,\"\\n\\n\"],[8,[39,0],null,[[\"@model\"],[[30,0,[\"model\"]]]],null]],[],false,[\"form/fields/text-field\"]]",
     "moduleName": "ember-formulaic/templates/form/fields/textfield.hbs",
     "isStrictMode": false
   });
@@ -6342,109 +7310,13 @@
   0; //eaimeta@70e063a35619d71f0,"@ember/template-factory"eaimeta@70e063a35619d71f
   var _default = _exports.default = (0, _templateFactory.createTemplateFactory)(
   /*
-    <div class="row formulaic-row form-row">
-    <div class="col-xs-8 preview-column edit-menu">
-      <h2>Modify Form</h2>
-      {{#if this.inEditMode}}
-        <div class="edit-menu-item row">
-          <div class="col-xs-2">
-            <label for="form-name">Form Name</label>
-          </div>
-          <div class="col-xs-10">
-            <Input @type="text" id="form-name" placeholder="" @value={{this.model.name}} class="form-control input-sm"/>
-          </div>
-        </div>
-        <div class="edit-menu-item row">
-          <div class="col-xs-2">
-            <label for="form-slug">Slug</label>
-          </div>
-          <div class="col-xs-10">
-            <Input @type="text" id="form-slug" placeholder="" @value={{this.model.slug}} class="form-control input-sm"/>
-          </div>
-        </div>
-        <div class="edit-menu-item row">
-          <div class="col-xs-2">
-            <label for="form-privacy-policy">Privacy Policy</label>
-          </div>
-          <div class="col-xs-10">
-            {{#if this.privacyPoliciesReady}}
-              <select {{on "change" this.privacyPolicyChanged}} id="form-privacy-policy" class="form-control input-sm">
-                <option value="">Choose Privacy Policy...</option>
-                {{#each this.privacyPolicies as |policy|}}
-                  <option value={{policy.id}} selected={{if (this.eq policy.id this.model.privacy_policy.id) "selected"
-                                                            null}}>{{policy.name}}</option>
-                {{/each}}
-              </select>
-            {{else}}
-              <p>Loading ...</p>
-            {{/if}}
-          </div>
-  
-        </div>
-        <div class="edit-menu-item row">
-          <div class="col-xs-2">
-            <label for="form-success-message">Success Message</label>
-          </div>
-          <div class="col-xs-10">
-            <Textarea id="form-success-message" placeholder="" @value={{this.model.success_message}} rows={{6}}
-                      class="form-control input-sm text-block"/>
-          </div>
-        </div>
-  
-        <div class="row formulaic-controls">
-          <div class="col-xs-10 col-xs-offset-2">
-            <button class="btn btn-primary" type="submit" {{on "click" this.saveForm}}>Save</button>
-            <button class="btn btn-danger" type="submit" {{on "click" this.close}}>Close</button>
-          </div>
-        </div>
-      {{else}}
-        <div class="row">
-          <div class="edit-menu-item col-xs-12">
-            <div {{on "click" this.editForm}} role="button" tabindex="0">Form Details</div>
-            <span class="edit-menu-controls">
-              <div {{on "click" this.editForm}} role="button" tabindex="0">
-                <span class="glyphicon glyphicon-menu-hamburger"></span>
-                Change
-              </div>
-            </span>
-          </div>
-  
-          <div class="edit-menu-item col-xs-12">
-            <div {{on "click" this.editFields}} role="button" tabindex="0">Fields</div>
-            <span class="edit-menu-controls">
-              <div {{on "click" this.editFields}} role="button" tabindex="0">
-                <span class="glyphicon glyphicon-menu-hamburger"></span>
-                Change
-              </div>
-            </span>
-          </div>
-  
-          <div class="edit-menu-item col-xs-12">
-            <div {{on "click" this.editRules}} role="button" tabindex="0">Rules</div>
-            <span class="edit-menu-controls">
-              <div {{on "click" this.editRules}} role="button" tabindex="0"><span
-                class="glyphicon glyphicon-menu-hamburger"></span> Change</div>
-            </span>
-          </div>
-  
-          <div class="edit-menu-item col-xs-12">
-            <div {{on "click" this.viewSubmissions}} role="button" tabindex="0">Submissions</div>
-            <span class="edit-menu-controls">
-              <div {{on "click" this.viewSubmissions}} role="button" tabindex="0">
-                <span class="glyphicon glyphicon-th-list"></span>
-                View
-              </div>
-            </span>
-          </div>
-        </div>
-      {{/if}}
-    </div>
-  </div>
+    {{!-- app/templates/form/index.hbs --}}
+  <Form::Index @model={{this.model}} />
   
   */
   {
-    "id": "5OiA9Gh8",
-    "block": "[[[10,0],[14,0,\"row formulaic-row form-row\"],[12],[1,\"\\n  \"],[10,0],[14,0,\"col-xs-8 preview-column edit-menu\"],[12],[1,\"\\n    \"],[10,\"h2\"],[12],[1,\"Modify Form\"],[13],[1,\"\\n\"],[41,[30,0,[\"inEditMode\"]],[[[1,\"      \"],[10,0],[14,0,\"edit-menu-item row\"],[12],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-2\"],[12],[1,\"\\n          \"],[10,\"label\"],[14,\"for\",\"form-name\"],[12],[1,\"Form Name\"],[13],[1,\"\\n        \"],[13],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-10\"],[12],[1,\"\\n          \"],[8,[39,4],[[24,1,\"form-name\"],[24,\"placeholder\",\"\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"name\"]]]],null],[1,\"\\n        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n      \"],[10,0],[14,0,\"edit-menu-item row\"],[12],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-2\"],[12],[1,\"\\n          \"],[10,\"label\"],[14,\"for\",\"form-slug\"],[12],[1,\"Slug\"],[13],[1,\"\\n        \"],[13],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-10\"],[12],[1,\"\\n          \"],[8,[39,4],[[24,1,\"form-slug\"],[24,\"placeholder\",\"\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"slug\"]]]],null],[1,\"\\n        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n      \"],[10,0],[14,0,\"edit-menu-item row\"],[12],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-2\"],[12],[1,\"\\n          \"],[10,\"label\"],[14,\"for\",\"form-privacy-policy\"],[12],[1,\"Privacy Policy\"],[13],[1,\"\\n        \"],[13],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-10\"],[12],[1,\"\\n\"],[41,[30,0,[\"privacyPoliciesReady\"]],[[[1,\"            \"],[11,\"select\"],[24,1,\"form-privacy-policy\"],[24,0,\"form-control input-sm\"],[4,[38,6],[\"change\",[30,0,[\"privacyPolicyChanged\"]]],null],[12],[1,\"\\n              \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose Privacy Policy...\"],[13],[1,\"\\n\"],[42,[28,[37,9],[[28,[37,9],[[30,0,[\"privacyPolicies\"]]],null]],null],null,[[[1,\"                \"],[10,\"option\"],[15,2,[30,1,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"eq\"]],[[30,1,[\"id\"]],[30,0,[\"model\",\"privacy_policy\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,1,[\"name\"]]],[13],[1,\"\\n\"]],[1]],null],[1,\"            \"],[13],[1,\"\\n\"]],[]],[[[1,\"            \"],[10,2],[12],[1,\"Loading ...\"],[13],[1,\"\\n\"]],[]]],[1,\"        \"],[13],[1,\"\\n\\n      \"],[13],[1,\"\\n      \"],[10,0],[14,0,\"edit-menu-item row\"],[12],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-2\"],[12],[1,\"\\n          \"],[10,\"label\"],[14,\"for\",\"form-success-message\"],[12],[1,\"Success Message\"],[13],[1,\"\\n        \"],[13],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-10\"],[12],[1,\"\\n          \"],[8,[39,11],[[24,1,\"form-success-message\"],[24,\"placeholder\",\"\"],[16,\"rows\",6],[24,0,\"form-control input-sm text-block\"]],[[\"@value\"],[[30,0,[\"model\",\"success_message\"]]]],null],[1,\"        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n\\n      \"],[10,0],[14,0,\"row formulaic-controls\"],[12],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-10 col-xs-offset-2\"],[12],[1,\"\\n          \"],[11,\"button\"],[24,0,\"btn btn-primary\"],[24,4,\"submit\"],[4,[38,6],[\"click\",[30,0,[\"saveForm\"]]],null],[12],[1,\"Save\"],[13],[1,\"\\n          \"],[11,\"button\"],[24,0,\"btn btn-danger\"],[24,4,\"submit\"],[4,[38,6],[\"click\",[30,0,[\"close\"]]],null],[12],[1,\"Close\"],[13],[1,\"\\n        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n\"]],[]],[[[1,\"      \"],[10,0],[14,0,\"row\"],[12],[1,\"\\n        \"],[10,0],[14,0,\"edit-menu-item col-xs-12\"],[12],[1,\"\\n          \"],[11,0],[24,\"role\",\"button\"],[24,\"tabindex\",\"0\"],[4,[38,6],[\"click\",[30,0,[\"editForm\"]]],null],[12],[1,\"Form Details\"],[13],[1,\"\\n          \"],[10,1],[14,0,\"edit-menu-controls\"],[12],[1,\"\\n            \"],[11,0],[24,\"role\",\"button\"],[24,\"tabindex\",\"0\"],[4,[38,6],[\"click\",[30,0,[\"editForm\"]]],null],[12],[1,\"\\n              \"],[10,1],[14,0,\"glyphicon glyphicon-menu-hamburger\"],[12],[13],[1,\"\\n              Change\\n            \"],[13],[1,\"\\n          \"],[13],[1,\"\\n        \"],[13],[1,\"\\n\\n        \"],[10,0],[14,0,\"edit-menu-item col-xs-12\"],[12],[1,\"\\n          \"],[11,0],[24,\"role\",\"button\"],[24,\"tabindex\",\"0\"],[4,[38,6],[\"click\",[30,0,[\"editFields\"]]],null],[12],[1,\"Fields\"],[13],[1,\"\\n          \"],[10,1],[14,0,\"edit-menu-controls\"],[12],[1,\"\\n            \"],[11,0],[24,\"role\",\"button\"],[24,\"tabindex\",\"0\"],[4,[38,6],[\"click\",[30,0,[\"editFields\"]]],null],[12],[1,\"\\n              \"],[10,1],[14,0,\"glyphicon glyphicon-menu-hamburger\"],[12],[13],[1,\"\\n              Change\\n            \"],[13],[1,\"\\n          \"],[13],[1,\"\\n        \"],[13],[1,\"\\n\\n        \"],[10,0],[14,0,\"edit-menu-item col-xs-12\"],[12],[1,\"\\n          \"],[11,0],[24,\"role\",\"button\"],[24,\"tabindex\",\"0\"],[4,[38,6],[\"click\",[30,0,[\"editRules\"]]],null],[12],[1,\"Rules\"],[13],[1,\"\\n          \"],[10,1],[14,0,\"edit-menu-controls\"],[12],[1,\"\\n            \"],[11,0],[24,\"role\",\"button\"],[24,\"tabindex\",\"0\"],[4,[38,6],[\"click\",[30,0,[\"editRules\"]]],null],[12],[10,1],[14,0,\"glyphicon glyphicon-menu-hamburger\"],[12],[13],[1,\" Change\"],[13],[1,\"\\n          \"],[13],[1,\"\\n        \"],[13],[1,\"\\n\\n        \"],[10,0],[14,0,\"edit-menu-item col-xs-12\"],[12],[1,\"\\n          \"],[11,0],[24,\"role\",\"button\"],[24,\"tabindex\",\"0\"],[4,[38,6],[\"click\",[30,0,[\"viewSubmissions\"]]],null],[12],[1,\"Submissions\"],[13],[1,\"\\n          \"],[10,1],[14,0,\"edit-menu-controls\"],[12],[1,\"\\n            \"],[11,0],[24,\"role\",\"button\"],[24,\"tabindex\",\"0\"],[4,[38,6],[\"click\",[30,0,[\"viewSubmissions\"]]],null],[12],[1,\"\\n              \"],[10,1],[14,0,\"glyphicon glyphicon-th-list\"],[12],[13],[1,\"\\n              View\\n            \"],[13],[1,\"\\n          \"],[13],[1,\"\\n        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"]],[\"policy\"],false,[\"div\",\"h2\",\"if\",\"label\",\"input\",\"select\",\"on\",\"option\",\"each\",\"-track-array\",\"p\",\"textarea\",\"button\",\"span\"]]",
+    "id": "oXDSwGPN",
+    "block": "[[[8,[39,0],null,[[\"@model\"],[[30,0,[\"model\"]]]],null],[1,\"\\n\"]],[],false,[\"form/index\"]]",
     "moduleName": "ember-formulaic/templates/form/index.hbs",
     "isStrictMode": false
   });
@@ -6683,13 +7555,18 @@
      */
 
     if (initialField instanceof _field.default) {
+      console.warn("initialField :", initialField);
       if (initialField.get('textfield')) {
+        console.warn("stopped at : textfield");
         return initialField.get('textfield');
       } else if (initialField.get('choicefield')) {
+        console.warn("stopped at : choicefield");
         return initialField.get('choicefield');
       } else if (initialField.get('booleanfield')) {
+        console.warn("stopped at : booleanfield");
         return initialField.get('booleanfield');
       } else if (initialField.get('hiddenfield')) {
+        console.warn("stopped at : hiddenfield");
         return initialField.get('hiddenfield');
       } else {
         // Raise exception
@@ -7012,7 +7889,7 @@ catch(err) {
 
 ;
           if (!runningTests) {
-            require("ember-formulaic/app")["default"].create({"API_HOST":"","API_NAMESPACE":"formulaic/api","LOG_RESOLVER":true,"LOG_ACTIVE_GENERATION":true,"LOG_TRANSITIONS":true,"LOG_TRANSITIONS_INTERNAL":true,"LOG_VIEW_LOOKUPS":true,"name":"ember-formulaic","version":"0.0.0+5af179f4"});
+            require("ember-formulaic/app")["default"].create({"API_HOST":"","API_NAMESPACE":"formulaic/api","LOG_RESOLVER":true,"LOG_ACTIVE_GENERATION":true,"LOG_TRANSITIONS":true,"LOG_TRANSITIONS_INTERNAL":true,"LOG_VIEW_LOOKUPS":true,"name":"ember-formulaic","version":"0.0.0+d675ae48"});
           }
         
 //# sourceMappingURL=ember-formulaic.map

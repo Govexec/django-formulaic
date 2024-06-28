@@ -13,7 +13,7 @@ export default class FormIndexController extends Controller {
   @tracked downloadInProgress = false;
   @tracked downloadFailed = false;
   @tracked privacyPolicies = [];
-  @tracked model = { privacy_policy: null };
+  @tracked model = {privacy_policy: null};
 
   get form() {
     return this.model;
@@ -41,10 +41,10 @@ export default class FormIndexController extends Controller {
     }
   }
 
-   @action
+  @action
   privacyPolicyChanged(event) {
     let selectedPolicyId = event.target.value;
-     this.model.privacy_policy = this.privacyPolicies.find(policy => policy.id === selectedPolicyId);
+    this.model.privacy_policy = this.privacyPolicies.find(policy => policy.id === selectedPolicyId);
   }
 
   @action

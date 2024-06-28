@@ -23,39 +23,24 @@ export default class SortableFieldComponent extends Component {
   constructor() {
     super(...arguments);
     this.field = this.args.field;
+    //this.completeField();
   }
 
   get previewComponent() {
     if (this.field && this.field.subtype) {
-      return `preview-${this.field.subtype.replace('_', '-')}`;
+      return  `preview-${this.field.subtype.replace('_', '-')}`;
     } else {
       return '';
     }
   }
 
   get completeField() {
-    console.warn("field details : ", this.field);
-
     if (!this.field) {
       return null;
     }
 
-    return this.field;
-
-    // switch (this.field.model_class) {
-    //   case FIELD_TYPES.TEXTFIELD:
-    //     return this.field.textfield.data;
-    //   case FIELD_TYPES.CHOICEFIELD:
-    //     return this.field.choicefield.data;
-    //   case FIELD_TYPES.BOOLEANFIELD:
-    //     return this.field.booleanfield.data;
-    //   case FIELD_TYPES.HIDDENFIELD:
-    //     return this.field.hiddenfield.data;
-    //   default:
-    //     throw new Error('Field type not implemented');
-    // }
+    return this.field.get(this.field.model_class);
   }
-
 
   @computed('currentField')
   get isEditing() {
@@ -93,8 +78,8 @@ export default class SortableFieldComponent extends Component {
   }
 
   @action
-  handleClick() {
-    this.args.onClick(this.field);
+  handleEditClick() {
+    this.args.onEditClick(this.field);
   }
 
   willDestroy() {

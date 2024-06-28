@@ -1,1 +1,25 @@
-{{yield}}
+{{#if @field}}
+  {{#if @field.model_class}}
+    {{#let (concat "form/fields/" @field.model_class) as |componentName|}}
+      {{#if (component componentName)}}
+        {{component componentName model=@field}}
+      {{else}}
+        <div>Template for {{componentName}} not found.</div>
+        <div>Check if the template exists and is correctly named.</div>
+      {{/if}}
+    {{/let}}
+  {{else if @field.field.model_class}}
+    {{#let (concat "form/fields/" @field.field.model_class) as |componentName|}}
+      {{#if (component componentName)}}
+        {{component componentName model=@field}}
+      {{else}}
+        <div>Template for {{componentName}} not found.</div>
+        <div>Check if the template exists and is correctly named.</div>
+      {{/if}}
+    {{/let}}
+  {{else}}
+    <div>No model_class found.</div>
+  {{/if}}
+{{else}}
+  {{component "form/fields/index"}}
+{{/if}}

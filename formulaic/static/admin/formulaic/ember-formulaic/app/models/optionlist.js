@@ -4,4 +4,5 @@ export default class OptionListModel extends Model {
     @attr('string') name;
     @hasMany('option', { async: true, inverse: 'list' }) options;
     @hasMany('optiongroup', { async: true, inverse: 'list' }) groups;
+    @hasMany('choicefield', { async: true, inverse: 'option_list' }) choice_fields;
 }

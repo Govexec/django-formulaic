@@ -5,9 +5,10 @@
     {{#if field}}
       <SortableField
         @field={{field}}
+        @currentController={{@targetController}}
         @currentField={{@currentField}}
-        @onClick={{this.editField}}
-        @onDeleteClick={{this.deleteField}}
+        @onEditClick={{@editField}}
+        @onDeleteClick={{@deleteField}}
         @onOrderInvalidated={{this.triggerUpdateSortable}}
       />
     {{else}}

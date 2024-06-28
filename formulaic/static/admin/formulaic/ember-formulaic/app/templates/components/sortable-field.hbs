@@ -2,7 +2,7 @@
 
 <div
   class="field-preview single-line-text form-group col-xs-12 item {{if this.isEditing "editing"}} {{if this.completeField.validator.isInvalid "warning"}}"
-  {{on "click" this.handleClick}}
+  {{on "click" this.handleEditClick}}
 >
   <input type="hidden" value={{this.field.position}} class="position" />
   <ul class="controls list-inline">

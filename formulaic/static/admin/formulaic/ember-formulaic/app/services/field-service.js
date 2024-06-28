@@ -1,56 +1,66 @@
+//services/field-service.js
+
+import {tracked} from '@glimmer/tracking';
 import Service from '@ember/service';
-import { inject as service } from '@ember/service';
+import {inject as service} from '@ember/service';
 
 export default class FieldService extends Service {
   @service store;
   @service router;
+  @tracked currentField = null;
+  @tracked validators = {};
 
-  createBaseField(subtype, form) {
+  eq(a, b) {
+    return a === b;
+  }
+
+  async validatorFor(field) {
+    let validatorKey = field.toString();
+    if (!this.validators[validatorKey]) {
+      this.validators[validatorKey] = field.validator;
+    }
+    return this.validators[validatorKey];
+  }
+
+  removeValidatorFor(field) {
+    let validatorKey = field.toString();
+    if (this.validators[validatorKey]) {
+      this.validators[validatorKey].destroy();
+      delete this.validators[validatorKey];
+    }
+  }
+
+  createBaseField(subtype, form, model_class) {
     const position = document.querySelectorAll('.field-sortable .item').length;
-    return this.store.createRecord('field', {
+    console.log("position : ", position);
+    let field = this.store.createRecord('field', {
       display_name: null,
       data_name: null,
       slug: null,
       required: false,
       help_text: null,
-      model_class: 'textfield',
+      model_class: model_class,
       position: position,
       css_class: null,
       subtype: subtype,
       form: form
-    });
-  }
+    })
 
-  renderFieldSidebar(context, field) {
-    const fieldType = field.textfield || field.choicefield || field.booleanfield || field.hiddenfield;
-    if (!fieldType) {
-      throw new Error("Formulaic: field type not implemented");
-    }
+    //console.warn(this.sortableVersion++);
 
-    const templateName = `form/fields/${fieldType.modelName}`;
-    const controllerName = `form/fields/${fieldType.modelName}`;
-
-    context.render(templateName, {
-      into: 'form.fields',
-      outlet: 'sidebar',
-      model: fieldType,
-      controller: controllerName
-    });
+    return field;
   }
 
   openEditField(context, field) {
-    context.set('currentField', field);
-    this.renderFieldSidebar(context, field);
+    this.currentField = field.get(field.model_class);
+    console.warn("this.currentField : ", this.currentField);
   }
 
-  closeEditField(context) {
-    context.set('currentField', null);
-    context.render('form.fields.index', {
-      into: 'form.fields',
-      outlet: 'sidebar'
-    });
+  closeEditField() {
+    this.currentField = null;
   }
 
+  // this will return generic FieldModel ::: not specific model
   createField(subtype, form, type) {
     const validSubtypes = {
       text: ["text", "textarea", "email", "phone_number", "integer", "full_name"],
@@ -63,12 +73,12 @@ export default class FieldService extends Service {
       throw new Error(`Formulaic: ${type} field subtype \`${subtype}\` not implemented`);
     }
 
-    let field = this.createBaseField(subtype, form);
+    let field = this.createBaseField(subtype, form, (type + "field"));
     let specificField;
 
     switch (type) {
       case 'text':
-        specificField = this.store.createRecord('textfield', { ...field, subtype });
+        specificField = this.store.createRecord('textfield', {...field, subtype});
         break;
       case 'choice':
         specificField = this.store.createRecord('choicefield', {
@@ -81,14 +91,17 @@ export default class FieldService extends Service {
         });
         break;
       case 'boolean':
-        specificField = this.store.createRecord('booleanfield', { ...field, subtype });
+        specificField = this.store.createRecord('booleanfield', {...field, subtype});
         break;
       case 'hidden':
-        specificField = this.store.createRecord('hiddenfield', { ...field, subtype, value: "" });
+        specificField = this.store.createRecord('hiddenfield', {...field, subtype, value: ""});
         break;
     }
 
     field[type + 'field'] = specificField;
+
+    console.warn("final-field : ", field);
+
     return field;
   }
 }

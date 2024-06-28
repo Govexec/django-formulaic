@@ -5,6 +5,6 @@ export default class FormModel extends Model {
     @attr('string') slug;
     @attr('string') success_message;
     @belongsTo('privacypolicy', { async: true, inverse: 'forms' }) privacy_policy;
-    @hasMany('field', { async: true, inverse: 'form' }) fields;
-    @hasMany('rule', { async: true, inverse: 'form' }) rules;
+    @hasMany('field', { async: false, polymorphic: true, inverse: 'form'}) fields;
+    @hasMany('rule', { async: false, inverse: 'form' }) rules;
 }

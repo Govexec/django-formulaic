@@ -1,0 +1,18 @@
+<!-- templates/form/fields/index.hbs -->
+
+<h2>Add Fields</h2>
+<h3>Basic</h3>
+<button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createTextField "text")}}>Text (Single Line)</button>
+<button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createTextField "textarea")}}>Text (Multi Line)</button>
+<button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createChoiceField "select")}}>Dropdown List</button>
+<button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createChoiceField "radio_select")}}>Radio List</button>
+<button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createChoiceField "checkbox_select_multiple")}}>Checkbox List</button>
+<button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createBooleanField "checkbox")}}>Checkbox</button>
+<button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createChoiceField "select_multiple")}}>Multi-select List</button>
+<button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createHiddenField "hidden")}}>Hidden Field</button>
+
+<h3>Typed</h3>
+<button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createTextField "full_name")}}>Full Name</button>
+<button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createTextField "email")}}>Email</button>
+<button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createTextField "phone_number")}}>Phone Number</button>
+<button class="btn btn-default btn-block" type="submit" {{on "click" (fn this.createTextField "integer")}}>Integer</button>

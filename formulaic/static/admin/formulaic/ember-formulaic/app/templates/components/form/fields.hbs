@@ -1,0 +1,42 @@
+<!-- templates/components/form/fields.hbs -->
+
+<div class="row formulaic-row edit-fields">
+  <div class="col-xs-8 preview-column">
+    <h2>Editing Fields</h2>
+    <div class="custom-edit-block">
+      {{!-- Ensure SortableFields component is available --}}
+      <SortableFields
+        @items={{this.activeFields}}
+        @targetController={{this}}
+        @currentField={{this.currentField}}
+        @editField={{this.editField}}
+        @deleteField={{this.deleteField}}
+        @invalidateOrder={{this.invalidateOrder}}  />
+    </div>
+
+    <div class="row formulaic-controls">
+      <div class="col-xs-12">
+        {{!-- Save & Continue Editing Button --}}
+        <button class="btn btn-primary" type="submit" {{on "click" (fn this.saveFields true)}}
+                disabled={{this.controlsDisabled}}>
+          {{#if this.saveContinueActive}}Saving...{{else}}Save & Continue Editing{{/if}}
+        </button>
+        {{!-- Save Button --}}
+        <button class="btn btn-primary" type="submit" {{on "click" (fn this.saveFields false)}}
+                disabled={{this.controlsDisabled}}>
+          {{#if this.saveActive}}Saving...{{else}}Save{{/if}}
+        </button>
+        {{!-- Close Button --}}
+        <button class="btn btn-danger" type="submit" {{on "click" this.close}} disabled={{this.controlsDisabled}}>
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-4">
+    <div class="edit-column">
+      <Sidebar @field={{this.fieldService.currentField}} />
+    </div>
+  </div>
+</div>
