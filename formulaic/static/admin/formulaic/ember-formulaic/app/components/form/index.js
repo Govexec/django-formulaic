@@ -20,7 +20,6 @@ export default class FormIndexComponent extends Component {
 
   constructor() {
     super(...arguments);
-    console.warn("model : ", this.model)
     once(this, this.loadPrivacyPolicies);
   }
 

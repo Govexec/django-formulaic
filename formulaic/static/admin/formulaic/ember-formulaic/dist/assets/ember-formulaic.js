@@ -1017,7 +1017,7 @@
     }
   })), _class);
 });
-;define("ember-formulaic/components/form/fields", ["exports", "@glimmer/component", "@ember/object", "@ember/service", "@glimmer/tracking", "rsvp", "ember-formulaic/utils/fields", "ember-formulaic/utils/slug"], function (_exports, _component, _object, _service, _tracking, _rsvp, _fields, _slug) {
+;define("ember-formulaic/components/form/fields", ["exports", "@glimmer/component", "@ember/object", "@ember/service", "@glimmer/tracking", "rsvp", "ember-formulaic/utils/slug"], function (_exports, _component, _object, _service, _tracking, _rsvp, _slug) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
@@ -1025,7 +1025,7 @@
   });
   _exports.default = void 0;
   var _dec, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9; //components/form/field.js
-  0; //eaimeta@70e063a35619d71f0,"@glimmer/component",0,"@ember/object",0,"@ember/service",0,"@glimmer/tracking",0,"rsvp",0,"ember-formulaic/utils/fields",0,"ember-formulaic/utils/slug"eaimeta@70e063a35619d71f
+  0; //eaimeta@70e063a35619d71f0,"@glimmer/component",0,"@ember/object",0,"@ember/service",0,"@glimmer/tracking",0,"rsvp",0,"ember-formulaic/utils/slug"eaimeta@70e063a35619d71f
   function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
   function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
   function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
@@ -1064,11 +1064,11 @@
       this.saveContinueActive = continueEditing;
       let validationErrors = [];
       let actualFields = this.model.filter(field => !field.isDeleted).map(field => {
-        let actualField = _fields.default.getActualField(field);
+        let actualField = field.get(field.model_class);
         if (!actualField.slug) {
           actualField.slug = _slug.default.generateSlug(actualField.data_name);
         }
-        let validator = this.validatorFor(actualField);
+        let validator = this.fieldService.validatorFor(actualField);
         if (validator.isInvalid) {
           validationErrors.push(`Field "${actualField.data_name}" is incomplete`);
         }
@@ -1081,7 +1081,11 @@
         this.saveContinueActive = false;
         return;
       }
-      let promises = [...this.fieldsPendingDeletion.map(field => field.deleteRecord().then(() => field.save())), ...actualFields.map(field => field.save())];
+      console.warn("deleted fields :", this.fieldsPendingDeletion);
+      let promises = [...this.fieldsPendingDeletion.map(field => {
+        field.deleteRecord();
+        return field.save();
+      }), ...actualFields.map(field => field.save())];
       this.fieldsPendingDeletion.length = 0;
       try {
         let results = await (0, _rsvp.allSettled)(promises);
@@ -1092,8 +1096,8 @@
           toastr.options.positionClass = "toast-bottom-center";
           toastr.error('Save failed. Contact administrator.');
         } else {
-          this.reloadFields();
           toastr.options.positionClass = "toast-bottom-center";
+          this.fieldService.refreshCurrentRoute(this.router.currentRouteName);
           toastr.success('Fields saved.');
           if (!continueEditing) {
             this.router.transitionTo('form');
@@ -1112,17 +1116,12 @@
       this.fieldService.openEditField(this, field);
     }
     deleteField(field, completeField) {
-      this.removeValidatorFor(field);
+      this.fieldService.removeValidatorFor(field);
       field.deleteRecord();
       this.fieldsPendingDeletion.push(completeField);
-      this.invalidateOrder();
       if (this.currentField === field) {
         this.fieldService.closeEditField(this);
       }
-    }
-    reloadFields() {
-      this.store.unloadAll('field');
-      this.refresh();
     }
   }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "store", [_service.inject], {
     configurable: true,
@@ -1181,7 +1180,7 @@
     initializer: function () {
       return {};
     }
-  }), _applyDecoratedDescriptor(_class.prototype, "invalidateOrder", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "invalidateOrder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "saveFields", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "saveFields"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "close", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "close"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "editField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "editField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "deleteField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "deleteField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "reloadFields", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "reloadFields"), _class.prototype)), _class));
+  }), _applyDecoratedDescriptor(_class.prototype, "invalidateOrder", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "invalidateOrder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "saveFields", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "saveFields"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "close", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "close"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "editField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "editField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "deleteField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "deleteField"), _class.prototype)), _class));
 });
 ;define("ember-formulaic/components/form/fields/basefield", ["exports", "@glimmer/component", "@ember/service", "@glimmer/tracking", "@ember/object", "ember-formulaic/utils/slug"], function (_exports, _component, _service, _tracking, _object, _slug) {
   "use strict";
@@ -1525,7 +1524,6 @@
       _initializerDefineProperty(this, "downloadFailed", _descriptor7, this);
       _initializerDefineProperty(this, "privacyPolicies", _descriptor8, this);
       _initializerDefineProperty(this, "model", _descriptor9, this);
-      console.warn("model : ", this.model);
       (0, _runloop.once)(this, this.loadPrivacyPolicies);
     }
     get form() {
@@ -2352,7 +2350,7 @@
     value: true
   });
   _exports.default = void 0;
-  var _dec, _dec2, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5; //components/sortable-field.js
+  var _dec, _dec2, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4; //components/sortable-field.js
   0; //eaimeta@70e063a35619d71f0,"@glimmer/component",0,"@glimmer/tracking",0,"@ember/controller",0,"@ember/object"eaimeta@70e063a35619d71f
   function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
   function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -2369,13 +2367,11 @@
   let SortableFieldComponent = _exports.default = (_dec = (0, _object.computed)('currentField'), _dec2 = (0, _object.computed)('field.hiddenfield'), (_class = class SortableFieldComponent extends _component.default {
     constructor() {
       super(...arguments);
-      _initializerDefineProperty(this, "fields", _descriptor, this);
-      _initializerDefineProperty(this, "display_name", _descriptor2, this);
-      _initializerDefineProperty(this, "data_name", _descriptor3, this);
-      _initializerDefineProperty(this, "slug", _descriptor4, this);
-      _initializerDefineProperty(this, "field", _descriptor5, this);
+      _initializerDefineProperty(this, "display_name", _descriptor, this);
+      _initializerDefineProperty(this, "data_name", _descriptor2, this);
+      _initializerDefineProperty(this, "slug", _descriptor3, this);
+      _initializerDefineProperty(this, "field", _descriptor4, this);
       this.field = this.args.field;
-      //this.completeField();
     }
     get previewComponent() {
       if (this.field && this.field.subtype) {
@@ -2396,9 +2392,6 @@
     get showDisplayName() {
       return this.field.model_class !== FIELD_TYPES.HIDDENFIELD;
     }
-    invalidateOrder() {
-      this.fields.invalidateOrder();
-    }
     handleDisplayNameChange() {
       this.display_name = this.completeField.display_name;
     }
@@ -2416,53 +2409,43 @@
     }
     willDestroy() {
       super.willDestroy(...arguments);
-      this.args.onOrderInvalidated();
     }
     clickedDeleteField(field, completeField) {
       this.args.onDeleteClick(field, completeField);
     }
-  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "fields", [_controller.inject], {
+  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "display_name", [_tracking.tracked], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: null
-  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "display_name", [_tracking.tracked], {
+  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "data_name", [_tracking.tracked], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: null
-  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "data_name", [_tracking.tracked], {
+  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "slug", [_tracking.tracked], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: null
-  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "slug", [_tracking.tracked], {
+  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "field", [_tracking.tracked], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: null
-  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "field", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: null
-  }), _applyDecoratedDescriptor(_class.prototype, "isEditing", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "isEditing"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "showDisplayName", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "showDisplayName"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "invalidateOrder", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "invalidateOrder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleDisplayNameChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleDisplayNameChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleDataNameChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleDataNameChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleSlugChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleSlugChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handlePositionChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handlePositionChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleEditClick", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleEditClick"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clickedDeleteField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "clickedDeleteField"), _class.prototype)), _class));
+  }), _applyDecoratedDescriptor(_class.prototype, "isEditing", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "isEditing"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "showDisplayName", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "showDisplayName"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleDisplayNameChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleDisplayNameChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleDataNameChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleDataNameChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleSlugChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleSlugChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handlePositionChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handlePositionChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleEditClick", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleEditClick"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clickedDeleteField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "clickedDeleteField"), _class.prototype)), _class));
 });
-;define("ember-formulaic/components/sortable-fields", ["exports", "ember-formulaic/components/base-sortable", "@ember/object"], function (_exports, _baseSortable, _object) {
+;define("ember-formulaic/components/sortable-fields", ["exports", "ember-formulaic/components/base-sortable"], function (_exports, _baseSortable) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
     value: true
   });
   _exports.default = void 0;
-  var _class; //components/sortable-fields.js
-  0; //eaimeta@70e063a35619d71f0,"ember-formulaic/components/base-sortable",0,"@ember/object"eaimeta@70e063a35619d71f
-  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
-  let SortableFieldsComponent = _exports.default = (_class = class SortableFieldsComponent extends _baseSortable.default {
-    triggerUpdateSortable() {
-      this.args.onOrderInvalidated();
-    }
-  }, (_applyDecoratedDescriptor(_class.prototype, "triggerUpdateSortable", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "triggerUpdateSortable"), _class.prototype)), _class);
+  0; //eaimeta@70e063a35619d71f0,"ember-formulaic/components/base-sortable"eaimeta@70e063a35619d71f
+  //components/sortable-fields.js
+  class SortableFieldsComponent extends _baseSortable.default {}
+  _exports.default = SortableFieldsComponent;
 });
 ;define("ember-formulaic/components/sortable-rule", ["exports", "@glimmer/component", "@ember/service", "@glimmer/tracking", "@ember/object"], function (_exports, _component, _service, _tracking, _object) {
   "use strict";
@@ -4782,6 +4765,38 @@
     initializer: null
   }), _applyDecoratedDescriptor(_class.prototype, "closeSubmissions", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "closeSubmissions"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "gotoNextPage", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "gotoNextPage"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "gotoPreviousPage", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "gotoPreviousPage"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "changeSource", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "changeSource"), _class.prototype)), _class);
 });
+;define("ember-formulaic/serializers/booleanfield", ["exports", "@ember-data/serializer/json"], function (_exports, _json) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/json"eaimeta@70e063a35619d71f
+  // serializers/text-field.js
+  class BooleanFieldSerializer extends _json.default {
+    normalizeResponse(store, primaryModelClass, payload, id, requestType) {
+      return super.normalizeResponse(store, primaryModelClass, payload, id, requestType);
+    }
+  }
+  _exports.default = BooleanFieldSerializer;
+});
+;define("ember-formulaic/serializers/choicefield", ["exports", "@ember-data/serializer/json"], function (_exports, _json) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/json"eaimeta@70e063a35619d71f
+  // serializers/text-field.js
+  class ChoiceFieldSerializer extends _json.default {
+    normalizeResponse(store, primaryModelClass, payload, id, requestType) {
+      return super.normalizeResponse(store, primaryModelClass, payload, id, requestType);
+    }
+  }
+  _exports.default = ChoiceFieldSerializer;
+});
 ;define("ember-formulaic/serializers/field", ["exports", "@ember-data/serializer/json"], function (_exports, _json) {
   "use strict";
 
@@ -4983,6 +4998,22 @@
     }
   }
   _exports.default = FormSerializer;
+});
+;define("ember-formulaic/serializers/hiddenfield", ["exports", "@ember-data/serializer/json"], function (_exports, _json) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/json"eaimeta@70e063a35619d71f
+  // serializers/text-field.js
+  class HiddenFieldSerializer extends _json.default {
+    normalizeResponse(store, primaryModelClass, payload, id, requestType) {
+      return super.normalizeResponse(store, primaryModelClass, payload, id, requestType);
+    }
+  }
+  _exports.default = HiddenFieldSerializer;
 });
 ;define("ember-formulaic/serializers/option", ["exports", "@ember-data/serializer/json"], function (_exports, _json) {
   "use strict";
@@ -5252,6 +5283,22 @@
   }
   _exports.default = PrivacyPolicySerializer;
 });
+;define("ember-formulaic/serializers/textfield", ["exports", "@ember-data/serializer/json"], function (_exports, _json) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/json"eaimeta@70e063a35619d71f
+  // serializers/text-field.js
+  class TextFieldSerializer extends _json.default {
+    normalizeResponse(store, primaryModelClass, payload, id, requestType) {
+      return super.normalizeResponse(store, primaryModelClass, payload, id, requestType);
+    }
+  }
+  _exports.default = TextFieldSerializer;
+});
 ;define("ember-formulaic/services/-ensure-registered", ["exports", "@embroider/util/services/ensure-registered"], function (_exports, _ensureRegistered) {
   "use strict";
 
@@ -5328,7 +5375,7 @@
   });
   0; //eaimeta@70e063a35619d71f0,"ember-sortable/services/ember-sortable-internal-state"eaimeta@70e063a35619d71f
 });
-;define("ember-formulaic/services/field-service", ["exports", "@glimmer/tracking", "@ember/service"], function (_exports, _tracking, _service) {
+;define("ember-formulaic/services/field-service", ["exports", "@glimmer/tracking", "@ember/service", "@ember/object"], function (_exports, _tracking, _service, _object) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
@@ -5336,7 +5383,7 @@
   });
   _exports.default = void 0;
   var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4; //services/field-service.js
-  0; //eaimeta@70e063a35619d71f0,"@glimmer/tracking",0,"@ember/service",0,"@ember/service"eaimeta@70e063a35619d71f
+  0; //eaimeta@70e063a35619d71f0,"@glimmer/tracking",0,"@ember/service",0,"@ember/object",0,"@ember/service"eaimeta@70e063a35619d71f
   function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
   function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
   function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
@@ -5439,6 +5486,12 @@
       field[type + 'field'] = specificField;
       return field;
     }
+    refreshCurrentRoute(currentRouteName) {
+      let route = this.router._router._routerMicrolib.getRoute(currentRouteName);
+      if (route) {
+        route.refresh();
+      }
+    }
   }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "store", [_service.inject], {
     configurable: true,
     enumerable: true,
@@ -5463,7 +5516,7 @@
     initializer: function () {
       return {};
     }
-  })), _class);
+  }), _applyDecoratedDescriptor(_class.prototype, "refreshCurrentRoute", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "refreshCurrentRoute"), _class.prototype)), _class);
 });
 ;define("ember-formulaic/services/page-title", ["exports", "ember-page-title/services/page-title"], function (_exports, _pageTitle) {
   "use strict";
@@ -6753,7 +6806,6 @@
           @currentField={{@currentField}}
           @onEditClick={{@editField}}
           @onDeleteClick={{@deleteField}}
-          @onOrderInvalidated={{this.triggerUpdateSortable}}
         />
       {{else}}
         <div class="row">
@@ -6768,8 +6820,8 @@
   
   */
   {
-    "id": "8KS6a/oB",
-    "block": "[[[3,\"templates/components/sortable-fields.hbs\"],[1,\"\\n\\n\"],[10,0],[14,0,\"field-sortable\"],[12],[1,\"\\n\"],[42,[28,[37,2],[[28,[37,2],[[30,1]],null]],null],null,[[[41,[30,2],[[[1,\"      \"],[8,[39,4],null,[[\"@field\",\"@currentController\",\"@currentField\",\"@onEditClick\",\"@onDeleteClick\",\"@onOrderInvalidated\"],[[30,2],[30,3],[30,4],[30,5],[30,6],[30,0,[\"triggerUpdateSortable\"]]]],null],[1,\"\\n\"]],[]],[[[1,\"      \"],[10,0],[14,0,\"row\"],[12],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-12 no-records\"],[12],[1,\"\\n          \"],[10,\"h4\"],[12],[1,\"This form doesn't have any fields\"],[13],[1,\"\\n          \"],[10,2],[12],[1,\"Click on the options in the 'Add Fields' panel to the right to add one\"],[13],[1,\"\\n        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n\"]],[]]]],[2]],null],[13],[1,\"\\n\"]],[\"@items\",\"field\",\"@targetController\",\"@currentField\",\"@editField\",\"@deleteField\"],false,[\"div\",\"each\",\"-track-array\",\"if\",\"sortable-field\",\"h4\",\"p\"]]",
+    "id": "wM8U6MZZ",
+    "block": "[[[3,\"templates/components/sortable-fields.hbs\"],[1,\"\\n\\n\"],[10,0],[14,0,\"field-sortable\"],[12],[1,\"\\n\"],[42,[28,[37,2],[[28,[37,2],[[30,1]],null]],null],null,[[[41,[30,2],[[[1,\"      \"],[8,[39,4],null,[[\"@field\",\"@currentController\",\"@currentField\",\"@onEditClick\",\"@onDeleteClick\"],[[30,2],[30,3],[30,4],[30,5],[30,6]]],null],[1,\"\\n\"]],[]],[[[1,\"      \"],[10,0],[14,0,\"row\"],[12],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-12 no-records\"],[12],[1,\"\\n          \"],[10,\"h4\"],[12],[1,\"This form doesn't have any fields\"],[13],[1,\"\\n          \"],[10,2],[12],[1,\"Click on the options in the 'Add Fields' panel to the right to add one\"],[13],[1,\"\\n        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n\"]],[]]]],[2]],null],[13],[1,\"\\n\"]],[\"@items\",\"field\",\"@targetController\",\"@currentField\",\"@editField\",\"@deleteField\"],false,[\"div\",\"each\",\"-track-array\",\"if\",\"sortable-field\",\"h4\",\"p\"]]",
     "moduleName": "ember-formulaic/templates/components/sortable-fields.hbs",
     "isStrictMode": false
   });
@@ -7504,7 +7556,7 @@
     "isStrictMode": false
   });
 });
-;define("ember-formulaic/transforms/boolean", ["exports", "@ember/debug", "@ember-data/serializer/-private"], function (_exports, _debug, _private) {
+;define("ember-formulaic/transforms/boolean", ["exports", "@ember-data/serializer/transform"], function (_exports, _transform) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
@@ -7513,19 +7565,11 @@
   Object.defineProperty(_exports, "default", {
     enumerable: true,
     get: function () {
-      return _private.BooleanTransform;
+      return _transform.BooleanTransform;
     }
   });
-  0; //eaimeta@70e063a35619d71f0,"@ember/debug",0,"@ember-data/serializer/-private"eaimeta@70e063a35619d71f
-  (true && !(false) && (0, _debug.deprecate)("You are relying on ember-data auto-magically installing the BooleanTransform. Use `export { BooleanTransform as default } from '@ember-data/serializer/transform';` in app/transforms/boolean.js instead", false, {
-    id: 'ember-data:deprecate-legacy-imports',
-    for: 'ember-data',
-    until: '6.0',
-    since: {
-      enabled: '5.2',
-      available: '5.2'
-    }
-  }));
+  0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/transform"eaimeta@70e063a35619d71f
+  // app/transforms/boolean.js
 });
 ;define("ember-formulaic/transforms/date", ["exports", "@ember/debug", "@ember-data/serializer/-private"], function (_exports, _debug, _private) {
   "use strict";
@@ -7550,7 +7594,7 @@
     }
   }));
 });
-;define("ember-formulaic/transforms/number", ["exports", "@ember/debug", "@ember-data/serializer/-private"], function (_exports, _debug, _private) {
+;define("ember-formulaic/transforms/number", ["exports", "@ember-data/serializer/transform"], function (_exports, _transform) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
@@ -7559,19 +7603,11 @@
   Object.defineProperty(_exports, "default", {
     enumerable: true,
     get: function () {
-      return _private.NumberTransform;
+      return _transform.NumberTransform;
     }
   });
-  0; //eaimeta@70e063a35619d71f0,"@ember/debug",0,"@ember-data/serializer/-private"eaimeta@70e063a35619d71f
-  (true && !(false) && (0, _debug.deprecate)("You are relying on ember-data auto-magically installing the NumberTransform. Use `export { NumberTransform as default } from '@ember-data/serializer/transform';` in app/transforms/number.js instead", false, {
-    id: 'ember-data:deprecate-legacy-imports',
-    for: 'ember-data',
-    until: '6.0',
-    since: {
-      enabled: '5.2',
-      available: '5.2'
-    }
-  }));
+  0; //eaimeta@70e063a35619d71f0,"@ember-data/serializer/transform"eaimeta@70e063a35619d71f
+  // app/transforms/number.js
 });
 ;define("ember-formulaic/transforms/string", ["exports", "@ember-data/serializer/transform"], function (_exports, _transform) {
   "use strict";

@@ -5,7 +5,6 @@ import {action} from '@ember/object';
 import {inject as service} from '@ember/service';
 import {tracked} from '@glimmer/tracking';
 import {allSettled} from 'rsvp';
-import FieldHelpers from '../../utils/fields';
 import slug from '../../utils/slug';
 
 export default class FieldsComponent extends Component {
@@ -46,12 +45,15 @@ export default class FieldsComponent extends Component {
 
     let validationErrors = [];
     let actualFields = this.model.filter(field => !field.isDeleted).map(field => {
-      let actualField = FieldHelpers.getActualField(field);
+
+      let actualField = field.get(field.model_class);
+
       if (!actualField.slug) {
         actualField.slug = slug.generateSlug(actualField.data_name);
       }
 
-      let validator = this.validatorFor(actualField);
+      let validator = this.fieldService.validatorFor(actualField);
+
       if (validator.isInvalid) {
         validationErrors.push(`Field "${actualField.data_name}" is incomplete`);
       }
@@ -67,8 +69,13 @@ export default class FieldsComponent extends Component {
       return;
     }
 
+    console.warn("deleted fields :", this.fieldsPendingDeletion);
+
     let promises = [
-      ...this.fieldsPendingDeletion.map(field => field.deleteRecord().then(() => field.save())),
+      ...this.fieldsPendingDeletion.map(field => {
+        field.deleteRecord();
+        return field.save();
+      }),
       ...actualFields.map(field => field.save())
     ];
 
@@ -85,8 +92,8 @@ export default class FieldsComponent extends Component {
         toastr.options.positionClass = "toast-bottom-center";
         toastr.error('Save failed. Contact administrator.');
       } else {
-        this.reloadFields();
         toastr.options.positionClass = "toast-bottom-center";
+        this.fieldService.refreshCurrentRoute(this.router.currentRouteName);
         toastr.success('Fields saved.');
         if (!continueEditing) {
           this.router.transitionTo('form');
@@ -111,19 +118,13 @@ export default class FieldsComponent extends Component {
 
   @action
   deleteField(field, completeField) {
-    this.removeValidatorFor(field);
+
+    this.fieldService.removeValidatorFor(field);
     field.deleteRecord();
     this.fieldsPendingDeletion.push(completeField);
-    this.invalidateOrder();
 
     if (this.currentField === field) {
       this.fieldService.closeEditField(this);
     }
-  }
-
-  @action
-  reloadFields() {
-    this.store.unloadAll('field');
-    this.refresh();
   }
 }

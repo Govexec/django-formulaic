@@ -13,7 +13,6 @@ const FIELD_TYPES = {
 };
 
 export default class SortableFieldComponent extends Component {
-  @controller fields;
 
   @tracked display_name;
   @tracked data_name;
@@ -23,7 +22,6 @@ export default class SortableFieldComponent extends Component {
   constructor() {
     super(...arguments);
     this.field = this.args.field;
-    //this.completeField();
   }
 
   get previewComponent() {
@@ -53,11 +51,6 @@ export default class SortableFieldComponent extends Component {
   }
 
   @action
-  invalidateOrder() {
-    this.fields.invalidateOrder();
-  }
-
-  @action
   handleDisplayNameChange() {
     this.display_name = this.completeField.display_name;
   }
@@ -84,7 +77,6 @@ export default class SortableFieldComponent extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.args.onOrderInvalidated();
   }
 
   @action
