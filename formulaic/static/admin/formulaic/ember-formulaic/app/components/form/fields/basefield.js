@@ -1,6 +1,6 @@
 //components/form/fields/basefield.js
 
-import Component, {inject as controller} from '@glimmer/component';
+import Component from '@glimmer/component';
 import {inject as service} from '@ember/service';
 import {tracked} from '@glimmer/tracking';
 import {action} from '@ember/object';
@@ -44,7 +44,14 @@ export default class BaseFieldComponent extends Component {
   }
 
   get autoSlug() {
-    if (this.model.slug) {
+
+    if(this.model.model_class === this.fieldService.fieldTypes().HIDDENFIELD)
+    {
+      this.model.display_name = this.model.data_name;
+    }
+
+    if (this.model.slug)
+    {
       return this.model.slug;
     }
     return slug.generateSlug(this.model.data_name);

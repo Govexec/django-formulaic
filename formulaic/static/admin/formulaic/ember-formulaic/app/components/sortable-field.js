@@ -50,6 +50,10 @@ export default class SortableFieldComponent extends Component {
     return this.field.model_class !== FIELD_TYPES.HIDDENFIELD
   }
 
+  get isHiddenField() {
+    return this.field.model_class === FIELD_TYPES.HIDDENFIELD
+  }
+
   @action
   handleDisplayNameChange() {
     this.display_name = this.completeField.display_name;
@@ -58,6 +62,11 @@ export default class SortableFieldComponent extends Component {
   @action
   handleDataNameChange() {
     this.data_name = this.completeField.data_name;
+
+    if(this.completeField.model_class === FIELD_TYPES.HIDDENFIELD)
+    {
+      this.display_name = this.completeField.data_name;
+    }
   }
 
   @action

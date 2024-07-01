@@ -14,6 +14,6 @@ export default class ChoiceFieldValidator extends BaseFieldValidator {
 
   @computed('field.option_list.isLoaded', 'field.option_list')
   get isOptionListInvalid() {
-    return this.field.option_list?.content == null;
+    return this.field.option_list?.id == null;
   }
 }

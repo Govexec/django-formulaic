@@ -4,6 +4,7 @@ import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {inject as service} from '@ember/service';
 import {tracked} from '@glimmer/tracking';
+import { A } from '@ember/array';
 import {allSettled} from 'rsvp';
 import slug from '../../utils/slug';
 
@@ -12,7 +13,7 @@ export default class FieldsComponent extends Component {
   @service router;
   @service('field-service') fieldService;
 
-  @tracked model = this.args.model || [];
+  @tracked model = A(this.fieldService.currentFormFields);
   @tracked currentField = this.fieldService.currentField;
   @tracked saveActive = false;
   @tracked saveContinueActive = false;
@@ -20,7 +21,7 @@ export default class FieldsComponent extends Component {
   @tracked validators = {};
 
   get activeFields() {
-    return this.model ? this.model.filter(item => !item.isDeleted) : [];
+    return this.model.filter(item => !item.isDeleted);
   }
 
   get controlsDisabled() {
@@ -55,21 +56,19 @@ export default class FieldsComponent extends Component {
       let validator = this.fieldService.validatorFor(actualField);
 
       if (validator.isInvalid) {
-        validationErrors.push(`Field "${actualField.data_name}" is incomplete`);
+        validationErrors.push(`Field "${actualField.display_name}" is incomplete`);
       }
 
       return actualField;
     });
 
     if (validationErrors.length > 0) {
-      toastr.options.positionClass = "toast-bottom-center";
+      toastr.options.positionClass = "toast-top-center";
       toastr.warning(`Unable to save because of these issues: <br>${validationErrors.join('<br>')}`);
       this.saveActive = false;
       this.saveContinueActive = false;
       return;
     }
-
-    console.warn("deleted fields :", this.fieldsPendingDeletion);
 
     let promises = [
       ...this.fieldsPendingDeletion.map(field => {
@@ -89,10 +88,10 @@ export default class FieldsComponent extends Component {
       this.saveContinueActive = false;
 
       if (saveErrors.length > 0) {
-        toastr.options.positionClass = "toast-bottom-center";
+        toastr.options.positionClass = "toast-top-center";
         toastr.error('Save failed. Contact administrator.');
       } else {
-        toastr.options.positionClass = "toast-bottom-center";
+        toastr.options.positionClass = "toast-top-center";
         this.fieldService.refreshCurrentRoute(this.router.currentRouteName);
         toastr.success('Fields saved.');
         if (!continueEditing) {
@@ -113,18 +112,20 @@ export default class FieldsComponent extends Component {
 
   @action
   editField(field) {
+
     this.fieldService.openEditField(this, field);
   }
 
   @action
   deleteField(field, completeField) {
 
-    this.fieldService.removeValidatorFor(field);
-    field.deleteRecord();
+    this.fieldService.removeValidatorFor(completeField);
     this.fieldsPendingDeletion.push(completeField);
 
-    if (this.currentField === field) {
+    if (this.fieldService.currentField === completeField) {
       this.fieldService.closeEditField(this);
     }
+
+    field.deleteRecord();
   }
 }

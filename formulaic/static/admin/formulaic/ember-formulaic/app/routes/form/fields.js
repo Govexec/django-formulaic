@@ -18,13 +18,15 @@ export default class FieldsRoute extends Route {
   async model() {
     try {
       let fieldRecords = await this.store.query('field', {form: this.formId});
-      return fieldRecords.toArray();
+      this.fieldService.currentForm = this.form;
+      this.fieldService.currentFormFields = fieldRecords.toArray();
+      return this.fieldService.currentFormFields;
     } catch (error) {
+      throw error;
     }
   }
 
   renderTemplate() {
     this.render('form.fields');
-    //this.fieldService.renderDefaultSidebar(this.controller);
   }
 }

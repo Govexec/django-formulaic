@@ -30,6 +30,20 @@
         {{/if}}
       </label>
     {{/if}}
+
+    {{#if this.isHiddenField}}
+      <label>
+        {{#if this.completeField.data_name}}
+          {{{this.completeField.data_name}}}
+        {{else}}
+          <span class="empty">(Field Name)</span>
+        {{/if}}
+        {{#if this.completeField.required}}
+          <span class="text-danger">*</span>
+        {{/if}}
+      </label>
+    {{/if}}
+
     {{component this.previewComponent completeField=this.completeField}}
   </div>
 </div>

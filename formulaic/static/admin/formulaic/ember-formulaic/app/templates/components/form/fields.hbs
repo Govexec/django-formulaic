@@ -36,7 +36,7 @@
 
   <div class="col-xs-4">
     <div class="edit-column">
-      <Sidebar @field={{this.fieldService.currentField}} />
+      <Sidebar @actualModel={{this.fieldService.currentField}} @formFields={{ this.model }} />
     </div>
   </div>
 </div>

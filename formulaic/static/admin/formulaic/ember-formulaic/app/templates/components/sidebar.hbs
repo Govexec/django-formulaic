@@ -1,17 +1,17 @@
-{{#if @field}}
-  {{#if @field.model_class}}
-    {{#let (concat "form/fields/" @field.model_class) as |componentName|}}
+{{#if @actualModel}}
+  {{#if this.actualModel.model_class}}
+    {{#let (concat "form/fields/" @actualModel.model_class) as |componentName|}}
       {{#if (component componentName)}}
-        {{component componentName model=@field}}
+        {{component componentName model=@actualModel}}
       {{else}}
         <div>Template for {{componentName}} not found.</div>
         <div>Check if the template exists and is correctly named.</div>
       {{/if}}
     {{/let}}
-  {{else if @field.field.model_class}}
-    {{#let (concat "form/fields/" @field.field.model_class) as |componentName|}}
+  {{else if @actualModel.field.model_class}}
+    {{#let (concat "form/fields/" @actualModel.field.model_class) as |componentName|}}
       {{#if (component componentName)}}
-        {{component componentName model=@field}}
+        {{component componentName model=@actualModel}}
       {{else}}
         <div>Template for {{componentName}} not found.</div>
         <div>Check if the template exists and is correctly named.</div>
@@ -21,5 +21,5 @@
     <div>No model_class found.</div>
   {{/if}}
 {{else}}
-  {{component "form/fields/index"}}
+  {{component "form/fields/index" }}
 {{/if}}

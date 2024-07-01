@@ -59,7 +59,7 @@ export default class ChoiceFieldComponent extends BaseFieldComponent {
     if (this.model.default_options.length > 0) {
       return this.model.default_options.firstObject;
     } else {
-      return null;
+      return this.model.default_option;
     }
   }
 
