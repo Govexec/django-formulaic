@@ -1,7 +1,9 @@
-<h2>Edit '{{subtypeName}}' field</h2>
-<div class="textfield-container {{if validator.isDisplayNameInvalid 'has-error'}}">
-  <button class="btn btn-link wysiwyg-toggle" {{action "toggleDisplayNameWYSIWYG"}}>
-    {{#if isDisplayNameWYSIWYGEnabled}}
+<!-- templates/form/fields/choicefield.hbs -->
+
+<h2>Edit '{{this.subtypeName}}' field</h2>
+<div class="textfield-container {{if this.validator.isDisplayNameInvalid 'has-error'}}">
+  <button class="btn btn-link wysiwyg-toggle" {{on "click" this.toggleDisplayNameWYSIWYG}}>
+    {{#if this.isDisplayNameWYSIWYGEnabled}}
       TEXT
     {{else}}
       WYSIWYG
@@ -9,55 +11,55 @@
   </button>
   <label class="control-label">
     Display Name
-    {{#if isDisplayNameWYSIWYGEnabled}}
-      {{tinymce-editor options=editorOptions value=model.display_name}}
+    {{#if this.isDisplayNameWYSIWYGEnabled}}
+      <TinymceEditor @options={{this.editorOptions}} @value={{this.model.display_name}} />
     {{else}}
-      {{input type="text" id="field-display-name" placeholder="(Display Name)" value=model.display_name class="form-control input-sm"}}
+      <Input @type="text" id="field-display-name" placeholder="(Display Name)" @value={{this.model.display_name}} class="form-control input-sm" />
     {{/if}}
   </label>
 </div>
-<div class="{{if validator.isDataNameInvalid 'has-error'}}">
+<div class="{{if this.validator.isDataNameInvalid 'has-error'}}">
   <label class="control-label">
     Data Column Name
-    {{input type="text" id="field-data-name" placeholder="(Data Column Name)" value=model.data_name class="form-control input-sm"}}
+    <Input @type="text" id="field-data-name" placeholder="(Data Column Name)" @value={{this.model.data_name}} class="form-control input-sm" />
   </label>
 </div>
-<div class="{{if validator.isSlugInvalid 'has-error'}}">
+<div class="{{if this.validator.isSlugInvalid 'has-error'}}">
   <label class="control-label">
     Slug
-    {{input type="text" id="field-slug" placeholder="(field-name)" value=autoSlug class="form-control input-sm"}}
+    <Input @type="text" id="field-slug" placeholder="(field-name)" @value={{this.autoSlug}} class="form-control input-sm" />
   </label>
 </div>
 <label>
-  {{input type="checkbox" id="field-required" checked=model.required}}
+  <Input @type="checkbox" id="field-required" @checked={{this.model.required}} />
   Required
 </label>
 
-<div class="{{if validator.isOptionListInvalid 'has-error'}}">
+<div class="{{if this.validator.isOptionListInvalid 'has-error'}}">
   <label class="control-label">
     Option List
-    {{#if optionlistsReady}}
-      {{#x-select value=model.option_list.content action=(action 'optionListChanged') class="form-control input-sm" as |xs|}}
+    {{#if this.optionlistsReady}}
+      <XSelect @value={{this.model.option_list.content}} @change={{this.optionListChanged}} class="form-control input-sm" as |xs|>
         <option>Choose `Option Set`...</option>
-        {{#each optionlists as |optionlist|}}
-          {{#xs.option value=optionlist}}{{optionlist.name}}{{/xs.option}}
+        {{#each this.optionlists as |optionlist|}}
+          <xs.option @value={{optionlist}}>{{optionlist.name}}</xs.option>
         {{/each}}
-      {{/x-select}}
+      </XSelect>
     {{else}}
       Loading
     {{/if}}
   </label>
 </div>
-{{#if hasOptionGroups}}
+{{#if this.hasOptionGroups}}
   <label class="control-label">
     Option Group
-    {{#if optiongroupsReady}}
-      {{#x-select value=model.option_group.content action=(action 'optionGroupChanged') class="form-control input-sm" as |xs|}}
+    {{#if this.optiongroupsReady}}
+      <XSelect @value={{this.model.option_group.content}} @change={{this.optionGroupChanged}} class="form-control input-sm" as |xs|>
         <option>Choose `Option Set`...</option>
-        {{#each optiongroups as |optiongroup|}}
-          {{#xs.option value=optiongroup}}{{optiongroup.name}}{{/xs.option}}
+        {{#each this.optiongroups as |optiongroup|}}
+          <xs.option @value={{optiongroup}}>{{optiongroup.name}}</xs.option>
         {{/each}}
-      {{/x-select}}
+      </XSelect>
     {{else}}
       Loading
     {{/if}}
@@ -65,54 +67,40 @@
 {{/if}}
 <label>
   Default Selected
-  {{#if optionlistsReady}}
-    {{#if supportsMultiValue}}
-      {{#x-select value=model.default_options.content multiple=true action=(action 'defaultOptionChanged') class="form-control input-sm" as |xs|}}
+  {{#if this.optionlistsReady}}
+    {{#if this.supportsMultiValue}}
+      <XSelect @value={{this.model.default_options.content}} @multiple={{true}} @change={{this.defaultOptionChanged}} class="form-control input-sm" as |xs|>
         <option>Choose `Default Option`...</option>
-        {{#each options as |option|}}
-          {{#xs.option value=option}}{{option.name}}{{/xs.option}}
+        {{#each this.options as |option|}}
+          <xs.option @value={{option}}>{{option.name}}</xs.option>
         {{/each}}
-      {{/x-select}}
-      {{!-- {{view "select"
-        multiple="true"
-        selection=default_options
-        content=options
-        optionValuePath="content"
-        optionLabelPath="content.name"
-        class="form-control input-sm"}} --}}
+      </XSelect>
     {{else}}
-      {{#x-select value=model.default_option.content action=(action 'defaultOptionChanged') class="form-control input-sm" as |xs|}}
+      <XSelect @value={{this.model.default_option.content}} @change={{this.defaultOptionChanged}} class="form-control input-sm" as |xs|>
         <option>Choose `Default Option`...</option>
-        {{#each options as |option|}}
-          {{#xs.option value=option}}{{option.name}}{{/xs.option}}
+        {{#each this.options as |option|}}
+          <xs.option @value={{option}}>{{option.name}}</xs.option>
         {{/each}}
-      {{/x-select}}
-      {{!-- {{view "select"
-        selection=default_option.content
-        content=options
-        prompt="Choose Default Option"
-        optionValuePath="content"
-        optionLabelPath="content.name"
-        class="form-control input-sm"}} --}}
+      </XSelect>
     {{/if}}
   {{else}}
     Loading
   {{/if}}
 </label>
 
-{{#if supportsMultiValue}}
+{{#if this.supportsMultiValue}}
   <label>
     Minimum Selections
-    {{input type="text" id="field-minimum-selections" value=model.minimum_selections class="form-control input-sm"}}
+    <Input @type="text" id="field-minimum-selections" @value={{this.model.minimum_selections}} class="form-control input-sm" />
   </label>
   <label>
     Maximum Selections
-    {{input type="text" id="field-maximum-selections" value=model.maximum_selections class="form-control input-sm"}}
+    <Input @type="text" id="field-maximum-selections" @value={{this.model.maximum_selections}} class="form-control input-sm" />
   </label>
 {{else}}
   <label class="control-label">
     Default Text (unselected)
-    {{input type="text" id="field-default-text" placeholder="(Choose one)" value=model.default_text class="form-control input-sm"}}
+    <Input @type="text" id="field-default-text" placeholder="(Choose one)" @value={{this.model.default_text}} class="form-control input-sm" />
   </label>
 {{/if}}
 
@@ -120,12 +108,12 @@
   <h4>Extras</h4>
   <label>
     Help Text
-    {{input type="text" id="field-help-text" placeholder="" value=model.help_text class="form-control input-sm"}}
+    <Input @type="text" id="field-help-text" placeholder="" @value={{this.model.help_text}} class="form-control input-sm" />
   </label>
   <label>
     CSS Class
-    {{input type="text" id="field-css-class" value=model.css_class class="form-control input-sm"}}
+    <Input @type="text" id="field-css-class" @value={{this.model.css_class}} class="form-control input-sm" />
   </label>
 </div>
 
-<button class="btn btn-primary" type="submit" {{action "doneEditingField"}}>Done</button>
+<button class="btn btn-primary" type="submit" {{on "click" this.doneEditingField}}>Done</button>

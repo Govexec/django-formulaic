@@ -1,13 +1,5 @@
 <select type="text" class="form-control">
   <option>
-    {{#if field.completeField.default_option}}
-      {{field.completeField.default_option.name}}
-    {{else}}
-      {{#if field.completeField.default_text}}
-        {{field.completeField.default_text}}
-      {{else}}
-        (Choose One)
-      {{/if}}
-    {{/if}}
+    {{this.defaultOption}}
   </option>
 </select>

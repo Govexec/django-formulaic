@@ -1,19 +1,21 @@
-<h2>Edit '{{subtypeName}}' field</h2>
-<div class="{{if validator.isDataNameInvalid 'has-error'}}">
+<!-- templates/form/fields/hiddenfield.hbs -->
+
+<h2>Edit '{{this.subtypeName}}' field</h2>
+<div class="{{if this.validator.isDataNameInvalid 'has-error'}}">
   <label class="control-label">
     Data Column Name
-    {{input type="text" id="field-data-name" placeholder="(Data Column Name)" value=model.data_name class="form-control input-sm"}}
+    <Input @type="text" id="field-data-name" placeholder="(Data Column Name)" @value={{this.model.data_name}} class="form-control input-sm" />
   </label>
 </div>
-<div class="{{if validator.isSlugInvalid 'has-error'}}">
+<div class="{{if this.validator.isSlugInvalid 'has-error'}}">
   <label class="control-label">
     Slug
-    {{input type="text" id="field-slug" placeholder="(field-name)" value=autoSlug class="form-control input-sm"}}
+    <Input @type="text" id="field-slug" placeholder="(field-name)" @value={{this.autoSlug}} class="form-control input-sm" />
   </label>
 </div>
 <label>
   Value
-    {{ input type="text" id="field-value" placeholder="" value=model.value class="form-control input-sm"}}
+  <Input @type="text" id="field-value" placeholder="" @value={{this.model.value}} class="form-control input-sm" />
 </label>
 
-<button class="btn btn-primary" type="submit" {{ action "doneEditingField"}}>Done</button>
+<button class="btn btn-primary" type="submit" {{on "click" this.doneEditingField}}>Done</button>

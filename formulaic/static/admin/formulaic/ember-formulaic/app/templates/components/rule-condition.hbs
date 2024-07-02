@@ -1,41 +1,39 @@
-<div class="{{ if condition.validator.isInvalid 'warning'}}">
-
+<div class="{{if this.condition.validator.isInvalid 'warning'}}">
   <span class="glyphicon glyphicon-move"></span>
 
-  {{input type="hidden" value=condition.position class="condition-position"}}
-  {{#if allFieldsReady}}
-    {{#x-select value=condition.field.content action=(action 'conditionFieldChanged') class="form-control input-sm" as |xs|}}
+  <input type="hidden" value={{this.condition.position}} class="condition-position" />
+  {{#if this.allFieldsReady}}
+    <XSelect @value={{this.condition.field.content}} @action={{this.conditionFieldChanged}} @class="form-control input-sm" as |xs|>
       <option>Choose Field...</option>
-      {{#each allFields as |field|}}
-        {{#xs.option value=field}}{{field.data_name}}{{/xs.option}}
+      {{#each this.allFields as |field|}}
+        <xs.option @value={{field}}>{{field.data_name}}</xs.option>
       {{/each}}
-    {{/x-select}}
+    </XSelect>
   {{else}}
     Loading
   {{/if}}
 
-  {{#x-select value=condition.operator action=(action 'conditionOperatorChanged') class="form-control input-sm" as |xs|}}
+  <XSelect @value={{this.condition.operator}} @action={{this.conditionOperatorChanged}} @class="form-control input-sm" as |xs|>
     <option>Choose Field...</option>
-    {{#each availableOperators as |operator|}}
-      {{#xs.option value=operator.value}}{{operator.name}}{{/xs.option}}
+    {{#each this.availableOperators as |operator|}}
+      <xs.option @value={{operator.value}}>{{operator.name}}</xs.option>
     {{/each}}
-  {{/x-select}}
+  </XSelect>
 
-  <!-- Display Appropriate Widget -->
-  {{#if useTextWidget}}
-    {{input type="text" value=condition.value class="form-control input-sm"}}
+  {{#if this.useTextWidget}}
+    <input type="text" value={{this.condition.value}} class="form-control input-sm" />
   {{/if}}
-  {{#if useSelectWidget}}
-    {{#x-select value=selectValue action=(action 'conditionSelectValueChanged') class="form-control input-sm" as |xs|}}
+  {{#if this.useSelectWidget}}
+    <XSelect @value={{this.selectValue}} @action={{this.conditionSelectValueChanged}} @class="form-control input-sm" as |xs|>
       <option>Choose Field...</option>
-      {{#each fieldOptions as |option|}}
-        {{#xs.option value=option.id}}{{option.name}}{{/xs.option}}
+      {{#each this.fieldOptions as |option|}}
+        <xs.option @value={{option.id}}>{{option.name}}</xs.option>
       {{/each}}
-    {{/x-select}}
+    </XSelect>
   {{/if}}
-  {{#if useNoWidget}}checked{{/if}}
+  {{#if this.useNoWidget}}checked{{/if}}
 
-  <button class="btn btn-xs btn-link" {{action "clickedDeleteCondition" condition bubbles=false}}>
+  <button class="btn btn-xs btn-link" {{on "click" (fn this.clickedDeleteCondition this.condition)}}>
     <span class="glyphicon glyphicon-trash"></span>
   </button>
 </div>

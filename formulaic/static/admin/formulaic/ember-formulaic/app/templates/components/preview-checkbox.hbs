@@ -1,9 +1,9 @@
 <div class="checkbox">
   <label>
-    {{input type="checkbox" checked=completeField.default_checked disabled=true}}
-    {{{completeField.display_name}}}
+    <input type="checkbox" checked={{this.args.completeField.default_checked}} disabled={{true}} />
+    {{{this.args.completeField.display_name}}}
 
-    {{#if completeField.required}}
+    {{#if this.args.completeField.required}}
       <span class="text-danger">*</span>
     {{/if}}
   </label>

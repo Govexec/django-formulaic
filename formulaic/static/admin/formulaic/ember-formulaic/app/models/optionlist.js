@@ -1,7 +1,8 @@
-import DS from 'ember-data';
+import Model, { attr, hasMany } from '@ember-data/model';
 
-export default DS.Model.extend({
-    name: DS.attr('string'),
-    options: DS.hasMany('option', {async: true}),
-    groups: DS.hasMany('optiongroup', {async: true}),
-});
+export default class OptionListModel extends Model {
+    @attr('string') name;
+    @hasMany('option', { async: false, inverse: 'list' }) options;
+    @hasMany('optiongroup', { async: false, inverse: 'list' }) groups;
+    @hasMany('choicefield', { async: false, inverse: 'option_list' }) choicefield;
+}

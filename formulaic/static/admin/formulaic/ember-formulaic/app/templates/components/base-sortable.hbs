@@ -1,2 +1,12 @@
-{{yield}}
-base-sortable.hbs
+<!-- templates/components/base-sortable.hbs -->
+<div class="sortable">
+  <SortableGroup @onChange={{this.updateSortable}}>
+    {{#each @items as |item|}}
+      <SortableItem @model={{item}} as |item|>
+        <div class="item handle">
+          {{yield item}}
+        </div>
+      </SortableItem>
+    {{/each}}
+  </SortableGroup>
+</div>

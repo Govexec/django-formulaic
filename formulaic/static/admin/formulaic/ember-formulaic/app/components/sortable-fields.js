@@ -1,6 +1,7 @@
-import BaseSortable from "./base-sortable";
+//components/sortable-fields.js
 
-export default BaseSortable.extend({
-    templateName: 'sortable/fields',
-    sortableSelector: '.field-sortable'
-});
+import BaseSortableComponent from './base-sortable';
+
+export default class SortableFieldsComponent extends BaseSortableComponent {
+
+}

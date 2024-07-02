@@ -1,7 +1,9 @@
-<h2>Edit '{{subtypeName}}' field</h2>
-<div class="textfield-container {{if validator.isDisplayNameInvalid 'has-error'}}">
-  <button class="btn btn-link wysiwyg-toggle" {{action "toggleDisplayNameWYSIWYG"}}>
-    {{#if isDisplayNameWYSIWYGEnabled}}
+<!-- templates/form/fields/booleanfield.hbs -->
+
+<h2>Edit '{{this.subtypeName}}' field</h2>
+<div class="textfield-container {{if this.validator.isDisplayNameInvalid 'has-error'}}">
+  <button class="btn btn-link wysiwyg-toggle" {{on "click" this.toggleDisplayNameWYSIWYG}}>
+    {{#if this.isDisplayNameWYSIWYGEnabled}}
       TEXT
     {{else}}
       WYSIWYG
@@ -9,31 +11,31 @@
   </button>
   <label class="control-label">
     Display Name
-    {{#if isDisplayNameWYSIWYGEnabled}}
-      {{tinymce-editor options=editorOptions value=model.display_name}}
+    {{#if this.isDisplayNameWYSIWYGEnabled}}
+      <TinymceEditor @options={{this.editorOptions}} @value={{this.model.display_name}} />
     {{else}}
-      {{input type="text" id="field-display-name" placeholder="(Display Name)" value=model.display_name class="form-control input-sm"}}
+      <Input @type="text" id="field-display-name" placeholder="(Display Name)" @value={{this.model.display_name}} class="form-control input-sm" />
     {{/if}}
   </label>
 </div>
-<div class="{{if validator.isDataNameInvalid 'has-error'}}">
+<div class="{{if this.validator.isDataNameInvalid 'has-error'}}">
   <label class="control-label">
     Data Column Name
-    {{input type="text" id="field-data-name" placeholder="(Data Column Name)" value=model.data_name class="form-control input-sm"}}
+    <Input @type="text" id="field-data-name" placeholder="(Data Column Name)" @value={{this.model.data_name}} class="form-control input-sm" />
   </label>
 </div>
-<div class="{{if validator.isSlugInvalid 'has-error'}}">
+<div class="{{if this.validator.isSlugInvalid 'has-error'}}">
   <label class="control-label">
     Slug
-    {{input type="text" id="field-slug" placeholder="(field-name)" value=autoSlug class="form-control input-sm"}}
+    <Input @type="text" id="field-slug" placeholder="(field-name)" @value={{this.autoSlug}} class="form-control input-sm" />
   </label>
 </div>
 <label>
-  {{input type="checkbox" id="field-required" checked=model.required}}
+  <Input @type="checkbox" id="field-required" @checked={{this.model.required}} />
   Required
 </label>
 <label>
-  {{input type="checkbox" id="field-default-checked" checked=model.default_checked}}
+  <Input @type="checkbox" id="field-default-checked" @checked={{this.model.default_checked}} />
   Checked by Default
 </label>
 
@@ -41,12 +43,12 @@
   <h4>Extras</h4>
   <label>
     Help Text
-    {{input type="text" id="field-help-text" placeholder="" value=model.help_text class="form-control input-sm"}}
+    <Input @type="text" id="field-help-text" placeholder="" @value={{this.model.help_text}} class="form-control input-sm" />
   </label>
   <label>
     CSS Class
-    {{input type="text" id="field-css-class" value=model.css_class class="form-control input-sm"}}
+    <Input @type="text" id="field-css-class" @value={{this.model.css_class}} class="form-control input-sm" />
   </label>
 </div>
 
-<button class="btn btn-primary" type="submit" {{action "doneEditingField"}}>Done</button>
+<button class="btn btn-primary" type="submit" {{on "click" this.doneEditingField}}>Done</button>

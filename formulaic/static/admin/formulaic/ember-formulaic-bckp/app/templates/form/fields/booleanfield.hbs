@@ -1,0 +1,52 @@
+<h2>Edit '{{subtypeName}}' field</h2>
+<div class="textfield-container {{if validator.isDisplayNameInvalid 'has-error'}}">
+  <button class="btn btn-link wysiwyg-toggle" {{action "toggleDisplayNameWYSIWYG"}}>
+    {{#if isDisplayNameWYSIWYGEnabled}}
+      TEXT
+    {{else}}
+      WYSIWYG
+    {{/if}}
+  </button>
+  <label class="control-label">
+    Display Name
+    {{#if isDisplayNameWYSIWYGEnabled}}
+      {{tinymce-editor options=editorOptions value=model.display_name}}
+    {{else}}
+      {{input type="text" id="field-display-name" placeholder="(Display Name)" value=model.display_name class="form-control input-sm"}}
+    {{/if}}
+  </label>
+</div>
+<div class="{{if validator.isDataNameInvalid 'has-error'}}">
+  <label class="control-label">
+    Data Column Name
+    {{input type="text" id="field-data-name" placeholder="(Data Column Name)" value=model.data_name class="form-control input-sm"}}
+  </label>
+</div>
+<div class="{{if validator.isSlugInvalid 'has-error'}}">
+  <label class="control-label">
+    Slug
+    {{input type="text" id="field-slug" placeholder="(field-name)" value=autoSlug class="form-control input-sm"}}
+  </label>
+</div>
+<label>
+  {{input type="checkbox" id="field-required" checked=model.required}}
+  Required
+</label>
+<label>
+  {{input type="checkbox" id="field-default-checked" checked=model.default_checked}}
+  Checked by Default
+</label>
+
+<div class="extras">
+  <h4>Extras</h4>
+  <label>
+    Help Text
+    {{input type="text" id="field-help-text" placeholder="" value=model.help_text class="form-control input-sm"}}
+  </label>
+  <label>
+    CSS Class
+    {{input type="text" id="field-css-class" value=model.css_class class="form-control input-sm"}}
+  </label>
+</div>
+
+<button class="btn btn-primary" type="submit" {{action "doneEditingField"}}>Done</button>

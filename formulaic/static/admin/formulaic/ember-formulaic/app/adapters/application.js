@@ -1,30 +1,49 @@
-import Ember from 'ember';
-import DRFAdapter from './drf';
+import RESTAdapter from '@ember-data/adapter/rest';
 
-export default DRFAdapter.extend({
-    buildURL: function(type, id, snapshot, requestType) {
-        /**
-         * Overriding `buildURL` to keep data fresh.  Without this,
-         * I was getting old data on refresh.
-         */
 
-        var url = this._super(type, id, snapshot, requestType);
+export default class ApplicationAdapter extends RESTAdapter {
 
-        // TODO: replace this with a global constant that gets changed every time cache should be invalidated?
-        var cacheBreaker = 'cacheBreaker=' + Math.round(new Date().getTime() / 1000);
-        cacheBreaker = ((url.indexOf('?') > -1) ? '&' : '?') + cacheBreaker;
+  get host() {
 
-        return url + cacheBreaker;
-    },
+    return "";
+  }
 
-    headers: Ember.computed(function() {
-        /**
-         * Adding CSRF header to protect against cross-domain
-         * forgery attacks.
-         */
+  get namespace() {
+    return "formulaic/api";
+  }
 
-        return {
-            "X-CSRFToken": this.cookie.getCookie('csrftoken')
-        };
-    }).volatile()
-});
+  buildURL(modelName, id, snapshot, requestType, query) {
+    let url = super.buildURL(...arguments);
+
+    // Add cache breaker (if needed)
+    let cacheBreaker = 'cacheBreaker=' + Math.round(new Date().getTime() / 1000);
+    cacheBreaker = ((url.indexOf('?') > -1) ? '&' : '?') + cacheBreaker;
+
+    return url + "/" + cacheBreaker;
+  }
+
+  get headers() {
+    let csrfToken = this.getCsrfTokenFromCookies();
+    return {
+      'X-CSRFToken': csrfToken,
+      'Accept': 'application/json, text/javascript, */*; q=0.01',
+    };
+  }
+
+  getCsrfTokenFromCookies() {
+    let csrfToken = null;
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      const [name, value] = cookie.trim().split('=');
+      if (name === 'csrftoken') {
+        csrfToken = value;
+        break;
+      }
+    }
+    return csrfToken;
+  }
+
+  handleResponse(status, headers, payload, requestData) {
+    return super.handleResponse(status, headers, payload, requestData);
+  }
+}

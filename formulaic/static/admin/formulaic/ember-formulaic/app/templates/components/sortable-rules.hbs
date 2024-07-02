@@ -1,6 +1,14 @@
 <div class="rule-sortable rule-list">
-  {{#each items as |rule|}}
-    {{sortable-rule rule=rule allFields=allFields targetController=targetController onDeleteClick=(action 'deleteRule' target=targetController) onOrderInvalidated=(action 'triggerUpdateSortable') onAddRuleClick=(action 'addRule' target=targetController) onAddConditionClick=(action 'addCondition' target=targetController) onAddResultClick=(action 'addResult' target=targetController)}}
+  {{#each @items as |rule|}}
+    <SortableRule
+      @rule={{rule}}
+      @allFields={{this.allFields}}
+      @onDeleteClick={{@onDeleteClick}}
+      @onOrderInvalidated={{@onOrderInvalidated}}
+      @onAddRuleClick={{@onAddRuleClick}}
+      @onAddConditionClick={{@onAddConditionClick}}
+      @onAddResultClick={{@onAddResultClick}}
+    />
   {{else}}
     <div class="row">
       <div class="col-xs-12 no-records">

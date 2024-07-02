@@ -1,41 +1,20 @@
-import Ember from 'ember';
-import config from './config/environment';
+import EmberRouter from '@ember/routing/router';
+import config from 'ember-formulaic/config/environment';
 
-const Router = Ember.Router.extend({
-  location: config.locationType,
-  rootURL: config.rootURL
-});
+export default class Router extends EmberRouter {
+  location = config.locationType;
+  rootURL = config.rootURL;
+
+  constructor() {
+    super(...arguments);
+    console.log('Router initialized');
+  }
+}
 
 Router.map(function() {
-    this.route('form', {
-        path: '/:form_id/change/'
-    }, function() {
-        this.route('fields', function() {
-            //this.route('field', { path: '/fields/:field_id' });
-        });
-        this.route('rules');
-        this.route('submissions');
-    });
+  this.route('form', { path: '/:form_id/change' }, function() {
+    this.route('fields');
+    this.route('rules');
+    this.route('submissions');
+  });
 });
-
-// var Router = Ember.Router.extend({
-//   location: config.locationType // ???
-// });
-
-// Router.map(function() {
-//     this.resource('form', { path: '/:form_id/' }, function() {
-//         this.route('edit');
-//         this.resource('fields', function() {
-//             //this.route('field', { path: '/fields/:field_id' });
-//         });
-//         this.resource('rules', function() {
-
-//         });
-//         this.resource('submissions', function() {
-
-//         });
-//     });
-
-// });
-
-export default Router;

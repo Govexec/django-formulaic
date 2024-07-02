@@ -7,51 +7,50 @@ A short introduction of this app could easily go here.
 
 You will need the following things properly installed on your computer.
 
-* [Git](https://git-scm.com/)
-* [nvm](https://github.com/creationix/nvm)
-* [Node.js](https://nodejs.org/) (with NPM)
-* [Bower](https://bower.io/)
-* [Ember CLI](https://ember-cli.com/)
-* [PhantomJS](http://phantomjs.org/) - TK: for testing
+- [Git](https://git-scm.com/)
+- [Node.js](https://nodejs.org/) (with npm)
+- [Ember CLI](https://cli.emberjs.com/release/)
+- [Google Chrome](https://google.com/chrome/)
 
 ## Installation
 
-* `nvm use`
-* `npm install`
-* `bower install`
+- `git clone <repository-url>` this repository
+- `cd ember-formulaic`
+- `npm install`
 
 ## Running / Development
 
-* `nvm use`
-* `ember serve`
+- `npm run start`
+- Visit your app at [http://localhost:4200](http://localhost:4200).
+- Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
 
 ### Code Generators
 
 Make use of the many generators for code, try `ember help generate` for more details
 
-### Running Tests - TK
+### Running Tests
 
-* `ember test`
-* `ember test --server`
+- `npm run test`
+- `npm run test:ember -- --server`
 
-### Building - TK: I generally don't differentiate the build created by `ember serve` from `ember build`
+### Linting
 
-* `ember build` (development)
-* `ember build --environment production` (production)
+- `npm run lint`
+- `npm run lint:fix`
+
+### Building
+
+- `npm exec ember build` (development)
+- `npm run build` (production)
 
 ### Deploying
 
-Most JavaScript changes can be deployed without any special effort.  The templates point
-to `/dist/` already.  However, if you make a configuration change
-(e.g. `config/environment.js`) or anything else that requires a new commit of
-`app/index.html`, you may need to update the Django template
-(`<formulaic-dir>/templates/admin/formulaic/form/index.html`) with the change.
+Specify what it takes to deploy your app.
 
 ## Further Reading / Useful Links
 
-* [GEMG Wiki Entry on Dep Management](https://github.com/Govexec/ge-govexec/wiki/JavaScript-Dependency-Management)
-* [ember.js](http://emberjs.com/)
-* [ember-cli](https://ember-cli.com/)
-* Development Browser Extensions
-  * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
-  * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
+- [ember.js](https://emberjs.com/)
+- [ember-cli](https://cli.emberjs.com/release/)
+- Development Browser Extensions
+  - [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
+  - [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)

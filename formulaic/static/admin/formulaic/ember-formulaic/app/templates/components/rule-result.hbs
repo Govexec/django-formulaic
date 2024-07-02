@@ -1,36 +1,36 @@
 <li>
-  <div class="{{if result.validator.isInvalid 'warning'}}">
+  <div class="{{if this.result.validator.isInvalid 'warning'}}">
     <span class="glyphicon glyphicon-circle-arrow-right"></span>
-    {{#x-select value=result.action action=(action 'resultActionChanged') class="form-control input-sm" as |xs|}}
-      {{#each availableActions as |action|}}
-        {{#xs.option value=action.value}}{{action.name}}{{/xs.option}}
+    <XSelect @value={{this.result.action}} @change={{this.resultActionChanged}} class="form-control input-sm">
+      {{#each this.availableActions as |action|}}
+        <option value={{action.value}}>{{action.name}}</option>
       {{/each}}
-    {{/x-select}}
+    </XSelect>
 
-    {{#if allFieldsReady}}
-      {{#x-select value=result.field.content action=(action 'resultFieldChanged') class="form-control input-sm" as |xs|}}
+    {{#if this.allFieldsReady}}
+      <XSelect @value={{this.result.field.content}} @change={{this.resultFieldChanged}} class="form-control input-sm">
         <option>Choose Field...</option>
-        {{#each availableFields as |field|}}
-          {{#xs.option value=field}}{{field.data_name}}{{/xs.option}}
+        {{#each this.availableFields as |field|}}
+          <option value={{field}}>{{field.data_name}}</option>
         {{/each}}
-      {{/x-select}}
+      </XSelect>
     {{else}}
       Loading
     {{/if}}
 
-    {{#if showOptionGroups}}
-      {{#if fieldHasOptionGroups}}
-        {{#x-select value=result.option_group.content action=(action 'resultOptionGroupChanged') class="form-control input-sm" as |xs|}}
+    {{#if this.showOptionGroups}}
+      {{#if this.fieldHasOptionGroups}}
+        <XSelect @value={{this.result.option_group.content}} @change={{this.resultOptionGroupChanged}} class="form-control input-sm">
           <option>Choose Group...</option>
-          {{#each optionGroups as |group|}}
-            {{#xs.option value=group}}{{group.name}}{{/xs.option}}
+          {{#each this.optionGroups as |group|}}
+            <option value={{group}}>{{group.name}}</option>
           {{/each}}
-        {{/x-select}}
+        </XSelect>
       {{else}}
         No groups in option list
       {{/if}}
     {{/if}}
-    <button class="btn btn-xs btn-link" {{action "clickedDeleteResult" result bubbles=false}}>
+    <button class="btn btn-xs btn-link" {{on "click" (fn this.clickedDeleteResult this.result)}}>
       <span class="glyphicon glyphicon-trash"></span>
     </button>
   </div>

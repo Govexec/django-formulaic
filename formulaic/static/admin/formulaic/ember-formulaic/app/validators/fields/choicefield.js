@@ -1,17 +1,19 @@
-import BaseField from './basefield';
+import { computed } from '@ember/object';
+import BaseFieldValidator from './basefield';
 
-export default BaseField.extend({
-    isInvalid: function () {
-        var invalid = this._super.apply(this);
-        return (invalid || this.get('isOptionListInvalid'));
-    }.property(
-        'isDisplayNameInvalid',
-        'isDataNameInvalid',
-        'isSlugInvalid',
-        'isOptionListInvalid'
-    ),
+export default class ChoiceFieldValidator extends BaseFieldValidator {
+  @computed(
+    'isDisplayNameInvalid',
+    'isDataNameInvalid',
+    'isSlugInvalid',
+    'isOptionListInvalid'
+  )
+  get isInvalid() {
+    return super.isInvalid || this.isOptionListInvalid;
+  }
 
-    isOptionListInvalid: function () {
-        return (this.get('field.option_list.content') == null);
-    }.property('field.option_list.isLoaded', 'field.option_list')
-});
+  @computed('field.option_list.isLoaded', 'field.option_list')
+  get isOptionListInvalid() {
+    return this.field.option_list?.id == null;
+  }
+}

@@ -1,12 +1,12 @@
-import Ember from 'ember';
+//routes/form.js
 
-export default Ember.Route.extend({
-    model: function(params) {
-        let formId = params.form_id;
+import Route from '@ember/routing/route';
+import {inject as service} from '@ember/service';
 
-        return this.store.find('form', formId);
-    },
-    actions: {
-        
-    }
-});
+export default class FormRoute extends Route {
+  @service store;
+
+  async model(params) {
+    return await this.store.findRecord('form', params.form_id);
+  }
+}
