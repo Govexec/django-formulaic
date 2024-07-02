@@ -1,5 +1,5 @@
 {{#if @actualModel}}
-  {{#if this.actualModel.model_class}}
+  {{#if @actualModel.model_class}}
     {{#let (concat "form/fields/" @actualModel.model_class) as |componentName|}}
       {{#if (component componentName)}}
         {{component componentName model=@actualModel}}

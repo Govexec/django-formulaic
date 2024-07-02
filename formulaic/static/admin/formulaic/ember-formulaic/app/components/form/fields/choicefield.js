@@ -29,8 +29,7 @@ export default class ChoiceFieldComponent extends BaseFieldComponent {
   }
 
   async loadOptionGroups() {
-    if (this.model.option_list)
-    {
+    if (this.model.option_list) {
       try {
         let option_groups = await this.store.query('optiongroup', {
           list: this.model.option_list.id
@@ -47,7 +46,7 @@ export default class ChoiceFieldComponent extends BaseFieldComponent {
   }
 
   get modelOptions() {
-    if (this.model.option_group?.options) {
+    if (this.hasOptionGroups && this.model.option_group?.options) {
       return this.model.option_group.options;
     } else if (this.model.option_list?.options) {
       return this.model.option_list.options
@@ -89,7 +88,7 @@ export default class ChoiceFieldComponent extends BaseFieldComponent {
     const selectedOptionListId = event.target.value;
 
     if (this.model.option_list?.id !== selectedOptionListId) {
-      this.model.option_list = await this.store.findRecord('optionlist', selectedOptionListId);
+      this.model.option_list = await this.store.peekRecord('optionlist', selectedOptionListId);
       this.modelOptions;
       await this.loadOptionGroups();
     }
@@ -100,7 +99,7 @@ export default class ChoiceFieldComponent extends BaseFieldComponent {
     const selectedOptionGroupId = event.target.value;
 
     if (selectedOptionGroupId) {
-      this.model.option_group = await this.store.findRecord('optiongroup', selectedOptionGroupId);
+      this.model.option_group = await this.store.peekRecord('optiongroup', selectedOptionGroupId);
     }
   }
 
