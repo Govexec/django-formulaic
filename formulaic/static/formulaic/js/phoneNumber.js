@@ -28,16 +28,18 @@ $(document).ready(function () {
             // If blank, return early.
             if (phoneElement.value.trim().length === 0) return;
 
+            if (iti.isValidNumber()) {
+               let extension = iti.getExtension()
+               let formattedNumber;
+               if (extension){
+                   formattedNumber = iti.getNumber() + phoneElement.getAttribute("extensionPrefix") + iti.getExtension();
+               }
+               else {
+                   formattedNumber = iti.getNumber();
+               }
 
-             if (iti.isValidNumber()) {
-                 let extension = iti.getExtension()
-                 if (extension){
-                     let formattedNumber = iti.getNumber() + phoneElement.getAttribute("extensionPrefix") + iti.getExtension();
-                     $(iti.hiddenInput).attr("value", formattedNumber);
-                 }
-                 else {
-                     $(iti.hiddenInput).attr("value", iti.getNumber());
-                 }
+               iti.setNumber(formattedNumber);
+               $(iti.hiddenInput).attr("value", formattedNumber);
              }
         });
     }
