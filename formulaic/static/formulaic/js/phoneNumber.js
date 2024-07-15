@@ -33,10 +33,10 @@ $(document).ready(function () {
                  let extension = iti.getExtension()
                  if (extension){
                      let formattedNumber = iti.getNumber() + phoneElement.getAttribute("extensionPrefix") + iti.getExtension();
-                     iti.setNumber(formattedNumber);
+                     $(iti.hiddenInput).attr("value", formattedNumber);
                  }
                  else {
-                     iti.setNumber(iti.getNumber());
+                     $(iti.hiddenInput).attr("value", iti.getNumber());
                  }
              }
         });
