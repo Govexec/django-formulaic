@@ -1,28 +1,4 @@
 <!-- templates/form/rules.hbs -->
 
-<div class="row formulaic-row edit-rules">
-  <div class="col-xs-8 preview-column">
-    <h2>Editing Rules</h2>
+<Form::Rules @model={{this.model}} @form={{this.form}} />
 
-    <SortableRules @items={{this.activeRules}} @targetController={{this}} />
-
-    <div class="custom-edit-block">
-      <button class="btn btn-link" {{on "click" this.addRule}}>
-        <span class="glyphicon glyphicon-plus-sign"></span>
-        Add Rule
-      </button>
-    </div>
-
-    <div class="row formulaic-controls">
-      <div class="col-xs-12">
-        <button class="btn btn-primary" type="submit" {{on "click" (fn this.saveRules true)}} disabled={{this.controlsDisabled}}>
-          {{#if this.saveContinueActive}}Saving...{{else}}Save &amp; Continue Editing{{/if}}
-        </button>
-        <button class="btn btn-primary" type="submit" {{on "click" (fn this.saveRules false)}} disabled={{this.controlsDisabled}}>
-          {{#if this.saveActive}}Saving...{{else}}Save{{/if}}
-        </button>
-        <button class="btn btn-danger" type="submit" {{on "click" this.closeRules}} disabled={{this.controlsDisabled}}>Close</button>
-      </div>
-    </div>
-  </div>
-</div>

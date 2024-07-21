@@ -1,18 +1,19 @@
 import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
-import { action, computed } from '@ember/object';
+import {tracked} from '@glimmer/tracking';
+import {inject as service} from '@ember/service';
+import {action, computed} from '@ember/object';
 
 export default class RuleResultComponent extends Component {
   @service store;
+  @service('field-service') fieldService;
 
-  @tracked result;
-  @tracked allFields = [];
+  @tracked result = this.args.result;
+  @tracked allFields = this.fieldService.currentFormFields;
 
   allActions = [
-    { value: 'show', name: 'Show' },
-    { value: 'hide', name: 'Hide' },
-    { value: 'change-option-group', name: 'Change Option Group' }
+    {value: 'show', name: 'Show'},
+    {value: 'hide', name: 'Hide'},
+    {value: 'change-option-group', name: 'Change Option Group'}
   ];
 
   choiceFieldActions = [
@@ -38,14 +39,11 @@ export default class RuleResultComponent extends Component {
     return this.allFields.length;
   }
 
-  @computed(
-    'result.action',
-    'result.field.content.choicefield.option_list.content.groups.content'
-  )
+
   get showOptionGroups() {
     return (
       this.result.action === 'change-option-group' &&
-      this.result.field.content.choicefield
+      this.result.field.content?.choicefield
     );
   }
 
@@ -54,27 +52,33 @@ export default class RuleResultComponent extends Component {
     return this.optionGroups.length > 0;
   }
 
-  @computed(
-    'result.field.content.choicefield.option_list.content.groups.content'
-  )
+  @computed('result.field')
   get optionGroups() {
-    return this.result.field.content.choicefield.option_list.content.groups.content;
+    return this.result.field.content?.choicefield?.option_list?.groups.toArray() || [];
   }
 
   @action
-  resultActionChanged(value) {
-    this.result.action = value;
+  resultActionChanged(event) {
+    this.result.action = event.target.value;
   }
 
   @action
-  resultFieldChanged(value) {
-    this.result.field = value;
-    this.result.option_group = null;
+  async resultFieldChanged(event) {
+
+    const selectedOptionId = event.target.value;
+
+    if (this.result.field?.content?.id !== selectedOptionId) {
+      this.result.field = await this.store.peekRecord('field', selectedOptionId);
+    }
   }
 
   @action
-  resultOptionGroupChanged(value) {
-    this.result.option_group = value;
+  async resultOptionGroupChanged(event) {
+    const selectedOptionId = event.target.value;
+
+    if (this.result.option_group?.id !== selectedOptionId) {
+      this.result.option_group = await this.store.peekRecord('optiongroup', selectedOptionId);
+    }
   }
 
   @action

@@ -16,6 +16,7 @@ You will need the following things properly installed on your computer.
 
 - `git clone <repository-url>` this repository
 - `cd ember-formulaic`
+- `ember g ember-cli-sass`
 - `npm install`
 
 ## Running / Development

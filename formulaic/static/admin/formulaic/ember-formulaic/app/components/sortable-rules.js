@@ -5,11 +5,7 @@ import { computed } from '@ember/object';
 
 export default class SortableRulesComponent extends BaseSortableComponent {
   @service store;
+   @service('field-service') fieldService;
 
   sortableSelector = '.rule-sortable';
-
-  @computed
-  get allFields() {
-    return this.store.findAll('field');
-  }
 }

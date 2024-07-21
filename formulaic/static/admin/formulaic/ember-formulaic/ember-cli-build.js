@@ -13,7 +13,8 @@ module.exports = function (defaults) {
       displayOutput: false
     },
     'ember-bootstrap': {
-      bootstrapVersion: 4,
+      bootstrapVersion: 5,
+      importBootstrapFont: true,
       importBootstrapCSS: false,
       insertEmberWormholeElementToDom: false
     },
@@ -23,6 +24,10 @@ module.exports = function (defaults) {
     'ember-fetch': {
       preferNative: true
     },
+    sassOptions: {
+    // Example to use dart-sass
+    implementation: require('sass'),
+  }
   });
 
   return app.toTree();

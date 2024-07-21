@@ -6,14 +6,14 @@ export default class RuleValidator extends EmberObject {
     return this.areConditionsEmpty || this.areResultsEmpty;
   }
 
-  @computed('rule.conditions.content.length')
+  @computed('rule.conditions')
   get areConditionsEmpty() {
-    return this.rule.conditions?.content.length < 1;
+    return this.rule.conditions?.length < 1;
   }
 
-  @computed('rule.results.content.length')
+  @computed('rule.results')
   get areResultsEmpty() {
-    return this.rule.results?.content.length < 1;
+    return this.rule.results?.length < 1;
   }
 
   @computed('isInvalid', 'areConditionsInvalid', 'areResultsInvalid')
@@ -31,13 +31,14 @@ export default class RuleValidator extends EmberObject {
     return this.resultValidators.some((validator) => validator.isInvalid);
   }
 
-  @computed('rule.conditions.content.@each')
+  @computed('rule.conditions.@each')
   get conditionValidators() {
-    return this.rule.conditions?.content.map((condition) => condition.validator) || [];
+
+    return this.rule.conditions?.map((condition) => condition.validator) || [];
   }
 
-  @computed('rule.results.content.@each')
+  @computed('rule.results.@each')
   get resultValidators() {
-    return this.rule.results?.content.map((result) => result.validator) || [];
+    return this.rule.results?.map((result) => result.validator) || [];
   }
 }

@@ -1,14 +1,16 @@
-<div class="rule-sortable rule-list">
+<div class="rule-sortable rule-list ui-sortable">
   {{#each @items as |rule|}}
-    <SortableRule
-      @rule={{rule}}
-      @allFields={{this.allFields}}
-      @onDeleteClick={{@onDeleteClick}}
-      @onOrderInvalidated={{@onOrderInvalidated}}
-      @onAddRuleClick={{@onAddRuleClick}}
-      @onAddConditionClick={{@onAddConditionClick}}
-      @onAddResultClick={{@onAddResultClick}}
-    />
+    <div class="field-preview single-line-text form-group col-xs-12 item ember-view">
+      <SortableRule
+        @rule={{rule}}
+        @onAddRuleClick={{@onAddRuleClick}}
+        @onDeleteRuleClick={{@onDeleteRuleClick}}
+        @onAddConditionClick={{@onAddConditionClick}}
+        @onDeleteConditionClick={{@onDeleteConditionClick}}
+        @onAddResultClick={{@onAddResultClick}}
+        @onDeleteResultClick={{@onDeleteResultClick}}
+      />
+    </div>
   {{else}}
     <div class="row">
       <div class="col-xs-12 no-records">

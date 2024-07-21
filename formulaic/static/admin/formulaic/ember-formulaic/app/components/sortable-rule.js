@@ -15,7 +15,7 @@ export default class SortableRuleComponent extends Component {
     'item'
   ];
 
-  @tracked rule;
+  @tracked rule = this.args.rule;
 
   get classNameBindings() {
     return {
@@ -33,24 +33,18 @@ export default class SortableRuleComponent extends Component {
     return this.rule.results.filter(item => !item.isDeleted);
   }
 
+  get hasActiveConditions()
+  {
+    return this.activeConditions.length > 0
+  }
+
   willDestroy() {
     super.willDestroy(...arguments);
-    this.args.onOrderInvalidated();
   }
 
   @action
   clickedDeleteRule(rule) {
-    this.args.onDeleteClick(rule);
-  }
-
-  @action
-  clickedAddCondition(rule) {
-    this.args.onAddConditionClick(rule);
-  }
-
-  @action
-  clickedAddResult(rule) {
-    this.args.onAddResultClick(rule);
+    this.args.onDeleteRuleClick(rule);
   }
 
   @action
@@ -59,12 +53,22 @@ export default class SortableRuleComponent extends Component {
   }
 
   @action
+  clickedAddCondition(rule) {
+    this.args.onAddConditionClick(rule);
+  }
+
+  @action
   deleteCondition(condition) {
-    this.args.onDeleteCondition(condition);
+    this.args.onDeleteConditionClick(condition);
+  }
+
+  @action
+  clickedAddResult(rule) {
+    this.args.onAddResultClick(rule);
   }
 
   @action
   deleteResult(result) {
-    this.args.onDeleteResult(result);
+    this.args.onDeleteResultClick(result);
   }
 }
