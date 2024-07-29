@@ -1,16 +1,20 @@
-<div class="rule-sortable rule-list ui-sortable">
-  {{#each @items as |rule|}}
-    <div class="field-preview single-line-text form-group col-xs-12 item ember-view">
-      <SortableRule
-        @rule={{rule}}
-        @onAddRuleClick={{@onAddRuleClick}}
-        @onDeleteRuleClick={{@onDeleteRuleClick}}
-        @onAddConditionClick={{@onAddConditionClick}}
-        @onDeleteConditionClick={{@onDeleteConditionClick}}
-        @onAddResultClick={{@onAddResultClick}}
-        @onDeleteResultClick={{@onDeleteResultClick}}
-      />
-    </div>
+<div class="rule-sortable rule-list">
+  {{#each this.items as |rule index|}}
+    <div class="field-preview single-line-text form-group col-xs-12 item ember-view"
+           draggable="true"
+           ondragstart={{fn this.dragStart index}}
+           ondragover={{this.dragOver}}
+           ondrop={{fn this.dragDrop index}}>
+        <SortableRule
+          @rule={{rule}}
+          @onAddRuleClick={{@onAddRuleClick}}
+          @onDeleteRuleClick={{@onDeleteRuleClick}}
+          @onAddConditionClick={{@onAddConditionClick}}
+          @onDeleteConditionClick={{@onDeleteConditionClick}}
+          @onAddResultClick={{@onAddResultClick}}
+          @onDeleteResultClick={{@onDeleteResultClick}}
+        />
+      </div>
   {{else}}
     <div class="row">
       <div class="col-xs-12 no-records">
@@ -19,3 +23,4 @@
     </div>
   {{/each}}
 </div>
+

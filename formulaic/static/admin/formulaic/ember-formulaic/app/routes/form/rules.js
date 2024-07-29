@@ -24,8 +24,9 @@ export default class RulesRoute extends Route {
 
       this.fieldService.currentForm = this.form;
       this.fieldService.currentFormFields = formFields.toArray();
+      this.fieldService.currentFormRules = formRules.toArray();
 
-      return formRules.toArray();
+      return this.fieldService.currentFormRules;
     } catch (error) {
       console.error('Error fetching rules:', error);
       throw error;

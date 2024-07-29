@@ -10,6 +10,7 @@ export default class FieldService extends Service {
   @service store;
   @service router;
 
+  @tracked currentFormRules = A([]);
   @tracked currentFormFields = A([]);
   @tracked currentForm = null;
   @tracked currentField = null;

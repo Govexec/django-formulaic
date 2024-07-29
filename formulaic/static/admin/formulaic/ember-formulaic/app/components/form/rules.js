@@ -13,7 +13,7 @@ export default class RulesComponent extends Component {
   @service router;
   @service('field-service') fieldService;
 
-  @tracked ruleModel = A(this.args.model);
+  @tracked ruleModel = this.fieldService.currentFormRules;
 
   @tracked rulesPendingDeletion = [];
   @tracked conditionsPendingDeletion = [];
@@ -189,11 +189,14 @@ export default class RulesComponent extends Component {
         promises.push(deletedResult.save());
       }
 
-      for (let actualRule of this.ruleModel) {
+      console.warn("this.ruleMode : ", this.ruleModel);
+
+      for (let [index,actualRule] of this.ruleModel.entries()) {
         if (!actualRule.isDeleted) {
 
           actualRule.setConditions(actualRule.conditions.toArray());
           actualRule.setResults(actualRule.results.toArray());
+          actualRule.setPosition(index);
 
           promises.push(actualRule.save());
         }

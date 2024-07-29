@@ -11,10 +11,10 @@ export default class RuleModel extends Model {
 
   @tracked conditionsArray = [];
   @tracked resultsArray = [];
-  @tracked ruleForm = null
+  @tracked rulePosition = null
 
-  setForm(form) {
-    this.ruleForm = form;
+  setPosition(position) {
+    this.rulePosition = position;
   }
 
   setConditions(conditions) {

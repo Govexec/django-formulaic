@@ -59,7 +59,7 @@
     "ember-qunit": "^8.0.2",
     "ember-resolver": "^11.0.1",
     "ember-select-light": "^2.0.5",
-    "ember-sortable": "^5.0.2",
+    "ember-sortable": "^5.1.1",
     "ember-source": "~5.9.0",
     "ember-template-lint": "^5.13.0",
     "ember-toastr": "^3.0.1",
@@ -100,7 +100,6 @@
     "ember-cli-sass": "^11.0.1",
     "install": "^0.13.0",
     "slugify": "^1.6.6",
-    "sortablejs": "^1.15.2",
     "tinymce": "^7.2.0"
   }
 }

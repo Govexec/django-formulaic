@@ -313,8 +313,7 @@
 .ui-sortable-placeholder {
   background: url('images/bg-stripes.png') repeat !important;
   visibility: visible !important;
-  /*opacity: 0.1;*/
-  /*min-height:100px;*/
+  height: auto;
 }
 
 .controls .glyphicon {
@@ -334,4 +333,14 @@
   color: #aaa;
   position: absolute;
   right: 80px;
+}
+
+ul > li
+{
+  list-style-type: none;
+}
+
+.field-preview .dragging {
+  background-color: #000000; /* Change this to your preferred color */
+  opacity: 1; /* Slightly transparent */
 }

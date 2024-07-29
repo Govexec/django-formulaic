@@ -103,9 +103,11 @@ export default class RuleSerializer extends JSONSerializer {
 
     json.conditions = json.conditions || [];
     json.results = json.results || [];
+    json.position = json.position || null;
 
     json.conditions = snapshot.record.conditionsArray.map(condition => this._serializeCondition(condition));
     json.results = snapshot.record.resultsArray.map(result => this._serializeResult(result));
+    json.position = snapshot.record.rulePosition;
 
     return json;
   }
