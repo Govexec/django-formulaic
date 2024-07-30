@@ -47,7 +47,6 @@ export default class FieldService extends Service {
 
   openEditField(context, field) {
     this.currentField = field.get(field.model_class);
-    console.warn("this.currentField : ", this.currentField);
   }
 
   closeEditField() {

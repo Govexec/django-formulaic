@@ -45,9 +45,10 @@ export default class FieldsComponent extends Component {
     this.saveContinueActive = continueEditing;
 
     let validationErrors = [];
-    let actualFields = this.model.filter(field => !field.isDeleted).map(field => {
+    let actualFields = this.model.filter(field => !field.isDeleted).map((field, index) => {
 
       let actualField = field.get(field.model_class);
+      actualField.position = index;
 
       if (!actualField.slug) {
         actualField.slug = slug.generateSlug(actualField.data_name);

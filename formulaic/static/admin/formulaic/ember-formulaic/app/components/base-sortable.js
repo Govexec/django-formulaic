@@ -10,6 +10,7 @@ export default class BaseSortableComponent extends Component {
   @service('field-service') fieldService;
 
   @tracked items = this.fieldService.currentFormRules;
+  @tracked formFields = this.fieldService.currentFormFields;
 
   @tracked draggedItem = null;
   @tracked draggedIndex = null;
@@ -39,6 +40,37 @@ export default class BaseSortableComponent extends Component {
 
     this.fieldService.currentFormRules = items;
     this.items = items;
+
+    this.draggedItem = null;
+    this.draggedIndex = null;
+    this.placeholderIndex = null;
+  }
+
+
+  @action
+  dragStartField(index, event) {
+    this.draggedItem = this.formFields[index];
+    this.draggedIndex = index;
+    this.placeholderIndex = index;
+  }
+
+
+  @action
+  dragOverField(event) {
+    event.preventDefault();
+  }
+
+
+  @action
+  dragDropField(index) {
+    const items = [...this.formFields];
+    const draggedItem = this.draggedItem;
+
+    items.splice(this.draggedIndex, 1);
+    items.splice(index, 0, draggedItem);
+
+    this.fieldService.currentFormFields = items;
+    this.formFields = items;
 
     this.draggedItem = null;
     this.draggedIndex = null;

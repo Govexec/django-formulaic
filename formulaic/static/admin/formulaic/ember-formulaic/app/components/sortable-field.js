@@ -2,7 +2,7 @@
 
 import Component from '@glimmer/component';
 import {tracked} from '@glimmer/tracking';
-import {inject as controller} from '@ember/controller';
+import {inject as service} from '@ember/service';
 import {action, computed} from '@ember/object';
 
 const FIELD_TYPES = {
@@ -13,6 +13,8 @@ const FIELD_TYPES = {
 };
 
 export default class SortableFieldComponent extends Component {
+
+  @service('field-service') fieldService;
 
   @tracked display_name;
   @tracked data_name;
@@ -40,9 +42,9 @@ export default class SortableFieldComponent extends Component {
     return this.field.get(this.field.model_class);
   }
 
-  @computed('currentField')
+  @computed('fieldService.currentField.field')
   get isEditing() {
-    return this.currentField === this.field;
+    return this.fieldService.currentField?.field === this.field;
   }
 
   @computed('field.hiddenfield')
@@ -80,7 +82,7 @@ export default class SortableFieldComponent extends Component {
   }
 
   @action
-  handleEditClick() {
+  handleEditClick(event) {
     this.args.onEditClick(this.field);
   }
 

@@ -12,9 +12,9 @@
   <label class="control-label">
     Display Name
     {{#if this.isDisplayNameWYSIWYGEnabled}}
-      <TinymceEditor @options={{this.editorOptions}} @value={{this.model.display_name}} @onChange={{this.updateDisplayName}}  />
+      <TinymceEditor @options={{this.editorOptions}} @value={{this.fieldService.currentField.display_name}} @onChange={{this.updateDisplayName}}  />
     {{else}}
-      <Input @type="text" id="field-display-name" placeholder="(Display Name)" @value={{this.model.display_name}}
+      <Input @type="text" id="field-display-name" placeholder="(Display Name)" @value={{this.fieldService.currentField.display_name}}
              class="form-control input-sm"/>
     {{/if}}
   </label>
@@ -22,7 +22,7 @@
 <div class="{{if this.validator.isDataNameInvalid 'has-error'}}">
   <label class="control-label">
     Data Column Name
-    <Input @type="text" id="field-data-name" placeholder="(Data Column Name)" @value={{this.model.data_name}}
+    <Input @type="text" id="field-data-name" placeholder="(Data Column Name)" @value={{this.fieldService.currentField.data_name}}
            class="form-control input-sm"/>
   </label>
 </div>
@@ -34,7 +34,7 @@
   </label>
 </div>
 <label>
-  <Input @type="checkbox" id="field-required" @checked={{this.model.required}} />
+  <Input @type="checkbox" id="field-required" @checked={{this.fieldService.currentField.required}} />
   Required
 </label>
 
@@ -42,12 +42,12 @@
   <h4>Extras</h4>
   <label>
     Help Text
-    <Input @type="text" id="field-help-text" placeholder="" @value={{this.model.help_text}}
+    <Input @type="text" id="field-help-text" placeholder="" @value={{this.fieldService.currentField.help_text}}
            class="form-control input-sm"/>
   </label>
   <label>
     CSS Class
-    <Input @type="text" id="field-css-class" @value={{this.model.css_class}} class="form-control input-sm"/>
+    <Input @type="text" id="field-css-class" @value={{this.fieldService.currentField.css_class}} class="form-control input-sm"/>
   </label>
 </div>
 

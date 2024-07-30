@@ -94,7 +94,7 @@
     value: true
   });
   _exports.default = void 0;
-  var _dec, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6; // components/base-sortable.js
+  var _dec, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7; // components/base-sortable.js
   0; //eaimeta@70e063a35619d71f0,"@glimmer/component",0,"@ember/service",0,"@glimmer/tracking",0,"@ember/object"eaimeta@70e063a35619d71f
   function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
   function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -108,9 +108,10 @@
       _initializerDefineProperty(this, "store", _descriptor, this);
       _initializerDefineProperty(this, "fieldService", _descriptor2, this);
       _initializerDefineProperty(this, "items", _descriptor3, this);
-      _initializerDefineProperty(this, "draggedItem", _descriptor4, this);
-      _initializerDefineProperty(this, "draggedIndex", _descriptor5, this);
-      _initializerDefineProperty(this, "placeholderIndex", _descriptor6, this);
+      _initializerDefineProperty(this, "formFields", _descriptor4, this);
+      _initializerDefineProperty(this, "draggedItem", _descriptor5, this);
+      _initializerDefineProperty(this, "draggedIndex", _descriptor6, this);
+      _initializerDefineProperty(this, "placeholderIndex", _descriptor7, this);
     }
     dragStart(index, event) {
       this.draggedItem = this.items[index];
@@ -127,6 +128,25 @@
       items.splice(index, 0, draggedItem);
       this.fieldService.currentFormRules = items;
       this.items = items;
+      this.draggedItem = null;
+      this.draggedIndex = null;
+      this.placeholderIndex = null;
+    }
+    dragStartField(index, event) {
+      this.draggedItem = this.formFields[index];
+      this.draggedIndex = index;
+      this.placeholderIndex = index;
+    }
+    dragOverField(event) {
+      event.preventDefault();
+    }
+    dragDropField(index) {
+      const items = [...this.formFields];
+      const draggedItem = this.draggedItem;
+      items.splice(this.draggedIndex, 1);
+      items.splice(index, 0, draggedItem);
+      this.fieldService.currentFormFields = items;
+      this.formFields = items;
       this.draggedItem = null;
       this.draggedIndex = null;
       this.placeholderIndex = null;
@@ -148,28 +168,35 @@
     initializer: function () {
       return this.fieldService.currentFormRules;
     }
-  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "draggedItem", [_tracking.tracked], {
+  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "formFields", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return this.fieldService.currentFormFields;
+    }
+  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "draggedItem", [_tracking.tracked], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: function () {
       return null;
     }
-  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "draggedIndex", [_tracking.tracked], {
+  }), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "draggedIndex", [_tracking.tracked], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: function () {
       return null;
     }
-  }), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "placeholderIndex", [_tracking.tracked], {
+  }), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "placeholderIndex", [_tracking.tracked], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: function () {
       return null;
     }
-  }), _applyDecoratedDescriptor(_class.prototype, "dragStart", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "dragStart"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "dragOver", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "dragOver"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "dragDrop", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "dragDrop"), _class.prototype)), _class));
+  }), _applyDecoratedDescriptor(_class.prototype, "dragStart", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "dragStart"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "dragOver", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "dragOver"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "dragDrop", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "dragDrop"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "dragStartField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "dragStartField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "dragOverField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "dragOverField"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "dragDropField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "dragDropField"), _class.prototype)), _class));
 });
 ;define("ember-formulaic/components/bs-accordion", ["exports", "ember-bootstrap/components/bs-accordion"], function (_exports, _bsAccordion) {
   "use strict";
@@ -1128,8 +1155,9 @@
       this.saveActive = !continueEditing;
       this.saveContinueActive = continueEditing;
       let validationErrors = [];
-      let actualFields = this.model.filter(field => !field.isDeleted).map(field => {
+      let actualFields = this.model.filter(field => !field.isDeleted).map((field, index) => {
         let actualField = field.get(field.model_class);
+        actualField.position = index;
         if (!actualField.slug) {
           actualField.slug = _slug.default.generateSlug(actualField.data_name);
         }
@@ -1253,7 +1281,7 @@
     value: true
   });
   _exports.default = void 0;
-  var _dec, _class, _descriptor, _descriptor2, _descriptor3; //components/form/fields/basefield.js
+  var _dec, _class, _descriptor, _descriptor2; //components/form/fields/basefield.js
   0; //eaimeta@70e063a35619d71f0,"@glimmer/component",0,"@ember/service",0,"@glimmer/tracking",0,"@ember/object",0,"ember-formulaic/utils/slug"eaimeta@70e063a35619d71f
   function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
   function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -1265,8 +1293,7 @@
     constructor() {
       super(...arguments);
       _initializerDefineProperty(this, "fieldService", _descriptor, this);
-      _initializerDefineProperty(this, "model", _descriptor2, this);
-      _initializerDefineProperty(this, "isDisplayNameWYSIWYGEnabled", _descriptor3, this);
+      _initializerDefineProperty(this, "isDisplayNameWYSIWYGEnabled", _descriptor2, this);
       _defineProperty(this, "editorOptions", {
         height: 120,
         force_br_newlines: false,
@@ -1278,37 +1305,37 @@
       this.setupModelObserver();
     }
     setupModelObserver() {
-      if (this.model) {
+      if (this.fieldService.currentField) {
         this.isDisplayNameWYSIWYGEnabled = this.displayNameHasHtml;
       }
     }
     get displayNameHasHtml() {
-      return this.model.display_name && this.model.display_name.match(/<([A-Z][A-Z0-9]*)\b[^>]*>/i);
+      return this.fieldService.currentField.display_name && this.fieldService.currentField.display_name.match(/<([A-Z][A-Z0-9]*)\b[^>]*>/i);
     }
     get subtypeName() {
-      return this.model.subtype.replace('_', ' ');
+      return this.fieldService.currentField.subtype.replace('_', ' ');
     }
     get autoSlug() {
-      if (this.model.model_class === this.fieldService.fieldTypes().HIDDENFIELD) {
-        this.model.display_name = this.model.data_name;
+      if (this.fieldService.currentField.model_class === this.fieldService.fieldTypes().HIDDENFIELD) {
+        this.fieldService.currentField.display_name = this.fieldService.currentField.data_name;
       }
-      if (this.model.slug) {
-        return this.model.slug;
+      if (this.fieldService.currentField.slug) {
+        return this.fieldService.currentField.slug;
       }
-      return _slug.default.generateSlug(this.model.data_name);
+      return _slug.default.generateSlug(this.fieldService.currentField.data_name);
     }
     set autoSlug(value) {
-      this.model.slug = value;
+      this.fieldService.currentField.slug = value;
       return value;
     }
     get validator() {
-      return this.fieldService.validatorFor(this.model);
+      return this.fieldService.validatorFor(this.fieldService.currentField);
     }
     toggleDisplayNameWYSIWYG() {
       this.isDisplayNameWYSIWYGEnabled = !this.isDisplayNameWYSIWYGEnabled;
     }
     updateDisplayName(newValue) {
-      this.model.display_name = newValue;
+      this.fieldService.currentField.display_name = newValue;
     }
     doneEditingField() {
       this.fieldService.closeEditField(this);
@@ -1318,14 +1345,7 @@
     enumerable: true,
     writable: true,
     initializer: null
-  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "model", [_tracking.tracked], {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    initializer: function () {
-      return this.args.model;
-    }
-  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "isDisplayNameWYSIWYGEnabled", [_tracking.tracked], {
+  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "isDisplayNameWYSIWYGEnabled", [_tracking.tracked], {
     configurable: true,
     enumerable: true,
     writable: true,
@@ -1380,10 +1400,10 @@
       }
     }
     async loadOptionGroups() {
-      if (this.model.option_list) {
+      if (this.fieldService.currentField.option_list) {
         try {
           let option_groups = await this.store.query('optiongroup', {
-            list: this.model.option_list.id
+            list: this.fieldService.currentField.option_list.id
           });
           this.optiongroups = option_groups.toArray();
         } catch (error) {
@@ -1395,39 +1415,39 @@
       return this.optiongroups && this.optiongroups.length > 0;
     }
     get modelOptions() {
-      if (this.hasOptionGroups && this.model.option_group?.options) {
-        return this.model.option_group.options;
-      } else if (this.model.option_list?.options) {
-        return this.model.option_list.options;
+      if (this.hasOptionGroups && this.fieldService.currentField.option_group?.options) {
+        return this.fieldService.currentField.option_group.options;
+      } else if (this.fieldService.currentField.option_list?.options) {
+        return this.fieldService.currentField.option_list.options;
       }
       return null;
     }
     get defaultOption() {
-      if (this.model.default_options.length > 0) {
-        return this.model.default_options.firstObject;
+      if (this.fieldService.currentField.default_options.length > 0) {
+        return this.fieldService.currentField.default_options.firstObject;
       } else {
-        return this.model.default_option;
+        return this.fieldService.currentField.default_option;
       }
     }
     get defaultOptionList() {
-      return this.model.default_options;
+      return this.fieldService.currentField.default_options;
     }
     get optiongroupsReady() {
-      return this.optiongroups != null; //&& this.model.option_group?.isFulfilled;
+      return this.optiongroups != null; //&& this.fieldService.currentField.option_group?.isFulfilled;
     }
     get optionlistsReady() {
       return this.optionlists != null;
     }
     async optionsReady() {
-      return this.modelOptions != null; //&& this.model.default_options?.isFulfilled;
+      return this.modelOptions != null; //&& this.fieldService.currentField.default_options?.isFulfilled;
     }
     get supportsMultiValue() {
-      return ["checkbox_select_multiple", "select_multiple"].includes(this.model.subtype);
+      return ["checkbox_select_multiple", "select_multiple"].includes(this.fieldService.currentField.subtype);
     }
     async optionListChanged(event) {
       const selectedOptionListId = event.target.value;
-      if (this.model.option_list?.id !== selectedOptionListId) {
-        this.model.option_list = await this.store.peekRecord('optionlist', selectedOptionListId);
+      if (this.fieldService.currentField.option_list?.id !== selectedOptionListId) {
+        this.fieldService.currentField.option_list = await this.store.peekRecord('optionlist', selectedOptionListId);
         this.modelOptions;
         await this.loadOptionGroups();
       }
@@ -1435,13 +1455,13 @@
     async optionGroupChanged(event) {
       const selectedOptionGroupId = event.target.value;
       if (selectedOptionGroupId) {
-        this.model.option_group = await this.store.peekRecord('optiongroup', selectedOptionGroupId);
+        this.fieldService.currentField.option_group = await this.store.peekRecord('optiongroup', selectedOptionGroupId);
       }
     }
     async defaultOptionChanged(event) {
       const selectedDefaultOptionId = event.target.value;
       if (selectedDefaultOptionId) {
-        this.model.default_option = await this.store.findRecord('option', selectedDefaultOptionId);
+        this.fieldService.currentField.default_option = await this.store.findRecord('option', selectedDefaultOptionId);
       }
     }
   }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "store", [_service.inject], {
@@ -2569,26 +2589,42 @@
   });
   0; //eaimeta@70e063a35619d71f0,"ember-select-light/components/select-light"eaimeta@70e063a35619d71f
 });
-;define("ember-formulaic/components/sidebar", ["exports", "@glimmer/component"], function (_exports, _component) {
+;define("ember-formulaic/components/sidebar", ["exports", "@glimmer/component", "@ember/service"], function (_exports, _component, _service) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
     value: true
   });
   _exports.default = void 0;
-  0; //eaimeta@70e063a35619d71f0,"@glimmer/component"eaimeta@70e063a35619d71f
-  class SidebarComponent extends _component.default {}
-  _exports.default = SidebarComponent;
+  var _dec, _class, _descriptor;
+  0; //eaimeta@70e063a35619d71f0,"@glimmer/component",0,"@ember/service"eaimeta@70e063a35619d71f
+  function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
+  function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+  function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
+  function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+  function _applyDecoratedDescriptor(i, e, r, n, l) { var a = {}; return Object.keys(n).forEach(function (i) { a[i] = n[i]; }), a.enumerable = !!a.enumerable, a.configurable = !!a.configurable, ("value" in a || a.initializer) && (a.writable = !0), a = r.slice().reverse().reduce(function (r, n) { return n(i, e, r) || r; }, a), l && void 0 !== a.initializer && (a.value = a.initializer ? a.initializer.call(l) : void 0, a.initializer = void 0), void 0 === a.initializer && (Object.defineProperty(i, e, a), a = null), a; }
+  function _initializerWarningHelper(r, e) { throw Error("Decorating class property failed. Please ensure that transform-class-properties is enabled and runs after the decorators transform."); }
+  let SidebarComponent = _exports.default = (_dec = (0, _service.inject)('field-service'), (_class = class SidebarComponent extends _component.default {
+    constructor(...args) {
+      super(...args);
+      _initializerDefineProperty(this, "fieldService", _descriptor, this);
+    }
+  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "fieldService", [_dec], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: null
+  })), _class));
 });
-;define("ember-formulaic/components/sortable-field", ["exports", "@glimmer/component", "@glimmer/tracking", "@ember/controller", "@ember/object"], function (_exports, _component, _tracking, _controller, _object) {
+;define("ember-formulaic/components/sortable-field", ["exports", "@glimmer/component", "@glimmer/tracking", "@ember/service", "@ember/object"], function (_exports, _component, _tracking, _service, _object) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
     value: true
   });
   _exports.default = void 0;
-  var _dec, _dec2, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4; //components/sortable-field.js
-  0; //eaimeta@70e063a35619d71f0,"@glimmer/component",0,"@glimmer/tracking",0,"@ember/controller",0,"@ember/object"eaimeta@70e063a35619d71f
+  var _dec, _dec2, _dec3, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5; //components/sortable-field.js
+  0; //eaimeta@70e063a35619d71f0,"@glimmer/component",0,"@glimmer/tracking",0,"@ember/service",0,"@ember/object"eaimeta@70e063a35619d71f
   function _initializerDefineProperty(e, i, r, l) { r && Object.defineProperty(e, i, { enumerable: r.enumerable, configurable: r.configurable, writable: r.writable, value: r.initializer ? r.initializer.call(l) : void 0 }); }
   function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
   function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
@@ -2601,13 +2637,14 @@
     BOOLEANFIELD: 'booleanfield',
     HIDDENFIELD: 'hiddenfield'
   };
-  let SortableFieldComponent = _exports.default = (_dec = (0, _object.computed)('currentField'), _dec2 = (0, _object.computed)('field.hiddenfield'), (_class = class SortableFieldComponent extends _component.default {
+  let SortableFieldComponent = _exports.default = (_dec = (0, _service.inject)('field-service'), _dec2 = (0, _object.computed)('fieldService.currentField.field'), _dec3 = (0, _object.computed)('field.hiddenfield'), (_class = class SortableFieldComponent extends _component.default {
     constructor() {
       super(...arguments);
-      _initializerDefineProperty(this, "display_name", _descriptor, this);
-      _initializerDefineProperty(this, "data_name", _descriptor2, this);
-      _initializerDefineProperty(this, "slug", _descriptor3, this);
-      _initializerDefineProperty(this, "field", _descriptor4, this);
+      _initializerDefineProperty(this, "fieldService", _descriptor, this);
+      _initializerDefineProperty(this, "display_name", _descriptor2, this);
+      _initializerDefineProperty(this, "data_name", _descriptor3, this);
+      _initializerDefineProperty(this, "slug", _descriptor4, this);
+      _initializerDefineProperty(this, "field", _descriptor5, this);
       this.field = this.args.field;
     }
     get previewComponent() {
@@ -2624,7 +2661,7 @@
       return this.field.get(this.field.model_class);
     }
     get isEditing() {
-      return this.currentField === this.field;
+      return this.fieldService.currentField?.field === this.field;
     }
     get showDisplayName() {
       return this.field.model_class !== FIELD_TYPES.HIDDENFIELD;
@@ -2647,7 +2684,7 @@
     handlePositionChange() {
       this.completeField.position = this.field.position;
     }
-    handleEditClick() {
+    handleEditClick(event) {
       this.args.onEditClick(this.field);
     }
     willDestroy() {
@@ -2656,27 +2693,32 @@
     clickedDeleteField(field, completeField) {
       this.args.onDeleteClick(field, completeField);
     }
-  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "display_name", [_tracking.tracked], {
+  }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, "fieldService", [_dec], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: null
-  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "data_name", [_tracking.tracked], {
+  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "display_name", [_tracking.tracked], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: null
-  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "slug", [_tracking.tracked], {
+  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "data_name", [_tracking.tracked], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: null
-  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "field", [_tracking.tracked], {
+  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "slug", [_tracking.tracked], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: null
-  }), _applyDecoratedDescriptor(_class.prototype, "isEditing", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "isEditing"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "showDisplayName", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "showDisplayName"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleDisplayNameChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleDisplayNameChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleDataNameChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleDataNameChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleSlugChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleSlugChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handlePositionChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handlePositionChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleEditClick", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleEditClick"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clickedDeleteField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "clickedDeleteField"), _class.prototype)), _class));
+  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "field", [_tracking.tracked], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: null
+  }), _applyDecoratedDescriptor(_class.prototype, "isEditing", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "isEditing"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "showDisplayName", [_dec3], Object.getOwnPropertyDescriptor(_class.prototype, "showDisplayName"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleDisplayNameChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleDisplayNameChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleDataNameChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleDataNameChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleSlugChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleSlugChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handlePositionChange", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handlePositionChange"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleEditClick", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleEditClick"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clickedDeleteField", [_object.action], Object.getOwnPropertyDescriptor(_class.prototype, "clickedDeleteField"), _class.prototype)), _class));
 });
 ;define("ember-formulaic/components/sortable-fields", ["exports", "ember-formulaic/components/base-sortable"], function (_exports, _baseSortable) {
   "use strict";
@@ -5724,7 +5766,6 @@
     }
     openEditField(context, field) {
       this.currentField = field.get(field.model_class);
-      console.warn("this.currentField : ", this.currentField);
     }
     closeEditField() {
       this.currentField = null;
@@ -6065,16 +6106,16 @@
     <label class="control-label">
       Display Name
       {{#if this.isDisplayNameWYSIWYGEnabled}}
-        <TinymceEditor @options={{this.editorOptions}} @value={{this.model.display_name}} @onChange={{this.updateDisplayName}} />
+        <TinymceEditor @options={{this.editorOptions}} @value={{this.fieldService.currentField.display_name}} @onChange={{this.updateDisplayName}} />
       {{else}}
-        <Input @type="text" id="field-display-name" placeholder="(Display Name)" @value={{this.model.display_name}} class="form-control input-sm" />
+        <Input @type="text" id="field-display-name" placeholder="(Display Name)" @value={{this.fieldService.currentField.display_name}} class="form-control input-sm" />
       {{/if}}
     </label>
   </div>
   <div class="{{if this.validator.isDataNameInvalid 'has-error'}}">
     <label class="control-label">
       Data Column Name
-      <Input @type="text" id="field-data-name" placeholder="(Data Column Name)" @value={{this.model.data_name}} class="form-control input-sm" />
+      <Input @type="text" id="field-data-name" placeholder="(Data Column Name)" @value={{this.fieldService.currentField.data_name}} class="form-control input-sm" />
     </label>
   </div>
   <div class="{{if this.validator.isSlugInvalid 'has-error'}}">
@@ -6084,11 +6125,11 @@
     </label>
   </div>
   <label>
-    <Input @type="checkbox" id="field-required" @checked={{this.model.required}} />
+    <Input @type="checkbox" id="field-required" @checked={{this.fieldService.currentField.required}} />
     Required
   </label>
   <label>
-    <Input @type="checkbox" id="field-default-checked" @checked={{this.model.default_checked}} />
+    <Input @type="checkbox" id="field-default-checked" @checked={{this.fieldService.currentField.default_checked}} />
     Checked by Default
   </label>
   
@@ -6096,11 +6137,11 @@
     <h4>Extras</h4>
     <label>
       Help Text
-      <Input @type="text" id="field-help-text" placeholder="" @value={{this.model.help_text}} class="form-control input-sm" />
+      <Input @type="text" id="field-help-text" placeholder="" @value={{this.fieldService.currentField.help_text}} class="form-control input-sm" />
     </label>
     <label>
       CSS Class
-      <Input @type="text" id="field-css-class" @value={{this.model.css_class}} class="form-control input-sm" />
+      <Input @type="text" id="field-css-class" @value={{this.fieldService.currentField.css_class}} class="form-control input-sm" />
     </label>
   </div>
   
@@ -6108,8 +6149,8 @@
   
   */
   {
-    "id": "nuhOm7mP",
-    "block": "[[[3,\" templates/form/fields/booleanfield.hbs \"],[1,\"\\n\\n\"],[10,\"h2\"],[12],[1,\"Edit '\"],[1,[30,0,[\"subtypeName\"]]],[1,\"' field\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[\"textfield-container \",[52,[30,0,[\"validator\",\"isDisplayNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[11,\"button\"],[24,0,\"btn btn-link wysiwyg-toggle\"],[4,[38,4],[\"click\",[30,0,[\"toggleDisplayNameWYSIWYG\"]]],null],[12],[1,\"\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      TEXT\\n\"]],[]],[[[1,\"      WYSIWYG\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Display Name\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      \"],[8,[39,6],null,[[\"@options\",\"@value\",\"@onChange\"],[[30,0,[\"editorOptions\"]],[30,0,[\"model\",\"display_name\"]],[30,0,[\"updateDisplayName\"]]]],null],[1,\"\\n\"]],[]],[[[1,\"      \"],[8,[39,7],[[24,1,\"field-display-name\"],[24,\"placeholder\",\"(Display Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"display_name\"]]]],null],[1,\"\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isDataNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Data Column Name\\n    \"],[8,[39,7],[[24,1,\"field-data-name\"],[24,\"placeholder\",\"(Data Column Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"data_name\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isSlugInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Slug\\n    \"],[8,[39,7],[[24,1,\"field-slug\"],[24,\"placeholder\",\"(field-name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"autoSlug\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,\"label\"],[12],[1,\"\\n  \"],[8,[39,7],[[24,1,\"field-required\"]],[[\"@type\",\"@checked\"],[\"checkbox\",[30,0,[\"model\",\"required\"]]]],null],[1,\"\\n  Required\\n\"],[13],[1,\"\\n\"],[10,\"label\"],[12],[1,\"\\n  \"],[8,[39,7],[[24,1,\"field-default-checked\"]],[[\"@type\",\"@checked\"],[\"checkbox\",[30,0,[\"model\",\"default_checked\"]]]],null],[1,\"\\n  Checked by Default\\n\"],[13],[1,\"\\n\\n\"],[10,0],[14,0,\"extras\"],[12],[1,\"\\n  \"],[10,\"h4\"],[12],[1,\"Extras\"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    Help Text\\n    \"],[8,[39,7],[[24,1,\"field-help-text\"],[24,\"placeholder\",\"\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"help_text\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    CSS Class\\n    \"],[8,[39,7],[[24,1,\"field-css-class\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"css_class\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\\n\"],[11,\"button\"],[24,0,\"btn btn-primary\"],[24,4,\"submit\"],[4,[38,4],[\"click\",[30,0,[\"doneEditingField\"]]],null],[12],[1,\"Done\"],[13],[1,\"\\n\"]],[],false,[\"h2\",\"div\",\"if\",\"button\",\"on\",\"label\",\"tinymce-editor\",\"input\",\"h4\"]]",
+    "id": "uZG8BQze",
+    "block": "[[[3,\" templates/form/fields/booleanfield.hbs \"],[1,\"\\n\\n\"],[10,\"h2\"],[12],[1,\"Edit '\"],[1,[30,0,[\"subtypeName\"]]],[1,\"' field\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[\"textfield-container \",[52,[30,0,[\"validator\",\"isDisplayNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[11,\"button\"],[24,0,\"btn btn-link wysiwyg-toggle\"],[4,[38,4],[\"click\",[30,0,[\"toggleDisplayNameWYSIWYG\"]]],null],[12],[1,\"\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      TEXT\\n\"]],[]],[[[1,\"      WYSIWYG\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Display Name\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      \"],[8,[39,6],null,[[\"@options\",\"@value\",\"@onChange\"],[[30,0,[\"editorOptions\"]],[30,0,[\"fieldService\",\"currentField\",\"display_name\"]],[30,0,[\"updateDisplayName\"]]]],null],[1,\"\\n\"]],[]],[[[1,\"      \"],[8,[39,7],[[24,1,\"field-display-name\"],[24,\"placeholder\",\"(Display Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"fieldService\",\"currentField\",\"display_name\"]]]],null],[1,\"\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isDataNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Data Column Name\\n    \"],[8,[39,7],[[24,1,\"field-data-name\"],[24,\"placeholder\",\"(Data Column Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"fieldService\",\"currentField\",\"data_name\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isSlugInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Slug\\n    \"],[8,[39,7],[[24,1,\"field-slug\"],[24,\"placeholder\",\"(field-name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"autoSlug\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,\"label\"],[12],[1,\"\\n  \"],[8,[39,7],[[24,1,\"field-required\"]],[[\"@type\",\"@checked\"],[\"checkbox\",[30,0,[\"fieldService\",\"currentField\",\"required\"]]]],null],[1,\"\\n  Required\\n\"],[13],[1,\"\\n\"],[10,\"label\"],[12],[1,\"\\n  \"],[8,[39,7],[[24,1,\"field-default-checked\"]],[[\"@type\",\"@checked\"],[\"checkbox\",[30,0,[\"fieldService\",\"currentField\",\"default_checked\"]]]],null],[1,\"\\n  Checked by Default\\n\"],[13],[1,\"\\n\\n\"],[10,0],[14,0,\"extras\"],[12],[1,\"\\n  \"],[10,\"h4\"],[12],[1,\"Extras\"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    Help Text\\n    \"],[8,[39,7],[[24,1,\"field-help-text\"],[24,\"placeholder\",\"\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"fieldService\",\"currentField\",\"help_text\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    CSS Class\\n    \"],[8,[39,7],[[24,1,\"field-css-class\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"fieldService\",\"currentField\",\"css_class\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\\n\"],[11,\"button\"],[24,0,\"btn btn-primary\"],[24,4,\"submit\"],[4,[38,4],[\"click\",[30,0,[\"doneEditingField\"]]],null],[12],[1,\"Done\"],[13],[1,\"\\n\"]],[],false,[\"h2\",\"div\",\"if\",\"button\",\"on\",\"label\",\"tinymce-editor\",\"input\",\"h4\"]]",
     "moduleName": "ember-formulaic/templates/components/form/fields/booleanfield.hbs",
     "isStrictMode": false
   });
@@ -6138,9 +6179,9 @@
     <label class="control-label">
       Display Name
       {{#if this.isDisplayNameWYSIWYGEnabled}}
-        <TinymceEditor @options={{this.editorOptions}} @value={{this.model.display_name}} @onChange={{this.updateDisplayName}} />
+        <TinymceEditor @options={{this.editorOptions}} @value={{this.fieldService.currentField.display_name}} @onChange={{this.updateDisplayName}} />
       {{else}}
-        <Input @type="text" id="field-display-name" placeholder="(Display Name)" @value={{this.model.display_name}}
+        <Input @type="text" id="field-display-name" placeholder="(Display Name)" @value={{this.fieldService.currentField.display_name}}
                class="form-control input-sm"/>
       {{/if}}
     </label>
@@ -6148,7 +6189,7 @@
   <div class="{{if this.validator.isDataNameInvalid 'has-error'}}">
     <label class="control-label">
       Data Column Name
-      <Input @type="text" id="field-data-name" placeholder="(Data Column Name)" @value={{this.model.data_name}}
+      <Input @type="text" id="field-data-name" placeholder="(Data Column Name)" @value={{this.fieldService.currentField.data_name}}
              class="form-control input-sm"/>
     </label>
   </div>
@@ -6160,7 +6201,7 @@
     </label>
   </div>
   <label>
-    <Input @type="checkbox" id="field-required" @checked={{this.model.required}} />
+    <Input @type="checkbox" id="field-required" @checked={{this.fieldService.currentField.required}} />
     Required
   </label>
   
@@ -6171,7 +6212,7 @@
         <select {{on "change" this.optionListChanged}} class="form-control input-sm">
           <option value="">Choose `Option List`...</option>
           {{#each this.optionlists as |optionlist|}}
-            <option value={{optionlist.id}} selected={{if (this.fieldService.eq optionlist.id this.model.option_list.id)
+            <option value={{optionlist.id}} selected={{if (this.fieldService.eq optionlist.id this.fieldService.currentField.option_list.id)
                                                           "selected"
                                                           null}}>{{optionlist.name}}</option>
           {{/each}}
@@ -6189,7 +6230,7 @@
           <option value="">Choose `Option Set`...</option>
           {{#each this.optiongroups as |optiongroup|}}
             <option value={{optiongroup.id}} selected={{if
-              (this.fieldService.eq optiongroup.id this.model.option_group.id)
+              (this.fieldService.eq optiongroup.id this.fieldService.currentField.option_group.id)
               "selected"
               null}}>{{optiongroup.name}}</option>
           {{/each}}
@@ -6207,7 +6248,7 @@
           <option value="">Choose `Default Option`...</option>
           {{#each this.modelOptions as |modelOption|}}
             <option value={{modelOption.id}} selected={{if
-              (this.fieldService.eq modelOption.id this.model.default_options.id)
+              (this.fieldService.eq modelOption.id this.fieldService.currentField.default_options.id)
               "selected"
               null}}>{{modelOption.name}}</option>
           {{/each}}
@@ -6217,7 +6258,7 @@
           <option value="">Choose `Default Option`...</option>
           {{#each this.modelOptions as |modelOption|}}
             <option value={{modelOption.id}} selected={{if
-              (this.fieldService.eq modelOption.id this.model.default_options.id)
+              (this.fieldService.eq modelOption.id this.fieldService.currentField.default_options.id)
               "selected"
               null}}>{{modelOption.name}}</option>
           {{/each}}
@@ -6231,18 +6272,18 @@
   {{#if this.supportsMultiValue}}
     <label>
       Minimum Selections
-      <Input @type="text" id="field-minimum-selections" @value={{this.model.minimum_selections}}
+      <Input @type="text" id="field-minimum-selections" @value={{this.fieldService.currentField.minimum_selections}}
              class="form-control input-sm"/>
     </label>
     <label>
       Maximum Selections
-      <Input @type="text" id="field-maximum-selections" @value={{this.model.maximum_selections}}
+      <Input @type="text" id="field-maximum-selections" @value={{this.fieldService.currentField.maximum_selections}}
              class="form-control input-sm"/>
     </label>
   {{else}}
     <label class="control-label">
       Default Text (unselected)
-      <Input @type="text" id="field-default-text" placeholder="(Choose one)" @value={{this.model.default_text}}
+      <Input @type="text" id="field-default-text" placeholder="(Choose one)" @value={{this.fieldService.currentField.default_text}}
              class="form-control input-sm"/>
     </label>
   {{/if}}
@@ -6251,12 +6292,12 @@
     <h4>Extras</h4>
     <label>
       Help Text
-      <Input @type="text" id="field-help-text" placeholder="" @value={{this.model.help_text}}
+      <Input @type="text" id="field-help-text" placeholder="" @value={{this.fieldService.currentField.help_text}}
              class="form-control input-sm"/>
     </label>
     <label>
       CSS Class
-      <Input @type="text" id="field-css-class" @value={{this.model.css_class}} class="form-control input-sm"/>
+      <Input @type="text" id="field-css-class" @value={{this.fieldService.currentField.css_class}} class="form-control input-sm"/>
     </label>
   </div>
   
@@ -6264,8 +6305,8 @@
   
   */
   {
-    "id": "8bHA6zS3",
-    "block": "[[[3,\" templates/form/fields/choicefield.hbs \"],[1,\"\\n\\n\"],[10,\"h2\"],[12],[1,\"Edit '\"],[1,[30,0,[\"subtypeName\"]]],[1,\"' field\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[\"textfield-container \",[52,[30,0,[\"validator\",\"isDisplayNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[11,\"button\"],[24,0,\"btn btn-link wysiwyg-toggle\"],[4,[38,4],[\"click\",[30,0,[\"toggleDisplayNameWYSIWYG\"]]],null],[12],[1,\"\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      TEXT\\n\"]],[]],[[[1,\"      WYSIWYG\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Display Name\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      \"],[8,[39,6],null,[[\"@options\",\"@value\",\"@onChange\"],[[30,0,[\"editorOptions\"]],[30,0,[\"model\",\"display_name\"]],[30,0,[\"updateDisplayName\"]]]],null],[1,\"\\n\"]],[]],[[[1,\"      \"],[8,[39,7],[[24,1,\"field-display-name\"],[24,\"placeholder\",\"(Display Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"display_name\"]]]],null],[1,\"\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isDataNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Data Column Name\\n    \"],[8,[39,7],[[24,1,\"field-data-name\"],[24,\"placeholder\",\"(Data Column Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"data_name\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isSlugInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Slug\\n    \"],[8,[39,7],[[24,1,\"field-slug\"],[24,\"placeholder\",\"(field-name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"autoSlug\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,\"label\"],[12],[1,\"\\n  \"],[8,[39,7],[[24,1,\"field-required\"]],[[\"@type\",\"@checked\"],[\"checkbox\",[30,0,[\"model\",\"required\"]]]],null],[1,\"\\n  Required\\n\"],[13],[1,\"\\n\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isOptionListInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Option List\\n\"],[41,[30,0,[\"optionlistsReady\"]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm\"],[4,[38,4],[\"change\",[30,0,[\"optionListChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Option List`...\"],[13],[1,\"\\n\"],[42,[28,[37,11],[[28,[37,11],[[30,0,[\"optionlists\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,1,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,1,[\"id\"]],[30,0,[\"model\",\"option_list\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,1,[\"name\"]]],[13],[1,\"\\n\"]],[1]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],[[[1,\"      Loading\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[41,[30,0,[\"hasOptionGroups\"]],[[[1,\"  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Option Group\\n\"],[41,[30,0,[\"optiongroupsReady\"]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm\"],[4,[38,4],[\"change\",[30,0,[\"optionGroupChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Option Set`...\"],[13],[1,\"\\n\"],[42,[28,[37,11],[[28,[37,11],[[30,0,[\"optiongroups\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,2,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,2,[\"id\"]],[30,0,[\"model\",\"option_group\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,2,[\"name\"]]],[13],[1,\"\\n\"]],[2]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],[[[1,\"      Loading\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"]],[]],null],[10,\"label\"],[12],[1,\"\\n  Default Selected\\n\"],[41,[30,0,[\"optionlistsReady\"]],[[[41,[30,0,[\"supportsMultiValue\"]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm select2\"],[24,\"multiple\",\"multiple\"],[4,[38,4],[\"change\",[30,0,[\"defaultOptionChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Default Option`...\"],[13],[1,\"\\n\"],[42,[28,[37,11],[[28,[37,11],[[30,0,[\"modelOptions\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,3,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,3,[\"id\"]],[30,0,[\"model\",\"default_options\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,3,[\"name\"]]],[13],[1,\"\\n\"]],[3]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm\"],[4,[38,4],[\"change\",[30,0,[\"defaultOptionChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Default Option`...\"],[13],[1,\"\\n\"],[42,[28,[37,11],[[28,[37,11],[[30,0,[\"modelOptions\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,4,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,4,[\"id\"]],[30,0,[\"model\",\"default_options\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,4,[\"name\"]]],[13],[1,\"\\n\"]],[4]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]]]],[]],[[[1,\"    Loading\\n\"]],[]]],[13],[1,\"\\n\\n\"],[41,[30,0,[\"supportsMultiValue\"]],[[[1,\"  \"],[10,\"label\"],[12],[1,\"\\n    Minimum Selections\\n    \"],[8,[39,7],[[24,1,\"field-minimum-selections\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"minimum_selections\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    Maximum Selections\\n    \"],[8,[39,7],[[24,1,\"field-maximum-selections\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"maximum_selections\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"]],[]],[[[1,\"  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Default Text (unselected)\\n    \"],[8,[39,7],[[24,1,\"field-default-text\"],[24,\"placeholder\",\"(Choose one)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"default_text\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"]],[]]],[1,\"\\n\"],[10,0],[14,0,\"extras\"],[12],[1,\"\\n  \"],[10,\"h4\"],[12],[1,\"Extras\"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    Help Text\\n    \"],[8,[39,7],[[24,1,\"field-help-text\"],[24,\"placeholder\",\"\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"help_text\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    CSS Class\\n    \"],[8,[39,7],[[24,1,\"field-css-class\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"css_class\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\\n\"],[11,\"button\"],[24,0,\"btn btn-primary\"],[24,4,\"submit\"],[4,[38,4],[\"click\",[30,0,[\"doneEditingField\"]]],null],[12],[1,\"Done\"],[13],[1,\"\\n\"]],[\"optionlist\",\"optiongroup\",\"modelOption\",\"modelOption\"],false,[\"h2\",\"div\",\"if\",\"button\",\"on\",\"label\",\"tinymce-editor\",\"input\",\"select\",\"option\",\"each\",\"-track-array\",\"h4\"]]",
+    "id": "E4vstn8S",
+    "block": "[[[3,\" templates/form/fields/choicefield.hbs \"],[1,\"\\n\\n\"],[10,\"h2\"],[12],[1,\"Edit '\"],[1,[30,0,[\"subtypeName\"]]],[1,\"' field\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[\"textfield-container \",[52,[30,0,[\"validator\",\"isDisplayNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[11,\"button\"],[24,0,\"btn btn-link wysiwyg-toggle\"],[4,[38,4],[\"click\",[30,0,[\"toggleDisplayNameWYSIWYG\"]]],null],[12],[1,\"\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      TEXT\\n\"]],[]],[[[1,\"      WYSIWYG\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Display Name\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      \"],[8,[39,6],null,[[\"@options\",\"@value\",\"@onChange\"],[[30,0,[\"editorOptions\"]],[30,0,[\"fieldService\",\"currentField\",\"display_name\"]],[30,0,[\"updateDisplayName\"]]]],null],[1,\"\\n\"]],[]],[[[1,\"      \"],[8,[39,7],[[24,1,\"field-display-name\"],[24,\"placeholder\",\"(Display Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"fieldService\",\"currentField\",\"display_name\"]]]],null],[1,\"\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isDataNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Data Column Name\\n    \"],[8,[39,7],[[24,1,\"field-data-name\"],[24,\"placeholder\",\"(Data Column Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"fieldService\",\"currentField\",\"data_name\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isSlugInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Slug\\n    \"],[8,[39,7],[[24,1,\"field-slug\"],[24,\"placeholder\",\"(field-name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"autoSlug\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,\"label\"],[12],[1,\"\\n  \"],[8,[39,7],[[24,1,\"field-required\"]],[[\"@type\",\"@checked\"],[\"checkbox\",[30,0,[\"fieldService\",\"currentField\",\"required\"]]]],null],[1,\"\\n  Required\\n\"],[13],[1,\"\\n\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isOptionListInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Option List\\n\"],[41,[30,0,[\"optionlistsReady\"]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm\"],[4,[38,4],[\"change\",[30,0,[\"optionListChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Option List`...\"],[13],[1,\"\\n\"],[42,[28,[37,11],[[28,[37,11],[[30,0,[\"optionlists\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,1,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,1,[\"id\"]],[30,0,[\"fieldService\",\"currentField\",\"option_list\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,1,[\"name\"]]],[13],[1,\"\\n\"]],[1]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],[[[1,\"      Loading\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[41,[30,0,[\"hasOptionGroups\"]],[[[1,\"  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Option Group\\n\"],[41,[30,0,[\"optiongroupsReady\"]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm\"],[4,[38,4],[\"change\",[30,0,[\"optionGroupChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Option Set`...\"],[13],[1,\"\\n\"],[42,[28,[37,11],[[28,[37,11],[[30,0,[\"optiongroups\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,2,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,2,[\"id\"]],[30,0,[\"fieldService\",\"currentField\",\"option_group\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,2,[\"name\"]]],[13],[1,\"\\n\"]],[2]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],[[[1,\"      Loading\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"]],[]],null],[10,\"label\"],[12],[1,\"\\n  Default Selected\\n\"],[41,[30,0,[\"optionlistsReady\"]],[[[41,[30,0,[\"supportsMultiValue\"]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm select2\"],[24,\"multiple\",\"multiple\"],[4,[38,4],[\"change\",[30,0,[\"defaultOptionChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Default Option`...\"],[13],[1,\"\\n\"],[42,[28,[37,11],[[28,[37,11],[[30,0,[\"modelOptions\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,3,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,3,[\"id\"]],[30,0,[\"fieldService\",\"currentField\",\"default_options\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,3,[\"name\"]]],[13],[1,\"\\n\"]],[3]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],[[[1,\"      \"],[11,\"select\"],[24,0,\"form-control input-sm\"],[4,[38,4],[\"change\",[30,0,[\"defaultOptionChanged\"]]],null],[12],[1,\"\\n        \"],[10,\"option\"],[14,2,\"\"],[12],[1,\"Choose `Default Option`...\"],[13],[1,\"\\n\"],[42,[28,[37,11],[[28,[37,11],[[30,0,[\"modelOptions\"]]],null]],null],null,[[[1,\"          \"],[10,\"option\"],[15,2,[30,4,[\"id\"]]],[15,\"selected\",[52,[28,[30,0,[\"fieldService\",\"eq\"]],[[30,4,[\"id\"]],[30,0,[\"fieldService\",\"currentField\",\"default_options\",\"id\"]]],null],\"selected\",null]],[12],[1,[30,4,[\"name\"]]],[13],[1,\"\\n\"]],[4]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]]]],[]],[[[1,\"    Loading\\n\"]],[]]],[13],[1,\"\\n\\n\"],[41,[30,0,[\"supportsMultiValue\"]],[[[1,\"  \"],[10,\"label\"],[12],[1,\"\\n    Minimum Selections\\n    \"],[8,[39,7],[[24,1,\"field-minimum-selections\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"fieldService\",\"currentField\",\"minimum_selections\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    Maximum Selections\\n    \"],[8,[39,7],[[24,1,\"field-maximum-selections\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"fieldService\",\"currentField\",\"maximum_selections\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"]],[]],[[[1,\"  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Default Text (unselected)\\n    \"],[8,[39,7],[[24,1,\"field-default-text\"],[24,\"placeholder\",\"(Choose one)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"fieldService\",\"currentField\",\"default_text\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"]],[]]],[1,\"\\n\"],[10,0],[14,0,\"extras\"],[12],[1,\"\\n  \"],[10,\"h4\"],[12],[1,\"Extras\"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    Help Text\\n    \"],[8,[39,7],[[24,1,\"field-help-text\"],[24,\"placeholder\",\"\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"fieldService\",\"currentField\",\"help_text\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    CSS Class\\n    \"],[8,[39,7],[[24,1,\"field-css-class\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"fieldService\",\"currentField\",\"css_class\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\\n\"],[11,\"button\"],[24,0,\"btn btn-primary\"],[24,4,\"submit\"],[4,[38,4],[\"click\",[30,0,[\"doneEditingField\"]]],null],[12],[1,\"Done\"],[13],[1,\"\\n\"]],[\"optionlist\",\"optiongroup\",\"modelOption\",\"modelOption\"],false,[\"h2\",\"div\",\"if\",\"button\",\"on\",\"label\",\"tinymce-editor\",\"input\",\"select\",\"option\",\"each\",\"-track-array\",\"h4\"]]",
     "moduleName": "ember-formulaic/templates/components/form/fields/choicefield.hbs",
     "isStrictMode": false
   });
@@ -6375,7 +6416,7 @@
     <label class="control-label">
       Data Column Name
       <Input @type="text" id="field-data-name" class="form-control input-sm" placeholder="(Data Column Name)"
-             @value={{this.model.data_name}}/>
+             @value={{this.fieldService.currentField.data_name}}/>
     </label>
   </div>
   <div class="{{if this.validator.isSlugInvalid 'has-error'}}">
@@ -6387,15 +6428,15 @@
   </div>
   <label>
     Value
-    <Input @type="text" id="field-value" placeholder="" @value={{this.model.value}} class="form-control input-sm"/>
+    <Input @type="text" id="field-value" placeholder="" @value={{this.fieldService.currentField.value}} class="form-control input-sm"/>
   </label>
   
   <button class="btn btn-primary" type="submit" {{on "click" this.doneEditingField}}>Done</button>
   
   */
   {
-    "id": "uvFUaIU0",
-    "block": "[[[3,\" templates/form/fields/hiddenfield.hbs \"],[1,\"\\n\\n\"],[10,\"h2\"],[12],[1,\"Edit '\"],[1,[30,0,[\"subtypeName\"]]],[1,\"' field\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isDataNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Data Column Name\\n    \"],[8,[39,4],[[24,1,\"field-data-name\"],[24,0,\"form-control input-sm\"],[24,\"placeholder\",\"(Data Column Name)\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"data_name\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isSlugInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Slug\\n    \"],[8,[39,4],[[24,1,\"field-slug\"],[24,\"placeholder\",\"(field-name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"autoSlug\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,\"label\"],[12],[1,\"\\n  Value\\n  \"],[8,[39,4],[[24,1,\"field-value\"],[24,\"placeholder\",\"\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"value\"]]]],null],[1,\"\\n\"],[13],[1,\"\\n\\n\"],[11,\"button\"],[24,0,\"btn btn-primary\"],[24,4,\"submit\"],[4,[38,6],[\"click\",[30,0,[\"doneEditingField\"]]],null],[12],[1,\"Done\"],[13],[1,\"\\n\"]],[],false,[\"h2\",\"div\",\"if\",\"label\",\"input\",\"button\",\"on\"]]",
+    "id": "ZKwYo340",
+    "block": "[[[3,\" templates/form/fields/hiddenfield.hbs \"],[1,\"\\n\\n\"],[10,\"h2\"],[12],[1,\"Edit '\"],[1,[30,0,[\"subtypeName\"]]],[1,\"' field\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isDataNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Data Column Name\\n    \"],[8,[39,4],[[24,1,\"field-data-name\"],[24,0,\"form-control input-sm\"],[24,\"placeholder\",\"(Data Column Name)\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"fieldService\",\"currentField\",\"data_name\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isSlugInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Slug\\n    \"],[8,[39,4],[[24,1,\"field-slug\"],[24,\"placeholder\",\"(field-name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"autoSlug\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,\"label\"],[12],[1,\"\\n  Value\\n  \"],[8,[39,4],[[24,1,\"field-value\"],[24,\"placeholder\",\"\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"fieldService\",\"currentField\",\"value\"]]]],null],[1,\"\\n\"],[13],[1,\"\\n\\n\"],[11,\"button\"],[24,0,\"btn btn-primary\"],[24,4,\"submit\"],[4,[38,6],[\"click\",[30,0,[\"doneEditingField\"]]],null],[12],[1,\"Done\"],[13],[1,\"\\n\"]],[],false,[\"h2\",\"div\",\"if\",\"label\",\"input\",\"button\",\"on\"]]",
     "moduleName": "ember-formulaic/templates/components/form/fields/hiddenfield.hbs",
     "isStrictMode": false
   });
@@ -6461,9 +6502,9 @@
     <label class="control-label">
       Display Name
       {{#if this.isDisplayNameWYSIWYGEnabled}}
-        <TinymceEditor @options={{this.editorOptions}} @value={{this.model.display_name}} @onChange={{this.updateDisplayName}}  />
+        <TinymceEditor @options={{this.editorOptions}} @value={{this.fieldService.currentField.display_name}} @onChange={{this.updateDisplayName}}  />
       {{else}}
-        <Input @type="text" id="field-display-name" placeholder="(Display Name)" @value={{this.model.display_name}}
+        <Input @type="text" id="field-display-name" placeholder="(Display Name)" @value={{this.fieldService.currentField.display_name}}
                class="form-control input-sm"/>
       {{/if}}
     </label>
@@ -6471,7 +6512,7 @@
   <div class="{{if this.validator.isDataNameInvalid 'has-error'}}">
     <label class="control-label">
       Data Column Name
-      <Input @type="text" id="field-data-name" placeholder="(Data Column Name)" @value={{this.model.data_name}}
+      <Input @type="text" id="field-data-name" placeholder="(Data Column Name)" @value={{this.fieldService.currentField.data_name}}
              class="form-control input-sm"/>
     </label>
   </div>
@@ -6483,7 +6524,7 @@
     </label>
   </div>
   <label>
-    <Input @type="checkbox" id="field-required" @checked={{this.model.required}} />
+    <Input @type="checkbox" id="field-required" @checked={{this.fieldService.currentField.required}} />
     Required
   </label>
   
@@ -6491,12 +6532,12 @@
     <h4>Extras</h4>
     <label>
       Help Text
-      <Input @type="text" id="field-help-text" placeholder="" @value={{this.model.help_text}}
+      <Input @type="text" id="field-help-text" placeholder="" @value={{this.fieldService.currentField.help_text}}
              class="form-control input-sm"/>
     </label>
     <label>
       CSS Class
-      <Input @type="text" id="field-css-class" @value={{this.model.css_class}} class="form-control input-sm"/>
+      <Input @type="text" id="field-css-class" @value={{this.fieldService.currentField.css_class}} class="form-control input-sm"/>
     </label>
   </div>
   
@@ -6504,8 +6545,8 @@
   
   */
   {
-    "id": "TXyWRWYI",
-    "block": "[[[3,\" templates/form/fields/textfield.hbs \"],[1,\"\\n\\n\"],[10,\"h2\"],[12],[1,\"Edit '\"],[1,[30,0,[\"subtypeName\"]]],[1,\"' field\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[\"textfield-container \",[52,[30,0,[\"validator\",\"isDisplayNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[11,\"button\"],[24,0,\"btn btn-link wysiwyg-toggle\"],[4,[38,4],[\"click\",[30,0,[\"toggleDisplayNameWYSIWYG\"]]],null],[12],[1,\"\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      TEXT\\n\"]],[]],[[[1,\"      WYSIWYG\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Display Name\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      \"],[8,[39,6],null,[[\"@options\",\"@value\",\"@onChange\"],[[30,0,[\"editorOptions\"]],[30,0,[\"model\",\"display_name\"]],[30,0,[\"updateDisplayName\"]]]],null],[1,\"\\n\"]],[]],[[[1,\"      \"],[8,[39,7],[[24,1,\"field-display-name\"],[24,\"placeholder\",\"(Display Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"display_name\"]]]],null],[1,\"\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isDataNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Data Column Name\\n    \"],[8,[39,7],[[24,1,\"field-data-name\"],[24,\"placeholder\",\"(Data Column Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"data_name\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isSlugInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Slug\\n    \"],[8,[39,7],[[24,1,\"field-slug\"],[24,\"placeholder\",\"(field-name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"autoSlug\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,\"label\"],[12],[1,\"\\n  \"],[8,[39,7],[[24,1,\"field-required\"]],[[\"@type\",\"@checked\"],[\"checkbox\",[30,0,[\"model\",\"required\"]]]],null],[1,\"\\n  Required\\n\"],[13],[1,\"\\n\\n\"],[10,0],[14,0,\"extras\"],[12],[1,\"\\n  \"],[10,\"h4\"],[12],[1,\"Extras\"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    Help Text\\n    \"],[8,[39,7],[[24,1,\"field-help-text\"],[24,\"placeholder\",\"\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"help_text\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    CSS Class\\n    \"],[8,[39,7],[[24,1,\"field-css-class\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"model\",\"css_class\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\\n\"],[11,\"button\"],[24,0,\"btn btn-primary\"],[24,4,\"submit\"],[4,[38,4],[\"click\",[30,0,[\"doneEditingField\"]]],null],[12],[1,\"Done\"],[13],[1,\"\\n\"]],[],false,[\"h2\",\"div\",\"if\",\"button\",\"on\",\"label\",\"tinymce-editor\",\"input\",\"h4\"]]",
+    "id": "FYC6+Tmu",
+    "block": "[[[3,\" templates/form/fields/textfield.hbs \"],[1,\"\\n\\n\"],[10,\"h2\"],[12],[1,\"Edit '\"],[1,[30,0,[\"subtypeName\"]]],[1,\"' field\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[\"textfield-container \",[52,[30,0,[\"validator\",\"isDisplayNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[11,\"button\"],[24,0,\"btn btn-link wysiwyg-toggle\"],[4,[38,4],[\"click\",[30,0,[\"toggleDisplayNameWYSIWYG\"]]],null],[12],[1,\"\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      TEXT\\n\"]],[]],[[[1,\"      WYSIWYG\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Display Name\\n\"],[41,[30,0,[\"isDisplayNameWYSIWYGEnabled\"]],[[[1,\"      \"],[8,[39,6],null,[[\"@options\",\"@value\",\"@onChange\"],[[30,0,[\"editorOptions\"]],[30,0,[\"fieldService\",\"currentField\",\"display_name\"]],[30,0,[\"updateDisplayName\"]]]],null],[1,\"\\n\"]],[]],[[[1,\"      \"],[8,[39,7],[[24,1,\"field-display-name\"],[24,\"placeholder\",\"(Display Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"fieldService\",\"currentField\",\"display_name\"]]]],null],[1,\"\\n\"]],[]]],[1,\"  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isDataNameInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Data Column Name\\n    \"],[8,[39,7],[[24,1,\"field-data-name\"],[24,\"placeholder\",\"(Data Column Name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"fieldService\",\"currentField\",\"data_name\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,0],[15,0,[29,[[52,[30,0,[\"validator\",\"isSlugInvalid\"]],\"has-error\"]]]],[12],[1,\"\\n  \"],[10,\"label\"],[14,0,\"control-label\"],[12],[1,\"\\n    Slug\\n    \"],[8,[39,7],[[24,1,\"field-slug\"],[24,\"placeholder\",\"(field-name)\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"autoSlug\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"],[10,\"label\"],[12],[1,\"\\n  \"],[8,[39,7],[[24,1,\"field-required\"]],[[\"@type\",\"@checked\"],[\"checkbox\",[30,0,[\"fieldService\",\"currentField\",\"required\"]]]],null],[1,\"\\n  Required\\n\"],[13],[1,\"\\n\\n\"],[10,0],[14,0,\"extras\"],[12],[1,\"\\n  \"],[10,\"h4\"],[12],[1,\"Extras\"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    Help Text\\n    \"],[8,[39,7],[[24,1,\"field-help-text\"],[24,\"placeholder\",\"\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"fieldService\",\"currentField\",\"help_text\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n  \"],[10,\"label\"],[12],[1,\"\\n    CSS Class\\n    \"],[8,[39,7],[[24,1,\"field-css-class\"],[24,0,\"form-control input-sm\"]],[[\"@type\",\"@value\"],[\"text\",[30,0,[\"fieldService\",\"currentField\",\"css_class\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\\n\"],[11,\"button\"],[24,0,\"btn btn-primary\"],[24,4,\"submit\"],[4,[38,4],[\"click\",[30,0,[\"doneEditingField\"]]],null],[12],[1,\"Done\"],[13],[1,\"\\n\"]],[],false,[\"h2\",\"div\",\"if\",\"button\",\"on\",\"label\",\"tinymce-editor\",\"input\",\"h4\"]]",
     "moduleName": "ember-formulaic/templates/components/form/fields/textfield.hbs",
     "isStrictMode": false
   });
@@ -7126,20 +7167,21 @@
   0; //eaimeta@70e063a35619d71f0,"@ember/template-factory"eaimeta@70e063a35619d71f
   var _default = _exports.default = (0, _templateFactory.createTemplateFactory)(
   /*
-    {{#if @actualModel}}
-    {{#if @actualModel.model_class}}
-      {{#let (concat "form/fields/" @actualModel.model_class) as |componentName|}}
+    
+  {{#if this.fieldService.currentField}}
+    {{#if this.fieldService.currentField.model_class}}
+      {{#let (concat "form/fields/" this.fieldService.currentField.model_class) as |componentName|}}
         {{#if (component componentName)}}
-          {{component componentName model=@actualModel}}
+          {{component componentName model=this.fieldService.currentField}}
         {{else}}
           <div>Template for {{componentName}} not found.</div>
           <div>Check if the template exists and is correctly named.</div>
         {{/if}}
       {{/let}}
-    {{else if @actualModel.field.model_class}}
-      {{#let (concat "form/fields/" @actualModel.field.model_class) as |componentName|}}
+    {{else if this.fieldService.currentField.field.model_class}}
+      {{#let (concat "form/fields/" this.fieldService.currentField.field.model_class) as |componentName|}}
         {{#if (component componentName)}}
-          {{component componentName model=@actualModel}}
+          {{component componentName model=this.fieldService.currentField}}
         {{else}}
           <div>Template for {{componentName}} not found.</div>
           <div>Check if the template exists and is correctly named.</div>
@@ -7154,8 +7196,8 @@
   
   */
   {
-    "id": "cEIpRUKQ",
-    "block": "[[[41,[30,1],[[[41,[30,1,[\"model_class\"]],[[[44,[[28,[37,2],[\"form/fields/\",[30,1,[\"model_class\"]]],null]],[[[41,[50,[30,2],0,null,null],[[[1,\"        \"],[46,[30,2],null,[[\"model\"],[[30,1]]],null],[1,\"\\n\"]],[]],[[[1,\"        \"],[10,0],[12],[1,\"Template for \"],[1,[30,2]],[1,\" not found.\"],[13],[1,\"\\n        \"],[10,0],[12],[1,\"Check if the template exists and is correctly named.\"],[13],[1,\"\\n\"]],[]]]],[2]]]],[]],[[[41,[30,1,[\"field\",\"model_class\"]],[[[44,[[28,[37,2],[\"form/fields/\",[30,1,[\"field\",\"model_class\"]]],null]],[[[41,[50,[30,3],0,null,null],[[[1,\"        \"],[46,[30,3],null,[[\"model\"],[[30,1]]],null],[1,\"\\n\"]],[]],[[[1,\"        \"],[10,0],[12],[1,\"Template for \"],[1,[30,3]],[1,\" not found.\"],[13],[1,\"\\n        \"],[10,0],[12],[1,\"Check if the template exists and is correctly named.\"],[13],[1,\"\\n\"]],[]]]],[3]]]],[]],[[[1,\"    \"],[10,0],[12],[1,\"No model_class found.\"],[13],[1,\"\\n  \"]],[]]]],[]]]],[]],[[[1,\"  \"],[46,\"form/fields/index\",null,null,null],[1,\"\\n\"]],[]]]],[\"@actualModel\",\"componentName\",\"componentName\"],false,[\"if\",\"let\",\"concat\",\"component\",\"div\"]]",
+    "id": "ElViOFQW",
+    "block": "[[[1,\"\\n\"],[41,[30,0,[\"fieldService\",\"currentField\"]],[[[41,[30,0,[\"fieldService\",\"currentField\",\"model_class\"]],[[[44,[[28,[37,2],[\"form/fields/\",[30,0,[\"fieldService\",\"currentField\",\"model_class\"]]],null]],[[[41,[50,[30,1],0,null,null],[[[1,\"        \"],[46,[30,1],null,[[\"model\"],[[30,0,[\"fieldService\",\"currentField\"]]]],null],[1,\"\\n\"]],[]],[[[1,\"        \"],[10,0],[12],[1,\"Template for \"],[1,[30,1]],[1,\" not found.\"],[13],[1,\"\\n        \"],[10,0],[12],[1,\"Check if the template exists and is correctly named.\"],[13],[1,\"\\n\"]],[]]]],[1]]]],[]],[[[41,[30,0,[\"fieldService\",\"currentField\",\"field\",\"model_class\"]],[[[44,[[28,[37,2],[\"form/fields/\",[30,0,[\"fieldService\",\"currentField\",\"field\",\"model_class\"]]],null]],[[[41,[50,[30,2],0,null,null],[[[1,\"        \"],[46,[30,2],null,[[\"model\"],[[30,0,[\"fieldService\",\"currentField\"]]]],null],[1,\"\\n\"]],[]],[[[1,\"        \"],[10,0],[12],[1,\"Template for \"],[1,[30,2]],[1,\" not found.\"],[13],[1,\"\\n        \"],[10,0],[12],[1,\"Check if the template exists and is correctly named.\"],[13],[1,\"\\n\"]],[]]]],[2]]]],[]],[[[1,\"    \"],[10,0],[12],[1,\"No model_class found.\"],[13],[1,\"\\n  \"]],[]]]],[]]]],[]],[[[1,\"  \"],[46,\"form/fields/index\",null,null,null],[1,\"\\n\"]],[]]]],[\"componentName\",\"componentName\"],false,[\"if\",\"let\",\"concat\",\"component\",\"div\"]]",
     "moduleName": "ember-formulaic/templates/components/sidebar.hbs",
     "isStrictMode": false
   });
@@ -7173,10 +7215,10 @@
     <!--templates/components/sortable-field.hbs -->
   
   <div
-    class="field-preview single-line-text form-group col-xs-12 item {{if this.isEditing "editing"}} {{if this.completeField.validator.isInvalid "warning"}}"
-    {{on "click" this.handleEditClick}}
-  >
-    <input type="hidden" value={{this.field.position}} class="position" />
+    class="field-preview single-line-text form-group col-xs-12 item ember-view {{if this.isEditing "editing"}} {{if
+      this.completeField.validator.isInvalid "warning"}}"
+    {{on "click" this.handleEditClick}}>
+    <input type="hidden" value={{this.field.position}} class="position"/>
     <ul class="controls list-inline">
       <li>
         <button class="btn btn-xs btn-link" {{on "click" (fn this.clickedDeleteField this.field this.completeField)}}>
@@ -7222,8 +7264,8 @@
   
   */
   {
-    "id": "QR+f5Iq1",
-    "block": "[[[3,\"templates/components/sortable-field.hbs \"],[1,\"\\n\\n\"],[11,0],[16,0,[29,[\"field-preview single-line-text form-group col-xs-12 item \",[52,[30,0,[\"isEditing\"]],\"editing\"],\" \",[52,[30,0,[\"completeField\",\"validator\",\"isInvalid\"]],\"warning\"]]]],[4,[38,2],[\"click\",[30,0,[\"handleEditClick\"]]],null],[12],[1,\"\\n  \"],[10,\"input\"],[15,2,[30,0,[\"field\",\"position\"]]],[14,0,\"position\"],[14,4,\"hidden\"],[12],[13],[1,\"\\n  \"],[10,\"ul\"],[14,0,\"controls list-inline\"],[12],[1,\"\\n    \"],[10,\"li\"],[12],[1,\"\\n      \"],[11,\"button\"],[24,0,\"btn btn-xs btn-link\"],[4,[38,2],[\"click\",[28,[37,7],[[30,0,[\"clickedDeleteField\"]],[30,0,[\"field\"]],[30,0,[\"completeField\"]]],null]],null],[12],[1,\"\\n        \"],[10,1],[14,0,\"glyphicon glyphicon-trash\"],[12],[13],[1,\"\\n      \"],[13],[1,\"\\n    \"],[13],[1,\"\\n  \"],[13],[1,\"\\n\\n\"],[41,[30,0,[\"completeField\",\"data_name\"]],[[[1,\"    \"],[10,1],[14,0,\"data-name\"],[12],[1,\"(\"],[1,[30,0,[\"completeField\",\"data_name\"]]],[1,\")\"],[13],[1,\"\\n\"]],[]],null],[1,\"\\n  \"],[10,0],[14,0,\"col-xs-6\"],[12],[1,\"\\n\"],[41,[30,0,[\"showDisplayName\"]],[[[1,\"      \"],[10,\"label\"],[12],[1,\"\\n\"],[41,[30,0,[\"completeField\",\"display_name\"]],[[[1,\"          \"],[2,[30,0,[\"completeField\",\"display_name\"]]],[1,\"\\n\"]],[]],[[[1,\"          \"],[10,1],[14,0,\"empty\"],[12],[1,\"(Field Name)\"],[13],[1,\"\\n\"]],[]]],[41,[30,0,[\"completeField\",\"required\"]],[[[1,\"          \"],[10,1],[14,0,\"text-danger\"],[12],[1,\"*\"],[13],[1,\"\\n\"]],[]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],null],[1,\"\\n\"],[41,[30,0,[\"isHiddenField\"]],[[[1,\"      \"],[10,\"label\"],[12],[1,\"\\n\"],[41,[30,0,[\"completeField\",\"data_name\"]],[[[1,\"          \"],[2,[30,0,[\"completeField\",\"data_name\"]]],[1,\"\\n\"]],[]],[[[1,\"          \"],[10,1],[14,0,\"empty\"],[12],[1,\"(Field Name)\"],[13],[1,\"\\n\"]],[]]],[41,[30,0,[\"completeField\",\"required\"]],[[[1,\"          \"],[10,1],[14,0,\"text-danger\"],[12],[1,\"*\"],[13],[1,\"\\n\"]],[]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],null],[1,\"\\n    \"],[46,[30,0,[\"previewComponent\"]],null,[[\"completeField\"],[[30,0,[\"completeField\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"]],[],false,[\"div\",\"if\",\"on\",\"input\",\"ul\",\"li\",\"button\",\"fn\",\"span\",\"label\",\"component\"]]",
+    "id": "d2EgFl82",
+    "block": "[[[3,\"templates/components/sortable-field.hbs \"],[1,\"\\n\\n\"],[11,0],[16,0,[29,[\"field-preview single-line-text form-group col-xs-12 item ember-view \",[52,[30,0,[\"isEditing\"]],\"editing\"],\" \",[52,[30,0,[\"completeField\",\"validator\",\"isInvalid\"]],\"warning\"]]]],[4,[38,2],[\"click\",[30,0,[\"handleEditClick\"]]],null],[12],[1,\"\\n  \"],[10,\"input\"],[15,2,[30,0,[\"field\",\"position\"]]],[14,0,\"position\"],[14,4,\"hidden\"],[12],[13],[1,\"\\n  \"],[10,\"ul\"],[14,0,\"controls list-inline\"],[12],[1,\"\\n    \"],[10,\"li\"],[12],[1,\"\\n      \"],[11,\"button\"],[24,0,\"btn btn-xs btn-link\"],[4,[38,2],[\"click\",[28,[37,7],[[30,0,[\"clickedDeleteField\"]],[30,0,[\"field\"]],[30,0,[\"completeField\"]]],null]],null],[12],[1,\"\\n        \"],[10,1],[14,0,\"glyphicon glyphicon-trash\"],[12],[13],[1,\"\\n      \"],[13],[1,\"\\n    \"],[13],[1,\"\\n  \"],[13],[1,\"\\n\\n\"],[41,[30,0,[\"completeField\",\"data_name\"]],[[[1,\"    \"],[10,1],[14,0,\"data-name\"],[12],[1,\"(\"],[1,[30,0,[\"completeField\",\"data_name\"]]],[1,\")\"],[13],[1,\"\\n\"]],[]],null],[1,\"\\n  \"],[10,0],[14,0,\"col-xs-6\"],[12],[1,\"\\n\"],[41,[30,0,[\"showDisplayName\"]],[[[1,\"      \"],[10,\"label\"],[12],[1,\"\\n\"],[41,[30,0,[\"completeField\",\"display_name\"]],[[[1,\"          \"],[2,[30,0,[\"completeField\",\"display_name\"]]],[1,\"\\n\"]],[]],[[[1,\"          \"],[10,1],[14,0,\"empty\"],[12],[1,\"(Field Name)\"],[13],[1,\"\\n\"]],[]]],[41,[30,0,[\"completeField\",\"required\"]],[[[1,\"          \"],[10,1],[14,0,\"text-danger\"],[12],[1,\"*\"],[13],[1,\"\\n\"]],[]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],null],[1,\"\\n\"],[41,[30,0,[\"isHiddenField\"]],[[[1,\"      \"],[10,\"label\"],[12],[1,\"\\n\"],[41,[30,0,[\"completeField\",\"data_name\"]],[[[1,\"          \"],[2,[30,0,[\"completeField\",\"data_name\"]]],[1,\"\\n\"]],[]],[[[1,\"          \"],[10,1],[14,0,\"empty\"],[12],[1,\"(Field Name)\"],[13],[1,\"\\n\"]],[]]],[41,[30,0,[\"completeField\",\"required\"]],[[[1,\"          \"],[10,1],[14,0,\"text-danger\"],[12],[1,\"*\"],[13],[1,\"\\n\"]],[]],null],[1,\"      \"],[13],[1,\"\\n\"]],[]],null],[1,\"\\n    \"],[46,[30,0,[\"previewComponent\"]],null,[[\"completeField\"],[[30,0,[\"completeField\"]]]],null],[1,\"\\n  \"],[13],[1,\"\\n\"],[13],[1,\"\\n\"]],[],false,[\"div\",\"if\",\"on\",\"input\",\"ul\",\"li\",\"button\",\"fn\",\"span\",\"label\",\"component\"]]",
     "moduleName": "ember-formulaic/templates/components/sortable-field.hbs",
     "isStrictMode": false
   });
@@ -7241,8 +7283,13 @@
     <!--templates/components/sortable-fields.hbs-->
   
   <div class="field-sortable">
-    {{#each @items as |field|}}
-      {{#if field}}
+    {{#each this.formFields as |field index|}}
+      <div
+        draggable="true"
+        ondragstart={{fn this.dragStartField index}}
+        ondragover={{this.dragOverField}}
+        ondrop={{fn this.dragDropField index}}
+      >
         <SortableField
           @field={{field}}
           @currentController={{@targetController}}
@@ -7250,21 +7297,21 @@
           @onEditClick={{@editField}}
           @onDeleteClick={{@deleteField}}
         />
-      {{else}}
-        <div class="row">
-          <div class="col-xs-12 no-records">
-            <h4>This form doesn't have any fields</h4>
-            <p>Click on the options in the 'Add Fields' panel to the right to add one</p>
-          </div>
+      </div>
+    {{else}}
+      <div class="row">
+        <div class="col-xs-12 no-records">
+          <h4>This form doesn't have any fields</h4>
+          <p>Click on the options in the 'Add Fields' panel to the right to add one</p>
         </div>
-      {{/if}}
+      </div>
     {{/each}}
   </div>
   
   */
   {
-    "id": "wM8U6MZZ",
-    "block": "[[[3,\"templates/components/sortable-fields.hbs\"],[1,\"\\n\\n\"],[10,0],[14,0,\"field-sortable\"],[12],[1,\"\\n\"],[42,[28,[37,2],[[28,[37,2],[[30,1]],null]],null],null,[[[41,[30,2],[[[1,\"      \"],[8,[39,4],null,[[\"@field\",\"@currentController\",\"@currentField\",\"@onEditClick\",\"@onDeleteClick\"],[[30,2],[30,3],[30,4],[30,5],[30,6]]],null],[1,\"\\n\"]],[]],[[[1,\"      \"],[10,0],[14,0,\"row\"],[12],[1,\"\\n        \"],[10,0],[14,0,\"col-xs-12 no-records\"],[12],[1,\"\\n          \"],[10,\"h4\"],[12],[1,\"This form doesn't have any fields\"],[13],[1,\"\\n          \"],[10,2],[12],[1,\"Click on the options in the 'Add Fields' panel to the right to add one\"],[13],[1,\"\\n        \"],[13],[1,\"\\n      \"],[13],[1,\"\\n\"]],[]]]],[2]],null],[13],[1,\"\\n\"]],[\"@items\",\"field\",\"@targetController\",\"@currentField\",\"@editField\",\"@deleteField\"],false,[\"div\",\"each\",\"-track-array\",\"if\",\"sortable-field\",\"h4\",\"p\"]]",
+    "id": "kHZ5ZCAA",
+    "block": "[[[3,\"templates/components/sortable-fields.hbs\"],[1,\"\\n\\n\"],[10,0],[14,0,\"field-sortable\"],[12],[1,\"\\n\"],[42,[28,[37,2],[[28,[37,2],[[30,0,[\"formFields\"]]],null]],null],null,[[[1,\"    \"],[10,0],[14,\"draggable\",\"true\"],[15,\"ondragstart\",[28,[37,3],[[30,0,[\"dragStartField\"]],[30,2]],null]],[15,\"ondragover\",[30,0,[\"dragOverField\"]]],[15,\"ondrop\",[28,[37,3],[[30,0,[\"dragDropField\"]],[30,2]],null]],[12],[1,\"\\n      \"],[8,[39,4],null,[[\"@field\",\"@currentController\",\"@currentField\",\"@onEditClick\",\"@onDeleteClick\"],[[30,1],[30,3],[30,4],[30,5],[30,6]]],null],[1,\"\\n    \"],[13],[1,\"\\n\"]],[1,2]],[[[1,\"    \"],[10,0],[14,0,\"row\"],[12],[1,\"\\n      \"],[10,0],[14,0,\"col-xs-12 no-records\"],[12],[1,\"\\n        \"],[10,\"h4\"],[12],[1,\"This form doesn't have any fields\"],[13],[1,\"\\n        \"],[10,2],[12],[1,\"Click on the options in the 'Add Fields' panel to the right to add one\"],[13],[1,\"\\n      \"],[13],[1,\"\\n    \"],[13],[1,\"\\n\"]],[]]],[13],[1,\"\\n\"]],[\"field\",\"index\",\"@targetController\",\"@currentField\",\"@editField\",\"@deleteField\"],false,[\"div\",\"each\",\"-track-array\",\"fn\",\"sortable-field\",\"h4\",\"p\"]]",
     "moduleName": "ember-formulaic/templates/components/sortable-fields.hbs",
     "isStrictMode": false
   });
@@ -9188,7 +9235,7 @@ catch(err) {
 
 ;
           if (!runningTests) {
-            require("ember-formulaic/app")["default"].create({"API_HOST":"","API_NAMESPACE":"formulaic/api","LOG_RESOLVER":true,"LOG_ACTIVE_GENERATION":true,"LOG_TRANSITIONS":true,"LOG_TRANSITIONS_INTERNAL":true,"LOG_VIEW_LOOKUPS":true,"name":"ember-formulaic","version":"0.0.0+2292cb8b"});
+            require("ember-formulaic/app")["default"].create({"API_HOST":"","API_NAMESPACE":"formulaic/api","LOG_RESOLVER":true,"LOG_ACTIVE_GENERATION":true,"LOG_TRANSITIONS":true,"LOG_TRANSITIONS_INTERNAL":true,"LOG_VIEW_LOOKUPS":true,"name":"ember-formulaic","version":"0.0.0+36bcd147"});
           }
         
 //# sourceMappingURL=ember-formulaic.map

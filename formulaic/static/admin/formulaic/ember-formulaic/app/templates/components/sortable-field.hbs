@@ -1,10 +1,10 @@
 <!--templates/components/sortable-field.hbs -->
 
 <div
-  class="field-preview single-line-text form-group col-xs-12 item {{if this.isEditing "editing"}} {{if this.completeField.validator.isInvalid "warning"}}"
-  {{on "click" this.handleEditClick}}
->
-  <input type="hidden" value={{this.field.position}} class="position" />
+  class="field-preview single-line-text form-group col-xs-12 item ember-view {{if this.isEditing "editing"}} {{if
+    this.completeField.validator.isInvalid "warning"}}"
+  {{on "click" this.handleEditClick}}>
+  <input type="hidden" value={{this.field.position}} class="position"/>
   <ul class="controls list-inline">
     <li>
       <button class="btn btn-xs btn-link" {{on "click" (fn this.clickedDeleteField this.field this.completeField)}}>

@@ -8,16 +8,20 @@ A short introduction of this app could easily go here.
 You will need the following things properly installed on your computer.
 
 - [Git](https://git-scm.com/)
-- [Node.js](https://nodejs.org/) (with npm)
+- [Node.js](https://nodejs.org/) (with nvm)
 - [Ember CLI](https://cli.emberjs.com/release/)
 - [Google Chrome](https://google.com/chrome/)
 
 ## Installation
+Install nvm
+- `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash`
 
+(Install node v20 using nvm)
+- `nvm install 20`
 - `git clone <repository-url>` this repository
-- `cd ember-formulaic`
-- `ember g ember-cli-sass`
+- `cd django-formulaic/formulaic/static/admin/formulaic/ember-formulaic`
 - `npm install`
+- `ember g ember-cli-sass`
 
 ## Running / Development
 

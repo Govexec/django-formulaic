@@ -9,7 +9,6 @@ import slug from '../../../utils/slug';
 export default class BaseFieldComponent extends Component {
   @service('field-service') fieldService;
 
-  @tracked model = this.args.model;
   @tracked isDisplayNameWYSIWYGEnabled = false;
 
   editorOptions = {
@@ -27,43 +26,43 @@ export default class BaseFieldComponent extends Component {
   }
 
   setupModelObserver() {
-    if (this.model) {
+    if (this.fieldService.currentField) {
       this.isDisplayNameWYSIWYGEnabled = this.displayNameHasHtml;
     }
   }
 
   get displayNameHasHtml() {
     return (
-      this.model.display_name &&
-      this.model.display_name.match(/<([A-Z][A-Z0-9]*)\b[^>]*>/i)
+      this.fieldService.currentField.display_name &&
+      this.fieldService.currentField.display_name.match(/<([A-Z][A-Z0-9]*)\b[^>]*>/i)
     );
   }
 
   get subtypeName() {
-    return this.model.subtype.replace('_', ' ');
+    return this.fieldService.currentField.subtype.replace('_', ' ');
   }
 
   get autoSlug() {
 
-    if(this.model.model_class === this.fieldService.fieldTypes().HIDDENFIELD)
+    if(this.fieldService.currentField.model_class === this.fieldService.fieldTypes().HIDDENFIELD)
     {
-      this.model.display_name = this.model.data_name;
+      this.fieldService.currentField.display_name = this.fieldService.currentField.data_name;
     }
 
-    if (this.model.slug)
+    if (this.fieldService.currentField.slug)
     {
-      return this.model.slug;
+      return this.fieldService.currentField.slug;
     }
-    return slug.generateSlug(this.model.data_name);
+    return slug.generateSlug(this.fieldService.currentField.data_name);
   }
 
   set autoSlug(value) {
-    this.model.slug = value;
+    this.fieldService.currentField.slug = value;
     return value;
   }
 
   get validator() {
-    return this.fieldService.validatorFor(this.model);
+    return this.fieldService.validatorFor(this.fieldService.currentField);
   }
 
   @action
@@ -73,7 +72,7 @@ export default class BaseFieldComponent extends Component {
 
   @action
   updateDisplayName(newValue) {
-    this.model.display_name = newValue;
+    this.fieldService.currentField.display_name = newValue;
   }
 
   @action

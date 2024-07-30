@@ -1,8 +1,13 @@
 <!--templates/components/sortable-fields.hbs-->
 
 <div class="field-sortable">
-  {{#each @items as |field|}}
-    {{#if field}}
+  {{#each this.formFields as |field index|}}
+    <div
+      draggable="true"
+      ondragstart={{fn this.dragStartField index}}
+      ondragover={{this.dragOverField}}
+      ondrop={{fn this.dragDropField index}}
+    >
       <SortableField
         @field={{field}}
         @currentController={{@targetController}}
@@ -10,13 +15,13 @@
         @onEditClick={{@editField}}
         @onDeleteClick={{@deleteField}}
       />
-    {{else}}
-      <div class="row">
-        <div class="col-xs-12 no-records">
-          <h4>This form doesn't have any fields</h4>
-          <p>Click on the options in the 'Add Fields' panel to the right to add one</p>
-        </div>
+    </div>
+  {{else}}
+    <div class="row">
+      <div class="col-xs-12 no-records">
+        <h4>This form doesn't have any fields</h4>
+        <p>Click on the options in the 'Add Fields' panel to the right to add one</p>
       </div>
-    {{/if}}
+    </div>
   {{/each}}
 </div>

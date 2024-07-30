@@ -12,9 +12,9 @@
   <label class="control-label">
     Display Name
     {{#if this.isDisplayNameWYSIWYGEnabled}}
-      <TinymceEditor @options={{this.editorOptions}} @value={{this.model.display_name}} @onChange={{this.updateDisplayName}} />
+      <TinymceEditor @options={{this.editorOptions}} @value={{this.fieldService.currentField.display_name}} @onChange={{this.updateDisplayName}} />
     {{else}}
-      <Input @type="text" id="field-display-name" placeholder="(Display Name)" @value={{this.model.display_name}}
+      <Input @type="text" id="field-display-name" placeholder="(Display Name)" @value={{this.fieldService.currentField.display_name}}
              class="form-control input-sm"/>
     {{/if}}
   </label>
@@ -22,7 +22,7 @@
 <div class="{{if this.validator.isDataNameInvalid 'has-error'}}">
   <label class="control-label">
     Data Column Name
-    <Input @type="text" id="field-data-name" placeholder="(Data Column Name)" @value={{this.model.data_name}}
+    <Input @type="text" id="field-data-name" placeholder="(Data Column Name)" @value={{this.fieldService.currentField.data_name}}
            class="form-control input-sm"/>
   </label>
 </div>
@@ -34,7 +34,7 @@
   </label>
 </div>
 <label>
-  <Input @type="checkbox" id="field-required" @checked={{this.model.required}} />
+  <Input @type="checkbox" id="field-required" @checked={{this.fieldService.currentField.required}} />
   Required
 </label>
 
@@ -45,7 +45,7 @@
       <select {{on "change" this.optionListChanged}} class="form-control input-sm">
         <option value="">Choose `Option List`...</option>
         {{#each this.optionlists as |optionlist|}}
-          <option value={{optionlist.id}} selected={{if (this.fieldService.eq optionlist.id this.model.option_list.id)
+          <option value={{optionlist.id}} selected={{if (this.fieldService.eq optionlist.id this.fieldService.currentField.option_list.id)
                                                         "selected"
                                                         null}}>{{optionlist.name}}</option>
         {{/each}}
@@ -63,7 +63,7 @@
         <option value="">Choose `Option Set`...</option>
         {{#each this.optiongroups as |optiongroup|}}
           <option value={{optiongroup.id}} selected={{if
-            (this.fieldService.eq optiongroup.id this.model.option_group.id)
+            (this.fieldService.eq optiongroup.id this.fieldService.currentField.option_group.id)
             "selected"
             null}}>{{optiongroup.name}}</option>
         {{/each}}
@@ -81,7 +81,7 @@
         <option value="">Choose `Default Option`...</option>
         {{#each this.modelOptions as |modelOption|}}
           <option value={{modelOption.id}} selected={{if
-            (this.fieldService.eq modelOption.id this.model.default_options.id)
+            (this.fieldService.eq modelOption.id this.fieldService.currentField.default_options.id)
             "selected"
             null}}>{{modelOption.name}}</option>
         {{/each}}
@@ -91,7 +91,7 @@
         <option value="">Choose `Default Option`...</option>
         {{#each this.modelOptions as |modelOption|}}
           <option value={{modelOption.id}} selected={{if
-            (this.fieldService.eq modelOption.id this.model.default_options.id)
+            (this.fieldService.eq modelOption.id this.fieldService.currentField.default_options.id)
             "selected"
             null}}>{{modelOption.name}}</option>
         {{/each}}
@@ -105,18 +105,18 @@
 {{#if this.supportsMultiValue}}
   <label>
     Minimum Selections
-    <Input @type="text" id="field-minimum-selections" @value={{this.model.minimum_selections}}
+    <Input @type="text" id="field-minimum-selections" @value={{this.fieldService.currentField.minimum_selections}}
            class="form-control input-sm"/>
   </label>
   <label>
     Maximum Selections
-    <Input @type="text" id="field-maximum-selections" @value={{this.model.maximum_selections}}
+    <Input @type="text" id="field-maximum-selections" @value={{this.fieldService.currentField.maximum_selections}}
            class="form-control input-sm"/>
   </label>
 {{else}}
   <label class="control-label">
     Default Text (unselected)
-    <Input @type="text" id="field-default-text" placeholder="(Choose one)" @value={{this.model.default_text}}
+    <Input @type="text" id="field-default-text" placeholder="(Choose one)" @value={{this.fieldService.currentField.default_text}}
            class="form-control input-sm"/>
   </label>
 {{/if}}
@@ -125,12 +125,12 @@
   <h4>Extras</h4>
   <label>
     Help Text
-    <Input @type="text" id="field-help-text" placeholder="" @value={{this.model.help_text}}
+    <Input @type="text" id="field-help-text" placeholder="" @value={{this.fieldService.currentField.help_text}}
            class="form-control input-sm"/>
   </label>
   <label>
     CSS Class
-    <Input @type="text" id="field-css-class" @value={{this.model.css_class}} class="form-control input-sm"/>
+    <Input @type="text" id="field-css-class" @value={{this.fieldService.currentField.css_class}} class="form-control input-sm"/>
   </label>
 </div>
 
