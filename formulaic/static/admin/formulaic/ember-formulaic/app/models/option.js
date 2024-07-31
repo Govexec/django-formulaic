@@ -1,8 +1,9 @@
-import DS from 'ember-data';
+import Model, { attr, belongsTo } from '@ember-data/model';
 
-export default DS.Model.extend({
-    name: DS.attr('string'),
-    value: DS.attr('string'),
-    position: DS.attr('number'),
-    list: DS.belongsTo('optionlist')
-});
+export default class OptionModel extends Model {
+    @attr('string') name;
+    @attr('string') value;
+    @attr('number') position;
+    @belongsTo('optionlist', { async: false, inverse: 'options' }) list;
+    @belongsTo('optiongroup', { async: false, inverse: 'options' }) group;
+}

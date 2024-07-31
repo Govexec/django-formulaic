@@ -1,9 +1,27 @@
-import DS from 'ember-data';
+import Model, {belongsTo, attr, hasMany} from '@ember-data/model';
 
-export default DS.Model.extend({
-    form: DS.belongsTo('form', { async:true }),
-    operator: DS.attr('string'),
-    position: DS.attr('number'),
-    conditions: DS.hasMany('rulecondition'),
-    results: DS.hasMany('ruleresult')
-});
+import {tracked} from '@glimmer/tracking';
+
+export default class RuleModel extends Model {
+  @belongsTo('form', {async: false, inverse: 'rules'}) form;
+  @attr('string') operator;
+  @attr('number') position;
+  @hasMany('rulecondition', {async: false, inverse: 'rule'}) conditions;
+  @hasMany('ruleresult', {async: false, inverse: 'rule'}) results;
+
+  @tracked conditionsArray = [];
+  @tracked resultsArray = [];
+  @tracked rulePosition = null
+
+  setPosition(position) {
+    this.rulePosition = position;
+  }
+
+  setConditions(conditions) {
+    this.conditionsArray = [...conditions];
+  }
+
+  setResults(results) {
+    this.resultsArray = [...results];
+  }
+}

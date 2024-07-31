@@ -7,51 +7,43 @@ A short introduction of this app could easily go here.
 
 You will need the following things properly installed on your computer.
 
-* [Git](https://git-scm.com/)
-* [nvm](https://github.com/creationix/nvm)
-* [Node.js](https://nodejs.org/) (with NPM)
-* [Bower](https://bower.io/)
-* [Ember CLI](https://ember-cli.com/)
-* [PhantomJS](http://phantomjs.org/) - TK: for testing
+- [Git](https://git-scm.com/)
+- [Node.js](https://nodejs.org/) (with nvm)
+- [Ember CLI](https://cli.emberjs.com/release/)
+- [Google Chrome](https://google.com/chrome/)
 
 ## Installation
+Install nvm
+- `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash`
 
-* `nvm use`
-* `npm install`
-* `bower install`
+(Install node v20 using nvm)
+- `nvm install 20`
+- `git clone <repository-url>` this repository
+- `cd django-formulaic/formulaic/static/admin/formulaic/ember-formulaic`
+- `npm install`
+- `ember g ember-cli-sass`
 
 ## Running / Development
 
-* `nvm use`
-* `ember serve`
+- `npm run start`
+- Visit your app at [http://localhost:4200](http://localhost:4200).
+- Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
 
 ### Code Generators
 
 Make use of the many generators for code, try `ember help generate` for more details
 
-### Running Tests - TK
+### Running Tests
 
-* `ember test`
-* `ember test --server`
+- `npm run test`
+- `npm run test:ember -- --server`
 
-### Building - TK: I generally don't differentiate the build created by `ember serve` from `ember build`
+### Linting
 
-* `ember build` (development)
-* `ember build --environment production` (production)
+- `npm run lint`
+- `npm run lint:fix`
 
-### Deploying
+### Building
+- `npm run build` (production)
 
-Most JavaScript changes can be deployed without any special effort.  The templates point
-to `/dist/` already.  However, if you make a configuration change
-(e.g. `config/environment.js`) or anything else that requires a new commit of
-`app/index.html`, you may need to update the Django template
-(`<formulaic-dir>/templates/admin/formulaic/form/index.html`) with the change.
 
-## Further Reading / Useful Links
-
-* [GEMG Wiki Entry on Dep Management](https://github.com/Govexec/ge-govexec/wiki/JavaScript-Dependency-Management)
-* [ember.js](http://emberjs.com/)
-* [ember-cli](https://ember-cli.com/)
-* Development Browser Extensions
-  * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
-  * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)

@@ -1,12 +1,5 @@
-import BaseSortable from "./base-sortable";
-import Ember from "ember";
+import BaseSortableComponent from './base-sortable';
 
-export default BaseSortable.extend({
-    templateName: 'sortable/rules',
-    sortableSelector: '.rule-sortable',
-    store: Ember.inject.service(),
+export default class SortableRulesComponent extends BaseSortableComponent {
 
-    allFields: function() {
-        return this.get('store').peekAll('field');
-    }.property()
-});
+}

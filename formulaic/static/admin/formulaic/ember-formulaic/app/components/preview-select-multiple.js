@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import Component from '@glimmer/component';
 
-export default Ember.Component.extend({
-});
+export default class PreviewSelectMultipleComponent extends Component {
+}

@@ -1,0 +1,26 @@
+
+{{#if this.fieldService.currentField}}
+  {{#if this.fieldService.currentField.model_class}}
+    {{#let (concat "form/fields/" this.fieldService.currentField.model_class) as |componentName|}}
+      {{#if (component componentName)}}
+        {{component componentName model=this.fieldService.currentField}}
+      {{else}}
+        <div>Template for {{componentName}} not found.</div>
+        <div>Check if the template exists and is correctly named.</div>
+      {{/if}}
+    {{/let}}
+  {{else if this.fieldService.currentField.field.model_class}}
+    {{#let (concat "form/fields/" this.fieldService.currentField.field.model_class) as |componentName|}}
+      {{#if (component componentName)}}
+        {{component componentName model=this.fieldService.currentField}}
+      {{else}}
+        <div>Template for {{componentName}} not found.</div>
+        <div>Check if the template exists and is correctly named.</div>
+      {{/if}}
+    {{/let}}
+  {{else}}
+    <div>No model_class found.</div>
+  {{/if}}
+{{else}}
+  {{component "form/fields/index" }}
+{{/if}}

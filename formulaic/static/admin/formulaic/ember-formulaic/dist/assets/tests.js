@@ -1,1033 +1,186 @@
 'use strict';
 
-define('ember-formulaic/tests/app.lint-test', ['exports'], function (exports) {
-  'use strict';
+define("ember-formulaic/tests/helpers/destroy-app", ["exports", "@ember/runloop"], function (_exports, _runloop) {
+  "use strict";
 
-  QUnit.module('ESLint | app');
-
-  QUnit.test('adapters/application.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'adapters/application.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('app.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'app.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/base-sortable.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/base-sortable.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/preview-checkbox-select-multiple.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/preview-checkbox-select-multiple.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/preview-checkbox.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/preview-checkbox.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/preview-email.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/preview-email.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/preview-full-name.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/preview-full-name.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/preview-hidden.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/preview-hidden.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/preview-integer.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/preview-integer.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/preview-phone-number.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/preview-phone-number.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/preview-radio-select.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/preview-radio-select.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/preview-select-multiple.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/preview-select-multiple.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/preview-select.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/preview-select.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/preview-text.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/preview-text.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/preview-textarea.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/preview-textarea.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/rule-condition.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/rule-condition.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/rule-result.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/rule-result.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/sortable-field.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/sortable-field.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/sortable-fields.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/sortable-fields.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/sortable-rule.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/sortable-rule.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/sortable-rules.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/sortable-rules.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('controllers/form.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'controllers/form.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('controllers/form/fields.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'controllers/form/fields.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('controllers/form/fields/basefield.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'controllers/form/fields/basefield.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('controllers/form/fields/booleanfield.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'controllers/form/fields/booleanfield.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('controllers/form/fields/choicefield.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'controllers/form/fields/choicefield.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('controllers/form/fields/hiddenfield.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'controllers/form/fields/hiddenfield.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('controllers/form/fields/index.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'controllers/form/fields/index.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('controllers/form/fields/textfield.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'controllers/form/fields/textfield.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('controllers/form/index.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'controllers/form/index.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('controllers/form/rules.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'controllers/form/rules.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('controllers/form/submissions.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'controllers/form/submissions.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('initializers/cookie-initializer.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'initializers/cookie-initializer.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('models/basefield.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'models/basefield.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('models/booleanfield.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'models/booleanfield.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('models/choicefield.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'models/choicefield.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('models/field.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'models/field.js should pass ESLint\n\n');
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
   });
-
-  QUnit.test('models/form.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'models/form.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('models/hiddenfield.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'models/hiddenfield.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('models/option.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'models/option.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('models/optiongroup.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'models/optiongroup.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('models/optionlist.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'models/optionlist.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('models/privacypolicy.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'models/privacypolicy.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('models/rule.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'models/rule.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('models/rulecondition.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'models/rulecondition.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('models/ruleresult.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'models/ruleresult.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('models/submission.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'models/submission.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('models/submissionsource.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'models/submissionsource.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('models/textfield.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'models/textfield.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('resolver.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'resolver.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('router.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'router.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('routes/form.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'routes/form.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('routes/form/fields.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'routes/form/fields.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('routes/form/index.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'routes/form/index.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('routes/form/rules.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'routes/form/rules.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('routes/form/submissions.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'routes/form/submissions.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('serializers/field.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'serializers/field.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('serializers/optiongroup.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'serializers/optiongroup.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('serializers/optionlist.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'serializers/optionlist.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('serializers/rule.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'serializers/rule.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('serializers/submissionsource.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'serializers/submissionsource.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('transforms/json.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'transforms/json.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('utils/fields.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'utils/fields.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('utils/slug.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'utils/slug.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('validators/factories.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'validators/factories.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('validators/fields/basefield.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'validators/fields/basefield.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('validators/fields/booleanfield.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'validators/fields/booleanfield.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('validators/fields/choicefield.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'validators/fields/choicefield.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('validators/fields/hiddenfield.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'validators/fields/hiddenfield.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('validators/fields/textfield.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'validators/fields/textfield.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('validators/rules/rule.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'validators/rules/rule.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('validators/rules/rulecondition.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'validators/rules/rulecondition.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('validators/rules/ruleresult.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'validators/rules/ruleresult.js should pass ESLint\n\n');
-  });
-});
-define('ember-formulaic/tests/helpers/destroy-app', ['exports', 'ember'], function (exports, _ember) {
-  exports['default'] = destroyApp;
-
+  _exports.default = destroyApp;
+  0; //eaimeta@70e063a35619d71f0,"@ember/runloop"eaimeta@70e063a35619d71f
   function destroyApp(application) {
-    _ember['default'].run(application, 'destroy');
+    (0, _runloop.run)(application, 'destroy');
   }
 });
-define('ember-formulaic/tests/helpers/module-for-acceptance', ['exports', 'qunit', 'ember', 'ember-formulaic/tests/helpers/start-app', 'ember-formulaic/tests/helpers/destroy-app'], function (exports, _qunit, _ember, _emberFormulaicTestsHelpersStartApp, _emberFormulaicTestsHelpersDestroyApp) {
-  var Promise = _ember['default'].RSVP.Promise;
+define("ember-formulaic/tests/helpers/index", ["exports", "ember-qunit"], function (_exports, _emberQunit) {
+  "use strict";
 
-  exports['default'] = function (name) {
-    var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.setupApplicationTest = setupApplicationTest;
+  _exports.setupRenderingTest = setupRenderingTest;
+  _exports.setupTest = setupTest;
+  0; //eaimeta@70e063a35619d71f0,"ember-qunit"eaimeta@70e063a35619d71f
+  // This file exists to provide wrappers around ember-qunit's
+  // test setup functions. This way, you can easily extend the setup that is
+  // needed per test type.
 
+  function setupApplicationTest(hooks, options) {
+    (0, _emberQunit.setupApplicationTest)(hooks, options);
+
+    // Additional setup for application tests can be done here.
+    //
+    // For example, if you need an authenticated session for each
+    // application test, you could do:
+    //
+    // hooks.beforeEach(async function () {
+    //   await authenticateSession(); // ember-simple-auth
+    // });
+    //
+    // This is also a good place to call test setup functions coming
+    // from other addons:
+    //
+    // setupIntl(hooks); // ember-intl
+    // setupMirage(hooks); // ember-cli-mirage
+  }
+  function setupRenderingTest(hooks, options) {
+    (0, _emberQunit.setupRenderingTest)(hooks, options);
+
+    // Additional setup for rendering tests can be done here.
+  }
+  function setupTest(hooks, options) {
+    (0, _emberQunit.setupTest)(hooks, options);
+
+    // Additional setup for unit tests can be done here.
+  }
+});
+define("ember-formulaic/tests/helpers/module-for-acceptance", ["exports", "rsvp", "qunit", "ember-formulaic/tests/helpers/start-app", "ember-formulaic/tests/helpers/destroy-app"], function (_exports, _rsvp, _qunit, _startApp, _destroyApp) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = _default;
+  0; //eaimeta@70e063a35619d71f0,"rsvp",0,"qunit",0,"ember-formulaic/tests/helpers/start-app",0,"ember-formulaic/tests/helpers/destroy-app"eaimeta@70e063a35619d71f
+  function _default(name, options = {}) {
     (0, _qunit.module)(name, {
-      beforeEach: function beforeEach() {
-        this.application = (0, _emberFormulaicTestsHelpersStartApp['default'])();
-
+      beforeEach() {
+        this.application = (0, _startApp.default)();
         if (options.beforeEach) {
           return options.beforeEach.apply(this, arguments);
         }
       },
-
-      afterEach: function afterEach() {
-        var _this = this;
-
-        var afterEach = options.afterEach && options.afterEach.apply(this, arguments);
-        return Promise.resolve(afterEach).then(function () {
-          return (0, _emberFormulaicTestsHelpersDestroyApp['default'])(_this.application);
-        });
+      afterEach() {
+        let afterEach = options.afterEach && options.afterEach.apply(this, arguments);
+        return _rsvp.Promise.resolve(afterEach).then(() => (0, _destroyApp.default)(this.application));
       }
     });
-  };
+  }
 });
-define('ember-formulaic/tests/helpers/resolver', ['exports', 'ember-formulaic/resolver', 'ember-formulaic/config/environment'], function (exports, _emberFormulaicResolver, _emberFormulaicConfigEnvironment) {
+define("ember-formulaic/tests/helpers/resolver", ["exports", "ember-formulaic/resolver", "ember-formulaic/config/environment"], function (_exports, _resolver, _environment) {
+  "use strict";
 
-  var resolver = _emberFormulaicResolver['default'].create();
-
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  0; //eaimeta@70e063a35619d71f0,"ember-formulaic/resolver",0,"ember-formulaic/config/environment"eaimeta@70e063a35619d71f
+  const resolver = _resolver.default.create();
   resolver.namespace = {
-    modulePrefix: _emberFormulaicConfigEnvironment['default'].modulePrefix,
-    podModulePrefix: _emberFormulaicConfigEnvironment['default'].podModulePrefix
+    modulePrefix: _environment.default.modulePrefix,
+    podModulePrefix: _environment.default.podModulePrefix
   };
-
-  exports['default'] = resolver;
+  var _default = _exports.default = resolver;
 });
-define('ember-formulaic/tests/helpers/start-app', ['exports', 'ember', 'ember-formulaic/app', 'ember-formulaic/config/environment'], function (exports, _ember, _emberFormulaicApp, _emberFormulaicConfigEnvironment) {
-  exports['default'] = startApp;
+define("ember-formulaic/tests/helpers/start-app", ["exports", "@ember/runloop", "@ember/polyfills", "ember-formulaic/app", "ember-formulaic/config/environment"], function (_exports, _runloop, _polyfills, _app, _environment) {
+  "use strict";
 
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = startApp;
+  0; //eaimeta@70e063a35619d71f0,"@ember/runloop",0,"@ember/polyfills",0,"ember-formulaic/app",0,"ember-formulaic/config/environment"eaimeta@70e063a35619d71f
   function startApp(attrs) {
-    var attributes = _ember['default'].merge({}, _emberFormulaicConfigEnvironment['default'].APP);
-    attributes = _ember['default'].merge(attributes, attrs); // use defaults, but you can override;
+    let attributes = (0, _polyfills.merge)({}, _environment.default.APP);
+    attributes = (0, _polyfills.merge)(attributes, attrs); // use defaults, but you can override;
 
-    return _ember['default'].run(function () {
-      var application = _emberFormulaicApp['default'].create(attributes);
+    return (0, _runloop.run)(() => {
+      let application = _app.default.create(attributes);
       application.setupForTesting();
       application.injectTestHelpers();
       return application;
     });
   }
 });
-define('ember-formulaic/tests/helpers/x-select', ['exports', 'ember', 'jquery'], function (exports, _ember, _jquery) {
-  exports.select = select;
+define("ember-formulaic/tests/integration/components/sidebar-test", ["qunit", "ember-formulaic/tests/helpers", "@ember/test-helpers", "@ember/template-factory"], function (_qunit, _helpers, _testHelpers, _templateFactory) {
+  "use strict";
 
-  /**
-   * Picks an option from the select and sets it to be `selected` in the DOM.
-   *
-   * @method select
-   * @param {string|<jQuery>} selector - selector for the select to pick from.
-   * @param {string} texts - text of the option you are picking
-   */
+  0; //eaimeta@70e063a35619d71f0,"qunit",0,"ember-formulaic/tests/helpers",0,"@ember/test-helpers",0,"@ember/template-factory"eaimeta@70e063a35619d71f
+  (0, _qunit.module)('Integration | Component | sidebar', function (hooks) {
+    (0, _helpers.setupRenderingTest)(hooks);
+    (0, _qunit.test)('it renders', async function (assert) {
+      // Set any properties with this.set('myProperty', 'value');
+      // Handle any actions with this.set('myAction', function(val) { ... });
 
-  function select(selector) {
-    for (var _len = arguments.length, texts = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      texts[_key - 1] = arguments[_key];
-    }
+      await (0, _testHelpers.render)((0, _templateFactory.createTemplateFactory)(
+      /*
+        <Sidebar />
+      */
+      {
+        "id": "1gEHp0yN",
+        "block": "[[[8,[39,0],null,null,null]],[],false,[\"sidebar\"]]",
+        "moduleName": "/Users/ronnieodima/PycharmProjects/formulaic/django-formulaic/formulaic/static/admin/formulaic/ember-formulaic/ember-formulaic/tests/integration/components/sidebar-test.js",
+        "isStrictMode": false
+      }));
+      assert.dom().hasText('');
 
-    var $select = selector instanceof _jquery['default'] ? selector : _ember['default'].$(selector);
-    var $options = $select.find('option');
-
-    if (!$options.length) {
-      throw 'No options found in ' + selector;
-    }
-
-    $options.each(function () {
-      var _this = this;
-
-      var $option = _ember['default'].$(this);
-
-      _ember['default'].run(function () {
-        _this.selected = texts.some(function (text) {
-          // uppercase both texts so the helper isn't case sensastive.
-          var optionText = $option.text().trim().toUpperCase();
-
-          return optionText === text.toUpperCase();
-        });
-
-        if (_this.selected) {
-          $option.prop('selected', true).trigger('change');
-        }
-      });
+      // Template block usage:
+      await (0, _testHelpers.render)((0, _templateFactory.createTemplateFactory)(
+      /*
+        
+            <Sidebar>
+              template block text
+            </Sidebar>
+          
+      */
+      {
+        "id": "Njbqm4SP",
+        "block": "[[[1,\"\\n      \"],[8,[39,0],null,null,[[\"default\"],[[[[1,\"\\n        template block text\\n      \"]],[]]]]],[1,\"\\n    \"]],[],false,[\"sidebar\"]]",
+        "moduleName": "/Users/ronnieodima/PycharmProjects/formulaic/django-formulaic/formulaic/static/admin/formulaic/ember-formulaic/ember-formulaic/tests/integration/components/sidebar-test.js",
+        "isStrictMode": false
+      }));
+      assert.dom().hasText('template block text');
     });
-  }
-});
-define('ember-formulaic/tests/integration/components/base-sortable-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
-
-  (0, _emberQunit.moduleForComponent)('base-sortable', 'Integration | Component | base sortable', {
-    integration: true
-  });
-
-  (0, _emberQunit.test)('it renders', function (assert) {
-
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-
-    this.render(Ember.HTMLBars.template({
-      'id': 'Lsckrow5',
-      'block': '{"statements":[["append",["unknown",["base-sortable"]],false]],"locals":[],"named":[],"yields":[],"blocks":[],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), '');
-
-    // Template block usage:
-    this.render(Ember.HTMLBars.template({
-      'id': 'f/ojrpjQ',
-      'block': '{"statements":[["text","\\n"],["block",["base-sortable"],null,null,0],["text","  "]],"locals":[],"named":[],"yields":[],"blocks":[{"statements":[["text","      template block text\\n"]],"locals":[]}],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), 'template block text');
   });
 });
-define('ember-formulaic/tests/integration/components/preview-checkbox-select-multiple-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
+define("ember-formulaic/tests/test-helper", ["ember-formulaic/app", "ember-formulaic/config/environment", "qunit", "@ember/test-helpers", "qunit-dom", "ember-qunit"], function (_app, _environment, QUnit, _testHelpers, _qunitDom, _emberQunit) {
+  "use strict";
 
-  (0, _emberQunit.moduleForComponent)('preview-checkbox-select-multiple', 'Integration | Component | preview checkbox select multiple', {
-    integration: true
-  });
-
-  (0, _emberQunit.test)('it renders', function (assert) {
-
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-
-    this.render(Ember.HTMLBars.template({
-      'id': 'o6v8Bv0Y',
-      'block': '{"statements":[["append",["unknown",["preview-checkbox-select-multiple"]],false]],"locals":[],"named":[],"yields":[],"blocks":[],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), '');
-
-    // Template block usage:
-    this.render(Ember.HTMLBars.template({
-      'id': 'MAYGYfmE',
-      'block': '{"statements":[["text","\\n"],["block",["preview-checkbox-select-multiple"],null,null,0],["text","  "]],"locals":[],"named":[],"yields":[],"blocks":[{"statements":[["text","      template block text\\n"]],"locals":[]}],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), 'template block text');
-  });
+  0; //eaimeta@70e063a35619d71f0,"ember-formulaic/app",0,"ember-formulaic/config/environment",0,"qunit",0,"@ember/test-helpers",0,"qunit-dom",0,"ember-qunit"eaimeta@70e063a35619d71f
+  (0, _testHelpers.setApplication)(_app.default.create(_environment.default.APP));
+  (0, _qunitDom.setup)(QUnit.assert);
+  (0, _emberQunit.start)();
 });
-define('ember-formulaic/tests/integration/components/preview-checkbox-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
+define('ember-formulaic/config/environment', [], function() {
+  var prefix = 'ember-formulaic';
+try {
+  var metaName = prefix + '/config/environment';
+  var rawConfig = document.querySelector('meta[name="' + metaName + '"]').getAttribute('content');
+  var config = JSON.parse(decodeURIComponent(rawConfig));
 
-  (0, _emberQunit.moduleForComponent)('preview-checkbox', 'Integration | Component | preview checkbox', {
-    integration: true
-  });
+  var exports = { 'default': config };
 
-  (0, _emberQunit.test)('it renders', function (assert) {
+  Object.defineProperty(exports, '__esModule', { value: true });
 
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
+  return exports;
+}
+catch(err) {
+  throw new Error('Could not read config from meta tag with name "' + metaName + '".');
+}
 
-    this.render(Ember.HTMLBars.template({
-      'id': '8HzBPVlf',
-      'block': '{"statements":[["append",["unknown",["preview-checkbox"]],false]],"locals":[],"named":[],"yields":[],"blocks":[],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), '');
-
-    // Template block usage:
-    this.render(Ember.HTMLBars.template({
-      'id': '74AAaWTu',
-      'block': '{"statements":[["text","\\n"],["block",["preview-checkbox"],null,null,0],["text","  "]],"locals":[],"named":[],"yields":[],"blocks":[{"statements":[["text","      template block text\\n"]],"locals":[]}],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), 'template block text');
-  });
 });
-define('ember-formulaic/tests/integration/components/preview-email-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
 
-  (0, _emberQunit.moduleForComponent)('preview-email', 'Integration | Component | preview email', {
-    integration: true
-  });
-
-  (0, _emberQunit.test)('it renders', function (assert) {
-
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-
-    this.render(Ember.HTMLBars.template({
-      'id': 'vMpjlsAA',
-      'block': '{"statements":[["append",["unknown",["preview-email"]],false]],"locals":[],"named":[],"yields":[],"blocks":[],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), '');
-
-    // Template block usage:
-    this.render(Ember.HTMLBars.template({
-      'id': 'IvcVnMXA',
-      'block': '{"statements":[["text","\\n"],["block",["preview-email"],null,null,0],["text","  "]],"locals":[],"named":[],"yields":[],"blocks":[{"statements":[["text","      template block text\\n"]],"locals":[]}],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), 'template block text');
-  });
-});
-define('ember-formulaic/tests/integration/components/preview-full-name-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
-
-  (0, _emberQunit.moduleForComponent)('preview-full-name', 'Integration | Component | preview full name', {
-    integration: true
-  });
-
-  (0, _emberQunit.test)('it renders', function (assert) {
-
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-
-    this.render(Ember.HTMLBars.template({
-      'id': '8aN96x6Y',
-      'block': '{"statements":[["append",["unknown",["preview-full-name"]],false]],"locals":[],"named":[],"yields":[],"blocks":[],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), '');
-
-    // Template block usage:
-    this.render(Ember.HTMLBars.template({
-      'id': 'yrJHh9ga',
-      'block': '{"statements":[["text","\\n"],["block",["preview-full-name"],null,null,0],["text","  "]],"locals":[],"named":[],"yields":[],"blocks":[{"statements":[["text","      template block text\\n"]],"locals":[]}],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), 'template block text');
-  });
-});
-define('ember-formulaic/tests/integration/components/preview-hidden-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
-
-  (0, _emberQunit.moduleForComponent)('preview-hidden', 'Integration | Component | preview hidden', {
-    integration: true
-  });
-
-  (0, _emberQunit.test)('it renders', function (assert) {
-
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-
-    this.render(Ember.HTMLBars.template({
-      'id': 'f5qnGk8S',
-      'block': '{"statements":[["append",["unknown",["preview-hidden"]],false]],"locals":[],"named":[],"yields":[],"blocks":[],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), '');
-
-    // Template block usage:
-    this.render(Ember.HTMLBars.template({
-      'id': 'zN8/V25v',
-      'block': '{"statements":[["text","\\n"],["block",["preview-hidden"],null,null,0],["text","  "]],"locals":[],"named":[],"yields":[],"blocks":[{"statements":[["text","      template block text\\n"]],"locals":[]}],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), 'template block text');
-  });
-});
-define('ember-formulaic/tests/integration/components/preview-integer-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
-
-  (0, _emberQunit.moduleForComponent)('preview-integer', 'Integration | Component | preview integer', {
-    integration: true
-  });
-
-  (0, _emberQunit.test)('it renders', function (assert) {
-
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-
-    this.render(Ember.HTMLBars.template({
-      'id': 'b0yit+pm',
-      'block': '{"statements":[["append",["unknown",["preview-integer"]],false]],"locals":[],"named":[],"yields":[],"blocks":[],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), '');
-
-    // Template block usage:
-    this.render(Ember.HTMLBars.template({
-      'id': 'uo0zkjVE',
-      'block': '{"statements":[["text","\\n"],["block",["preview-integer"],null,null,0],["text","  "]],"locals":[],"named":[],"yields":[],"blocks":[{"statements":[["text","      template block text\\n"]],"locals":[]}],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), 'template block text');
-  });
-});
-define('ember-formulaic/tests/integration/components/preview-phone-number-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
-
-  (0, _emberQunit.moduleForComponent)('preview-phone-number', 'Integration | Component | preview phone number', {
-    integration: true
-  });
-
-  (0, _emberQunit.test)('it renders', function (assert) {
-
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-
-    this.render(Ember.HTMLBars.template({
-      'id': 'TSQpHmFM',
-      'block': '{"statements":[["append",["unknown",["preview-phone-number"]],false]],"locals":[],"named":[],"yields":[],"blocks":[],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), '');
-
-    // Template block usage:
-    this.render(Ember.HTMLBars.template({
-      'id': '90XVEd2z',
-      'block': '{"statements":[["text","\\n"],["block",["preview-phone-number"],null,null,0],["text","  "]],"locals":[],"named":[],"yields":[],"blocks":[{"statements":[["text","      template block text\\n"]],"locals":[]}],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), 'template block text');
-  });
-});
-define('ember-formulaic/tests/integration/components/preview-radio-select-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
-
-  (0, _emberQunit.moduleForComponent)('preview-radio-select', 'Integration | Component | preview radio select', {
-    integration: true
-  });
-
-  (0, _emberQunit.test)('it renders', function (assert) {
-
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-
-    this.render(Ember.HTMLBars.template({
-      'id': 'a4ODQ80Q',
-      'block': '{"statements":[["append",["unknown",["preview-radio-select"]],false]],"locals":[],"named":[],"yields":[],"blocks":[],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), '');
-
-    // Template block usage:
-    this.render(Ember.HTMLBars.template({
-      'id': 'NSc6TbOT',
-      'block': '{"statements":[["text","\\n"],["block",["preview-radio-select"],null,null,0],["text","  "]],"locals":[],"named":[],"yields":[],"blocks":[{"statements":[["text","      template block text\\n"]],"locals":[]}],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), 'template block text');
-  });
-});
-define('ember-formulaic/tests/integration/components/preview-select-multiple-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
-
-  (0, _emberQunit.moduleForComponent)('preview-select-multiple', 'Integration | Component | preview select multiple', {
-    integration: true
-  });
-
-  (0, _emberQunit.test)('it renders', function (assert) {
-
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-
-    this.render(Ember.HTMLBars.template({
-      'id': 'I1qAIObc',
-      'block': '{"statements":[["append",["unknown",["preview-select-multiple"]],false]],"locals":[],"named":[],"yields":[],"blocks":[],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), '');
-
-    // Template block usage:
-    this.render(Ember.HTMLBars.template({
-      'id': 't/Lkoijm',
-      'block': '{"statements":[["text","\\n"],["block",["preview-select-multiple"],null,null,0],["text","  "]],"locals":[],"named":[],"yields":[],"blocks":[{"statements":[["text","      template block text\\n"]],"locals":[]}],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), 'template block text');
-  });
-});
-define('ember-formulaic/tests/integration/components/preview-select-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
-
-  (0, _emberQunit.moduleForComponent)('preview-select', 'Integration | Component | preview select', {
-    integration: true
-  });
-
-  (0, _emberQunit.test)('it renders', function (assert) {
-
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-
-    this.render(Ember.HTMLBars.template({
-      'id': '4BAjHkS8',
-      'block': '{"statements":[["append",["unknown",["preview-select"]],false]],"locals":[],"named":[],"yields":[],"blocks":[],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), '');
-
-    // Template block usage:
-    this.render(Ember.HTMLBars.template({
-      'id': 'r9VmPCoU',
-      'block': '{"statements":[["text","\\n"],["block",["preview-select"],null,null,0],["text","  "]],"locals":[],"named":[],"yields":[],"blocks":[{"statements":[["text","      template block text\\n"]],"locals":[]}],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), 'template block text');
-  });
-});
-define('ember-formulaic/tests/integration/components/preview-text-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
-
-  (0, _emberQunit.moduleForComponent)('preview-text', 'Integration | Component | preview text', {
-    integration: true
-  });
-
-  (0, _emberQunit.test)('it renders', function (assert) {
-
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-
-    this.render(Ember.HTMLBars.template({
-      'id': 'TXX0R9iG',
-      'block': '{"statements":[["append",["unknown",["preview-text"]],false]],"locals":[],"named":[],"yields":[],"blocks":[],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), '');
-
-    // Template block usage:
-    this.render(Ember.HTMLBars.template({
-      'id': 'XQJzDSvp',
-      'block': '{"statements":[["text","\\n"],["block",["preview-text"],null,null,0],["text","  "]],"locals":[],"named":[],"yields":[],"blocks":[{"statements":[["text","      template block text\\n"]],"locals":[]}],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), 'template block text');
-  });
-});
-define('ember-formulaic/tests/integration/components/preview-textarea-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
-
-  (0, _emberQunit.moduleForComponent)('preview-textarea', 'Integration | Component | preview textarea', {
-    integration: true
-  });
-
-  (0, _emberQunit.test)('it renders', function (assert) {
-
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-
-    this.render(Ember.HTMLBars.template({
-      'id': 'ZApZ2HFc',
-      'block': '{"statements":[["append",["unknown",["preview-textarea"]],false]],"locals":[],"named":[],"yields":[],"blocks":[],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), '');
-
-    // Template block usage:
-    this.render(Ember.HTMLBars.template({
-      'id': 'wfN/jop0',
-      'block': '{"statements":[["text","\\n"],["block",["preview-textarea"],null,null,0],["text","  "]],"locals":[],"named":[],"yields":[],"blocks":[{"statements":[["text","      template block text\\n"]],"locals":[]}],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), 'template block text');
-  });
-});
-define('ember-formulaic/tests/integration/components/sortable-rules-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
-
-  (0, _emberQunit.moduleForComponent)('sortable-rules', 'Integration | Component | sortable rules', {
-    integration: true
-  });
-
-  (0, _emberQunit.test)('it renders', function (assert) {
-
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-
-    this.render(Ember.HTMLBars.template({
-      'id': 'yqEzTjj8',
-      'block': '{"statements":[["append",["unknown",["sortable-rules"]],false]],"locals":[],"named":[],"yields":[],"blocks":[],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), '');
-
-    // Template block usage:
-    this.render(Ember.HTMLBars.template({
-      'id': 'hAhmTw7e',
-      'block': '{"statements":[["text","\\n"],["block",["sortable-rules"],null,null,0],["text","  "]],"locals":[],"named":[],"yields":[],"blocks":[{"statements":[["text","      template block text\\n"]],"locals":[]}],"hasPartials":false}',
-      'meta': {}
-    }));
-
-    assert.equal(this.$().text().trim(), 'template block text');
-  });
-});
-define('ember-formulaic/tests/test-helper', ['exports', 'ember-formulaic/tests/helpers/resolver', 'ember-qunit'], function (exports, _emberFormulaicTestsHelpersResolver, _emberQunit) {
-
-  (0, _emberQunit.setResolver)(_emberFormulaicTestsHelpersResolver['default']);
-});
-define('ember-formulaic/tests/tests.lint-test', ['exports'], function (exports) {
-  'use strict';
-
-  QUnit.module('ESLint | tests');
-
-  QUnit.test('helpers/destroy-app.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'helpers/destroy-app.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('helpers/module-for-acceptance.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'helpers/module-for-acceptance.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('helpers/resolver.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'helpers/resolver.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('helpers/start-app.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'helpers/start-app.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('integration/components/base-sortable-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'integration/components/base-sortable-test.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('integration/components/preview-checkbox-select-multiple-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'integration/components/preview-checkbox-select-multiple-test.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('integration/components/preview-checkbox-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'integration/components/preview-checkbox-test.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('integration/components/preview-email-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'integration/components/preview-email-test.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('integration/components/preview-full-name-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'integration/components/preview-full-name-test.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('integration/components/preview-hidden-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'integration/components/preview-hidden-test.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('integration/components/preview-integer-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'integration/components/preview-integer-test.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('integration/components/preview-phone-number-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'integration/components/preview-phone-number-test.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('integration/components/preview-radio-select-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'integration/components/preview-radio-select-test.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('integration/components/preview-select-multiple-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'integration/components/preview-select-multiple-test.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('integration/components/preview-select-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'integration/components/preview-select-test.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('integration/components/preview-text-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'integration/components/preview-text-test.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('integration/components/preview-textarea-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'integration/components/preview-textarea-test.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('integration/components/sortable-rules-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'integration/components/sortable-rules-test.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('test-helper.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'test-helper.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('unit/initializers/cookie-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'unit/initializers/cookie-test.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('unit/routes/form-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'unit/routes/form-test.js should pass ESLint\n\n');
-  });
-});
-define('ember-formulaic/tests/unit/initializers/cookie-test', ['exports', 'ember', 'ember-formulaic/initializers/cookie', 'qunit', 'ember-formulaic/tests/helpers/destroy-app'], function (exports, _ember, _emberFormulaicInitializersCookie, _qunit, _emberFormulaicTestsHelpersDestroyApp) {
-
-  (0, _qunit.module)('Unit | Initializer | cookie', {
-    beforeEach: function beforeEach() {
-      var _this = this;
-
-      _ember['default'].run(function () {
-        _this.application = _ember['default'].Application.create();
-        _this.application.deferReadiness();
-      });
-    },
-    afterEach: function afterEach() {
-      (0, _emberFormulaicTestsHelpersDestroyApp['default'])(this.application);
-    }
-  });
-
-  // Replace this with your real tests.
-  (0, _qunit.test)('it works', function (assert) {
-    (0, _emberFormulaicInitializersCookie.initialize)(this.application);
-
-    // you would normally confirm the results of the initializer here
-    assert.ok(true);
-  });
-});
-define('ember-formulaic/tests/unit/routes/form-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
-
-  (0, _emberQunit.moduleFor)('route:form', 'Unit | Route | form', {
-    // Specify the other units that are required for this test.
-    // needs: ['controller:foo']
-  });
-
-  (0, _emberQunit.test)('it exists', function (assert) {
-    var route = this.subject();
-    assert.ok(route);
-  });
-});
 require('ember-formulaic/tests/test-helper');
 EmberENV.TESTS_FILE_LOADED = true;
 //# sourceMappingURL=tests.map

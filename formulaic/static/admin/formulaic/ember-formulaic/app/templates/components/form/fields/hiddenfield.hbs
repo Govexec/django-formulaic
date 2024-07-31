@@ -1,0 +1,23 @@
+<!-- templates/form/fields/hiddenfield.hbs -->
+
+<h2>Edit '{{this.subtypeName}}' field</h2>
+<div class="{{if this.validator.isDataNameInvalid 'has-error'}}">
+  <label class="control-label">
+    Data Column Name
+    <Input @type="text" id="field-data-name" class="form-control input-sm" placeholder="(Data Column Name)"
+           @value={{this.fieldService.currentField.data_name}}/>
+  </label>
+</div>
+<div class="{{if this.validator.isSlugInvalid 'has-error'}}">
+  <label class="control-label">
+    Slug
+    <Input @type="text" id="field-slug" placeholder="(field-name)" @value={{this.autoSlug}}
+           class="form-control input-sm"/>
+  </label>
+</div>
+<label>
+  Value
+  <Input @type="text" id="field-value" placeholder="" @value={{this.fieldService.currentField.value}} class="form-control input-sm"/>
+</label>
+
+<button class="btn btn-primary" type="submit" {{on "click" this.doneEditingField}}>Done</button>

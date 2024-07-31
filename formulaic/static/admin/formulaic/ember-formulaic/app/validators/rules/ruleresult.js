@@ -1,47 +1,58 @@
-import Ember from 'ember';
+import EmberObject, { computed } from '@ember/object';
 
-export default Ember.Object.extend({
-    isInvalid: function () {
-        return (this.get('isFieldInvalid'));
-    }.property('isFieldInvalid'),
+export default class RuleResultValidator extends EmberObject {
+  @computed('isFieldInvalid')
+  get isInvalid() {
+    return this.isFieldInvalid;
+  }
 
-    isFieldInvalid: function () {
-        var fieldHasNoValue = (this.get('ruleresult.field.content') == null);
+  @computed(
+    'ruleresult.action',
+    'ruleresult.field.content',
+    'isChangeOptionGroupAction',
+    'changeOptionGroupInvalid'
+  )
+  get isFieldInvalid() {
+    const fieldHasNoValue = this.ruleresult.action == null || this.ruleresult.field.content == null;
 
-        if (this.get('isChangeOptionGroupAction')) {
-            // validation for change-option-group
-            return (this.get('changeOptionGroupInvalid') || fieldHasNoValue);
-        } else {
-            return fieldHasNoValue;
-        }
-    }.property('ruleresult.field.content', 'isChangeOptionGroupAction', 'changeOptionGroupInvalid'),
+    if (this.isChangeOptionGroupAction) {
+      // validation for change-option-group
+      return this.changeOptionGroupInvalid || fieldHasNoValue;
+    } else {
+      return fieldHasNoValue;
+    }
+  }
 
-    isChangeOptionGroupAction: function() {
-        return (this.get('ruleresult.action') === 'change-option-group');
-    }.property('ruleresult.action'),
+  @computed('ruleresult.action')
+  get isChangeOptionGroupAction() {
+    return this.ruleresult.action === 'change-option-group';
+  }
 
-    changeOptionGroupInvalid: function() {
-        if (!this.get('fieldHasOptionGroups')) {
-            return true;
-        } else if (this.get('ruleresult.option_group.content') == null) {
-            return true;
-        }
+  @computed('fieldHasOptionGroups', 'ruleresult.option_group')
+  get changeOptionGroupInvalid() {
+    if (!this.fieldHasOptionGroups) {
+      return true;
+    } else if (this.ruleresult.option_group == null) {
+      return true;
+    }
 
-        return false;
-    }.property('fieldHasOptionGroups', 'ruleresult.option_group.content'),
+    return false;
+  }
 
-    // TODO: dry violation
-    fieldHasOptionGroups: function () {
-        return (this.get('optionGroups.length') > 0);
-    }.property('optionGroups'),
+  // TODO: dry violation
+  @computed('optionGroups')
+  get fieldHasOptionGroups() {
+    return this.optionGroups.length > 0;
+  }
 
-    // TODO: dry violation
-    optionGroups: function () {
-        return this.get('ruleresult.field.content.choicefield.option_list.content.groups.content');
-    }.property(
-        'ruleresult.action',
-        'ruleresult.field.content',
-        'ruleresult.field.content.choicefield.option_list.content',
-        'ruleresult.field.content.choicefield.option_list.content.groups.content'
-    )
-});
+  // TODO: dry violation
+  @computed(
+    'ruleresult.action',
+    'ruleresult.field',
+    'ruleresult.field.choicefield.option_list',
+    'ruleresult.field.choicefield.option_list.groups'
+  )
+  get optionGroups() {
+    return   this.ruleresult.field?.get('choicefield')?.option_list?.groups.toArray() || [];
+  }
+}

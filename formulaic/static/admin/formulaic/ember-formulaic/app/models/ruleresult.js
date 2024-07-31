@@ -1,14 +1,14 @@
-import DS from 'ember-data';
+import Model, { attr, belongsTo } from '@ember-data/model';
 import validatorFactory from '../validators/factories';
 
-export default DS.Model.extend({
-    action: DS.attr('string'),
-    field: DS.belongsTo('field', {async:true}),
-    rule: DS.belongsTo('rule'),
-    option_group: DS.belongsTo('optiongroup', {async:true}),
+export default class RuleResultModel extends Model {
+    @attr('string') action;
+    @belongsTo('field', { async: true, inverse: null }) field;
+    @belongsTo('rule', { async: false, inverse: 'results' }) rule;
+    @belongsTo('optiongroup', { async: false, inverse: null }) option_group;
 
-    init() {
-        this._super(...arguments);
+    constructor() {
+        super(...arguments);
         this.validator = validatorFactory.createRuleValidator(this);
     }
-});
+}

@@ -1,43 +1,80 @@
-import Ember from 'ember';
+// components/base-sortable.js
+import Component from '@glimmer/component';
+import {inject as service} from '@ember/service';
+import {tracked} from '@glimmer/tracking';
+import {action} from "@ember/object";
 
-export default Ember.Component.extend({
-    templateName: 'sortable',
-    sortableSelector: '.sortable',
+export default class BaseSortableComponent extends Component {
 
-    didInsertElement: function() {
-        let thisView = this;
+  @service store;
+  @service('field-service') fieldService;
 
-        this.sortable = this.$(this.sortableSelector).sortable({
-            update: function() {
-                thisView.updateSortable(this);
-            },
-            containment: 'parent',
-            tolerance: 'pointer',
-            cursor: 'move'
-        });
+  @tracked items = this.fieldService.currentFormRules;
+  @tracked formFields = this.fieldService.currentFormFields;
 
-        // Listen to controller
-        // this.get('controller').on('orderInvalidated', this, this.updateSortable);
-    },
-    updateSortable: function() {
-        let $ = Ember.$;
+  @tracked draggedItem = null;
+  @tracked draggedIndex = null;
+  @tracked placeholderIndex = null;
 
-        this.sortable.find('.item').each(function(index) {
-            let positionElement = $(this).find('.position');
-            positionElement.val(index);
-            positionElement.trigger('change');
-        });
+  @action
+  dragStart(index, event) {
+    this.draggedItem = this.items[index];
+    this.draggedIndex = index;
+    this.placeholderIndex = index;
+  }
 
-        this.sortable.sortable("refresh");
-    },
-    willDestroy: function() {
-        // Un-register listener
-        // this.get('controller').off('orderInvalidated', this, this.updateSortable);
-    },
-    actions: {
-        triggerUpdateSortable: function() {
-            this.updateSortable();
-        }
-    }
-});
 
+  @action
+  dragOver(event) {
+    event.preventDefault();
+  }
+
+
+  @action
+  dragDrop(index) {
+    const items = [...this.items];
+    const draggedItem = this.draggedItem;
+
+    items.splice(this.draggedIndex, 1);
+    items.splice(index, 0, draggedItem);
+
+    this.fieldService.currentFormRules = items;
+    this.items = items;
+
+    this.draggedItem = null;
+    this.draggedIndex = null;
+    this.placeholderIndex = null;
+  }
+
+
+  @action
+  dragStartField(index, event) {
+    this.draggedItem = this.formFields[index];
+    this.draggedIndex = index;
+    this.placeholderIndex = index;
+  }
+
+
+  @action
+  dragOverField(event) {
+    event.preventDefault();
+  }
+
+
+  @action
+  dragDropField(index) {
+    const items = [...this.formFields];
+    const draggedItem = this.draggedItem;
+
+    items.splice(this.draggedIndex, 1);
+    items.splice(index, 0, draggedItem);
+
+    this.fieldService.currentFormFields = items;
+    this.formFields = items;
+
+    this.draggedItem = null;
+    this.draggedIndex = null;
+    this.placeholderIndex = null;
+  }
+
+}

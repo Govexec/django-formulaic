@@ -1,0 +1,137 @@
+<!-- templates/form/fields/choicefield.hbs -->
+
+<h2>Edit '{{this.subtypeName}}' field</h2>
+<div class="textfield-container {{if this.validator.isDisplayNameInvalid 'has-error'}}">
+  <button class="btn btn-link wysiwyg-toggle" {{on "click" this.toggleDisplayNameWYSIWYG}}>
+    {{#if this.isDisplayNameWYSIWYGEnabled}}
+      TEXT
+    {{else}}
+      WYSIWYG
+    {{/if}}
+  </button>
+  <label class="control-label">
+    Display Name
+    {{#if this.isDisplayNameWYSIWYGEnabled}}
+      <TinymceEditor @options={{this.editorOptions}} @value={{this.fieldService.currentField.display_name}} @onChange={{this.updateDisplayName}} />
+    {{else}}
+      <Input @type="text" id="field-display-name" placeholder="(Display Name)" @value={{this.fieldService.currentField.display_name}}
+             class="form-control input-sm"/>
+    {{/if}}
+  </label>
+</div>
+<div class="{{if this.validator.isDataNameInvalid 'has-error'}}">
+  <label class="control-label">
+    Data Column Name
+    <Input @type="text" id="field-data-name" placeholder="(Data Column Name)" @value={{this.fieldService.currentField.data_name}}
+           class="form-control input-sm"/>
+  </label>
+</div>
+<div class="{{if this.validator.isSlugInvalid 'has-error'}}">
+  <label class="control-label">
+    Slug
+    <Input @type="text" id="field-slug" placeholder="(field-name)" @value={{this.autoSlug}}
+           class="form-control input-sm"/>
+  </label>
+</div>
+<label>
+  <Input @type="checkbox" id="field-required" @checked={{this.fieldService.currentField.required}} />
+  Required
+</label>
+
+<div class="{{if this.validator.isOptionListInvalid 'has-error'}}">
+  <label class="control-label">
+    Option List
+    {{#if this.optionlistsReady}}
+      <select {{on "change" this.optionListChanged}} class="form-control input-sm">
+        <option value="">Choose `Option List`...</option>
+        {{#each this.optionlists as |optionlist|}}
+          <option value={{optionlist.id}} selected={{if (this.fieldService.eq optionlist.id this.fieldService.currentField.option_list.id)
+                                                        "selected"
+                                                        null}}>{{optionlist.name}}</option>
+        {{/each}}
+      </select>
+    {{else}}
+      Loading
+    {{/if}}
+  </label>
+</div>
+{{#if this.hasOptionGroups}}
+  <label class="control-label">
+    Option Group
+    {{#if this.optiongroupsReady}}
+      <select {{on "change" this.optionGroupChanged}} class="form-control input-sm">
+        <option value="">Choose `Option Set`...</option>
+        {{#each this.optiongroups as |optiongroup|}}
+          <option value={{optiongroup.id}} selected={{if
+            (this.fieldService.eq optiongroup.id this.fieldService.currentField.option_group.id)
+            "selected"
+            null}}>{{optiongroup.name}}</option>
+        {{/each}}
+      </select>
+    {{else}}
+      Loading
+    {{/if}}
+  </label>
+{{/if}}
+<label>
+  Default Selected
+  {{#if this.optionlistsReady}}
+    {{#if this.supportsMultiValue}}
+      <select {{on "change" this.defaultOptionChanged}} class="form-control input-sm select2" multiple="multiple">
+        <option value="">Choose `Default Option`...</option>
+        {{#each this.modelOptions as |modelOption|}}
+          <option value={{modelOption.id}} selected={{if
+            (this.fieldService.eq modelOption.id this.fieldService.currentField.default_options.id)
+            "selected"
+            null}}>{{modelOption.name}}</option>
+        {{/each}}
+      </select>
+    {{else}}
+      <select {{on "change" this.defaultOptionChanged}} class="form-control input-sm">
+        <option value="">Choose `Default Option`...</option>
+        {{#each this.modelOptions as |modelOption|}}
+          <option value={{modelOption.id}} selected={{if
+            (this.fieldService.eq modelOption.id this.fieldService.currentField.default_options.id)
+            "selected"
+            null}}>{{modelOption.name}}</option>
+        {{/each}}
+      </select>
+    {{/if}}
+  {{else}}
+    Loading
+  {{/if}}
+</label>
+
+{{#if this.supportsMultiValue}}
+  <label>
+    Minimum Selections
+    <Input @type="text" id="field-minimum-selections" @value={{this.fieldService.currentField.minimum_selections}}
+           class="form-control input-sm"/>
+  </label>
+  <label>
+    Maximum Selections
+    <Input @type="text" id="field-maximum-selections" @value={{this.fieldService.currentField.maximum_selections}}
+           class="form-control input-sm"/>
+  </label>
+{{else}}
+  <label class="control-label">
+    Default Text (unselected)
+    <Input @type="text" id="field-default-text" placeholder="(Choose one)" @value={{this.fieldService.currentField.default_text}}
+           class="form-control input-sm"/>
+  </label>
+{{/if}}
+
+<div class="extras">
+  <h4>Extras</h4>
+  <label>
+    Help Text
+    <Input @type="text" id="field-help-text" placeholder="" @value={{this.fieldService.currentField.help_text}}
+           class="form-control input-sm"/>
+  </label>
+  <label>
+    CSS Class
+    <Input @type="text" id="field-css-class" @value={{this.fieldService.currentField.css_class}} class="form-control input-sm"/>
+  </label>
+</div>
+
+<button class="btn btn-primary" type="submit" {{on "click" this.doneEditingField}}>Done</button>

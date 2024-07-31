@@ -1,88 +1,97 @@
-import Ember from 'ember';
+//components/sortable-field.js
 
-export default Ember.Component.extend({
-    tagName: 'div',
-    classNames: [
-        'field-preview',
-        'single-line-text',
-        'form-group',
-        'col-xs-12',
-        'item'
-    ],
-    classNameBindings: [
-        'isEditing:editing',
-        'completeField.validator.isInvalid:warning'
-    ],
+import Component from '@glimmer/component';
+import {tracked} from '@glimmer/tracking';
+import {inject as service} from '@ember/service';
+import {action, computed} from '@ember/object';
 
-    needs: 'fields',
+const FIELD_TYPES = {
+  TEXTFIELD: 'textfield',
+  CHOICEFIELD: 'choicefield',
+  BOOLEANFIELD: 'booleanfield',
+  HIDDENFIELD: 'hiddenfield'
+};
 
-    previewComponent: function() {
-        let viewName = 'preview-' + this.get('field.subtype').replace("_", "-");
-        return viewName;
-    }.property(),
+export default class SortableFieldComponent extends Component {
 
-    completeField: function() {
-        let field = this.get('field');
+  @service('field-service') fieldService;
 
-        if (field.get('textfield')) {
-            return field.get('textfield');
-        } else if (field.get('choicefield')) {
-            return field.get('choicefield');
-        } else if (field.get('booleanfield')) {
-            return field.get('booleanfield');
-        } else if (field.get('hiddenfield')) {
-            return field.get('hiddenfield');
-        } else {
-            // Raise exception
-            throw new Error("Field type not implemented");
-        }
-    }.property(),
+  @tracked display_name;
+  @tracked data_name;
+  @tracked slug;
+  @tracked field;
 
-    invalidateOrder: function () {
-        this.get('controllers.fields').invalidateOrder();
-    },
+  constructor() {
+    super(...arguments);
+    this.field = this.args.field;
+  }
 
-    displayNameChanged: Ember.observer('completeField.display_name', function() {
-        this.set('display_name', this.get('completeField.display_name'));
-    }),
-
-    dataNameChanged: Ember.observer('completeField.data_name', function() {
-        this.set('data_name', this.get('completeField.data_name'));
-    }),
-
-    slugChanged: Ember.observer('completeField.slug', function() {
-        this.set('slug', this.get('completeField.slug'));
-    }),
-
-    positionChanged: Ember.observer('field.position', function() {
-        this.set('completeField.position', this.get('field.position'));
-    }),
-
-    isEditing: function() {
-        return (this.get('currentField') === this.get('field'));
-    }.property('currentField'),
-
-    showDisplayName: function() {
-        return !(this.get('field.booleanfield'));
-    }.property('field.booleanfield'),
-
-    click() {
-        this.sendAction('onClick', this.get('field'));
-    },
-
-    destroy: function () {
-        /**
-         * Invalidate order after destroy
-         */
-
-        this._super(...arguments);
-
-        this.sendAction('onOrderInvalidated');
-    },
-
-    actions: {
-        clickedDeleteField: function(field, completeField) {
-            this.sendAction('onDeleteClick', field, completeField);
-        }
+  get previewComponent() {
+    if (this.field && this.field.subtype) {
+      return  `preview-${this.field.subtype.replace('_', '-')}`;
+    } else {
+      return '';
     }
-});
+  }
+
+  get completeField() {
+    if (!this.field) {
+      return null;
+    }
+
+    return this.field.get(this.field.model_class);
+  }
+
+  @computed('fieldService.currentField.field')
+  get isEditing() {
+    return this.fieldService.currentField?.field === this.field;
+  }
+
+  @computed('field.hiddenfield')
+  get showDisplayName() {
+    return this.field.model_class !== FIELD_TYPES.HIDDENFIELD
+  }
+
+  get isHiddenField() {
+    return this.field.model_class === FIELD_TYPES.HIDDENFIELD
+  }
+
+  @action
+  handleDisplayNameChange() {
+    this.display_name = this.completeField.display_name;
+  }
+
+  @action
+  handleDataNameChange() {
+    this.data_name = this.completeField.data_name;
+
+    if(this.completeField.model_class === FIELD_TYPES.HIDDENFIELD)
+    {
+      this.display_name = this.completeField.data_name;
+    }
+  }
+
+  @action
+  handleSlugChange() {
+    this.slug = this.completeField.slug;
+  }
+
+  @action
+  handlePositionChange() {
+    this.completeField.position = this.field.position;
+  }
+
+  @action
+  handleEditClick(event) {
+    this.args.onEditClick(this.field);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+  }
+
+  @action
+  clickedDeleteField(field, completeField) {
+    this.args.onDeleteClick(field, completeField);
+  }
+}

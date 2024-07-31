@@ -1,13 +1,13 @@
-import BaseField from './basefield';
-import DS from 'ember-data';
+import { belongsTo, attr } from '@ember-data/model';
+import BaseFieldModel from './basefield';
 import HiddenFieldValidator from '../validators/fields/hiddenfield';
 
-export default BaseField.extend({
-    field: DS.belongsTo('field'),
-    value: DS.attr('string'),
+export default class HiddenFieldModel extends BaseFieldModel {
+    @belongsTo('field', { async: false, inverse: 'hiddenfield' }) field;
+    @attr('string') value;
 
-    init() {
-        this._super(...arguments);
-        this.validator = HiddenFieldValidator.create({field: this});
+    constructor() {
+        super(...arguments);
+        this.validator = HiddenFieldValidator.create({ field: this });
     }
-});
+}

@@ -1,28 +1,30 @@
+<!-- templates/form/submissions.hbs -->
+
 <div class="row formulaic-row">
   <div class="col-xs-8 preview-column">
     <h2>View Submissions</h2>
 
-    {{#if hasSubmissions}}
+    {{#if this.hasSubmissions}}
       <nav class="navbar navbar-default formulaic-navbar">
         <div class="container-fluid">
           <div class="nav navbar-nav navbar-right formulaic-next-prev">
-            {{#if previousPage}}
-              <button type="button" class="btn btn-default navbar-btn" {{action "gotoPreviousPage" model}}>Previous</button>
+            {{#if this.previousPage}}
+              <button type="button" class="btn btn-default navbar-btn" {{on "click" this.gotoPreviousPage}}>Previous</button>
             {{/if}}
-            {{#if nextPage}}
-              <button type="button" class="btn btn-default navbar-btn" {{action "gotoNextPage" model}}>Next</button>
+            {{#if this.nextPage}}
+              <button type="button" class="btn btn-default navbar-btn" {{on "click" this.gotoNextPage}}>Next</button>
             {{/if}}
           </div>
-          <p class="nav navbar-text navbar-right">Page {{currentPage}} of {{pageCount}} (<em>{{count}} submissions</em>) </p>
+          <p class="nav navbar-text navbar-right">Page {{this.currentPage}} of {{this.pageCount}} (<em>{{this.count}} submissions</em>) </p>
           <div class="nav navbar-nav navbar-left formulaic-filters">
-            {{#if sources}}
+            {{#if this.sources}}
               <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
-              {{#x-select value=selectedSource action="changeSource" as |xs|}}
-                <option>Select `source` to filter...</option>
-                {{#each sources as |source|}}
-                  {{#xs.option value=source.id}}{{source.id}}{{/xs.option}}
+              <XSelect @value={{this.selectedSource}} @change={{this.changeSource}} as |xs|>
+                <option>Select source to filter...</option>
+                {{#each this.sources as |source|}}
+                  <xs.option @value={{source.id}}>{{source.id}}</xs.option>
                 {{/each}}
-              {{/x-select}}
+              </XSelect>
             {{/if}}
           </div>
         </div>
@@ -31,13 +33,13 @@
       <table class="table table-striped table-hover">
         <thead>
           <tr>
-            {{#each columnHeaders as |header|}}
+            {{#each this.columnHeaders as |header|}}
               <th>{{header}}</th>
             {{/each}}
           </tr>
         </thead>
         <tbody>
-          {{#each submissionDataList as |row|}}
+          {{#each this.submissionDataList as |row|}}
             <tr>
               {{#each row as |column|}}
                 <td>{{column}}</td>
@@ -50,21 +52,20 @@
       <nav class="navbar navbar-default formulaic-navbar">
         <div class="container-fluid">
           <div class="nav navbar-nav navbar-right formulaic-next-prev">
-            {{#if previousPage}}
-              <button type="button" class="btn btn-default navbar-btn" {{action "gotoPreviousPage" model}}>Previous</button>
+            {{#if this.previousPage}}
+              <button type="button" class="btn btn-default navbar-btn" {{on "click" this.gotoPreviousPage}}>Previous</button>
             {{/if}}
-            {{#if nextPage}}
-              <button type="button" class="btn btn-default navbar-btn" {{action "gotoNextPage" model}}>Next</button>
+            {{#if this.nextPage}}
+              <button type="button" class="btn btn-default navbar-btn" {{on "click" this.gotoNextPage}}>Next</button>
             {{/if}}
           </div>
-          <p class="nav navbar-text navbar-right">Page {{currentPage}} of {{pageCount}} (<em>{{count}} submissions</em>) </p>
+          <p class="nav navbar-text navbar-right">Page {{this.currentPage}} of {{this.pageCount}} (<em>{{this.count}} submissions</em>) </p>
         </div>
       </nav>
     {{else}}
       <p>No submissions found</p>
     {{/if}}
 
-    <button class="btn btn-danger" type="submit" {{action "closeSubmissions"}}>Close</button>
-
+    <button class="btn btn-danger" type="submit" {{on "click" this.closeSubmissions}}>Close</button>
   </div>
 </div>

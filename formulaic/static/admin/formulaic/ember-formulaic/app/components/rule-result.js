@@ -1,88 +1,88 @@
-import Ember from 'ember';
+import Component from '@glimmer/component';
+import {tracked} from '@glimmer/tracking';
+import {inject as service} from '@ember/service';
+import {action, computed} from '@ember/object';
 
-export default Ember.Component.extend({
-    store: Ember.inject.service(),
+export default class RuleResultComponent extends Component {
+  @service store;
+  @service('field-service') fieldService;
 
-    allActions: [
-        { value: 'show', name: 'Show' },
-        { value: 'hide', name: 'Hide' },
-        { value: 'change-option-group', name: 'Change Option Group'}
-        // , TODO: cut from initial scope
-        // { value: "require", name: "Require (Override)" },
-        // { value: "optional", name: "Optional (Override)" }
-    ],
+  @tracked result = this.args.result;
+  @tracked allFields = this.fieldService.currentFormFields;
 
-    choiceFieldActions: [
-        'change-option-group'
-    ],
+  allActions = [
+    {value: 'show', name: 'Show'},
+    {value: 'hide', name: 'Hide'},
+    {value: 'change-option-group', name: 'Change Option Group'}
+  ];
 
-    availableActions: function() {
-        return this.allActions;
-    }.property(),
+  choiceFieldActions = [
+    'change-option-group'
+  ];
 
-    availableFields: function() {
-        // TODO: observing `allFields.length` doesn't handle "no fields" situation
+  @computed('allActions')
+  get availableActions() {
+    return this.allActions;
+  }
 
-        if (this.get('choiceFieldActions').indexOf(this.get('result.action')) !== -1) {
-            // Action only applies to Choice Fields
-            return this.get('allFields').filter(function (field) {
-                return (field.get('choicefield'));
-            });
-        } else {
-            // Action applies to any field
-            return this.get('allFields');
-        }
-    }.property('allFields.length', 'result.action'),
-
-
-    allFieldsReady: function() {
-        return (this.get('allFields.length'));
-    }.property('allFields.length'),
-
-    showOptionGroups: function() {
-        if (this.get('result.action') === 'change-option-group') {
-            if (this.get('result.field.content.choicefield')) {
-                return true;
-            }
-        }
-
-        return false;
-    }.property(
-        'result.action',
-        'optionGroups',
-        'result.field.content',
-        'result.field.content.choicefield.option_list.content',
-        'result.field.content.choicefield.option_list.content.groups.content'
-    ),
-
-    fieldHasOptionGroups: function() {
-        return (this.get('optionGroups.length') > 0);
-    }.property('optionGroups'),
-
-    optionGroups: function() {
-        return this.get('result.field.content.choicefield.option_list.content.groups.content');
-    }.property(
-        'result.action',
-        'result.field.content',
-        'result.field.content.choicefield.option_list.content',
-        'result.field.content.choicefield.option_list.content.groups.content'
-    ),
-
-    actions: {
-        resultActionChanged: function(value) {
-            this.set('result.action', value);
-        },
-        resultFieldChanged: function(value) {
-            this.set('result.field', value);
-
-            // Clear option group when affected field changes
-            this.set('result.option_group', null);
-        },
-        resultOptionGroupChanged: function(value) {
-            this.set('result.option_group', value);
-        },
-        clickedDeleteResult: function(result) {
-            this.sendAction('onDeleteClick', result);
-        }
+  @computed('allFields.length', 'result.action')
+  get availableFields() {
+    if (this.choiceFieldActions.includes(this.result.action)) {
+      return this.allFields.filter(field => field.choicefield);
+    } else {
+      return this.allFields;
     }
-});
+  }
+
+  @computed('allFields.length')
+  get allFieldsReady() {
+    return this.allFields.length;
+  }
+
+
+  get showOptionGroups() {
+    return (
+      this.result.action === 'change-option-group' &&
+      this.result.field.content?.choicefield
+    );
+  }
+
+  @computed('optionGroups')
+  get fieldHasOptionGroups() {
+    return this.optionGroups.length > 0;
+  }
+
+  @computed('result.field')
+  get optionGroups() {
+    return this.result.field.content?.choicefield?.option_list?.groups.toArray() || [];
+  }
+
+  @action
+  resultActionChanged(event) {
+    this.result.action = event.target.value;
+  }
+
+  @action
+  async resultFieldChanged(event) {
+
+    const selectedOptionId = event.target.value;
+
+    if (this.result.field?.content?.id !== selectedOptionId) {
+      this.result.field = await this.store.peekRecord('field', selectedOptionId);
+    }
+  }
+
+  @action
+  async resultOptionGroupChanged(event) {
+    const selectedOptionId = event.target.value;
+
+    if (this.result.option_group?.id !== selectedOptionId) {
+      this.result.option_group = await this.store.peekRecord('optiongroup', selectedOptionId);
+    }
+  }
+
+  @action
+  clickedDeleteResult(result) {
+    this.args.onDeleteClick(result);
+  }
+}

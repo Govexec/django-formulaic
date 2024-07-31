@@ -1,28 +1,49 @@
-{{input type="hidden" value=field.position class="position"}}
-<ul class="controls list-inline">
-  <li>
-    <button class="btn btn-xs btn-link" {{action "clickedDeleteField" field completeField bubbles=false}}>
-      <span class="glyphicon glyphicon-trash"></span>
-    </button>
-  </li>
-</ul>
+<!--templates/components/sortable-field.hbs -->
 
-{{#if completeField.data_name}}
-  <span class="data-name">({{completeField.data_name}})</span>
-{{/if}}
+<div
+  class="field-preview single-line-text form-group col-xs-12 item ember-view {{if this.isEditing "editing"}} {{if
+    this.completeField.validator.isInvalid "warning"}}"
+  {{on "click" this.handleEditClick}}>
+  <input type="hidden" value={{this.field.position}} class="position"/>
+  <ul class="controls list-inline">
+    <li>
+      <button class="btn btn-xs btn-link" {{on "click" (fn this.clickedDeleteField this.field this.completeField)}}>
+        <span class="glyphicon glyphicon-trash"></span>
+      </button>
+    </li>
+  </ul>
 
-<div class="col-xs-6">
-  {{#if showDisplayName }}
-    <label>
-      {{#if completeField.display_name}}
-        {{{completeField.display_name}}}
-      {{else}}
-        <span class="empty">(Field Name)</span>
-      {{/if}}
-      {{#if completeField.required}}
-        <span class="text-danger">*</span>
-      {{/if}}
-    </label>
+  {{#if this.completeField.data_name}}
+    <span class="data-name">({{this.completeField.data_name}})</span>
   {{/if}}
-  {{component previewComponent completeField=completeField}}
+
+  <div class="col-xs-6">
+    {{#if this.showDisplayName}}
+      <label>
+        {{#if this.completeField.display_name}}
+          {{{this.completeField.display_name}}}
+        {{else}}
+          <span class="empty">(Field Name)</span>
+        {{/if}}
+        {{#if this.completeField.required}}
+          <span class="text-danger">*</span>
+        {{/if}}
+      </label>
+    {{/if}}
+
+    {{#if this.isHiddenField}}
+      <label>
+        {{#if this.completeField.data_name}}
+          {{{this.completeField.data_name}}}
+        {{else}}
+          <span class="empty">(Field Name)</span>
+        {{/if}}
+        {{#if this.completeField.required}}
+          <span class="text-danger">*</span>
+        {{/if}}
+      </label>
+    {{/if}}
+
+    {{component this.previewComponent completeField=this.completeField}}
+  </div>
 </div>

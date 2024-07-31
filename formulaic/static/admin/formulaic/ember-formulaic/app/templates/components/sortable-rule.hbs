@@ -1,48 +1,61 @@
-{{input type="hidden" value=rule.position class="position"}}
+<input type="hidden" value={{this.rule.position}} class="position"/>
 <ul class="controls list-inline">
   <li>
-    <button class="btn btn-xs btn-link" {{action "clickedDeleteRule" rule bubbles=false}}>
+    <button class="btn btn-xs btn-link" {{on "click" (fn this.clickedDeleteRule this.rule)}}>
       <span class="glyphicon glyphicon-trash"></span>
     </button>
   </li>
 </ul>
 <div class="col-xs-12">
-  {{#if rule.hasMultipleConditions}}
+  {{#if this.rule.hasMultipleConditions}}
     <div class="btn-group" role="group">
-      <button type="button" class="btn btn-primary btn-xs {{ if rule.isAnd 'active'}}" {{action "setOperator" "and"}}>AND</button>
-      <button type="button" class="btn btn-primary btn-xs {{ if rule.isOr 'active'}}" {{action "setOperator" "or"}}>OR</button>
+      <button type="button" class="btn btn-primary btn-xs {{if this.rule.isAnd "active"}}" {{on "click"
+                                                                                                (fn this.setOperator "and")}}>
+        AND
+      </button>
+      <button type="button" class="btn btn-primary btn-xs {{if this.rule.isOr "active"}}" {{on "click"
+                                                                                               (fn this.setOperator "or")}}>
+        OR
+      </button>
     </div>
   {{/if}}
 
-  <!-- Rule Conditions -->
-  <h4>
-    Conditions
-    <button class="btn btn-xs btn-link" {{action "clickedAddCondition" rule}}>
-      <span class="glyphicon glyphicon-plus-sign text-success"></span>
-      Add Condition
-    </button>
-  </h4>
-  <ul class="rule-conditions list-unstyled form-inline {{ if rule.isOr 'or'}}">
-    {{#each activeConditions as |condition|}}
-      {{rule-condition condition=condition allFields=allFields onDeleteClick=(action 'deleteCondition' target=targetController)}}
-    {{else}}
-      No conditions
-    {{/each}}
-  </ul>
+  {{#if this.hasActiveConditions}}
+    <!-- Rule Conditions -->
+    <h4>
+      Conditions
+      <button class="btn btn-xs btn-link" {{on "click" (fn this.clickedAddCondition this.rule)}}>
+        <span class="glyphicon glyphicon-plus-sign text-success"></span>
+        Add Condition
+      </button>
+    </h4>
+    <ul class="rule-conditions list-unstyled form-inline {{if this.rule.isOr "or"}}">
+      {{#each this.activeConditions as |condition|}}
+        <RuleCondition @condition={{condition}} @onDeleteClick={{this.deleteCondition}} />
+      {{else}}
+        No conditions
+      {{/each}}
+    </ul>
 
-  <!-- Rule Results -->
-  <h4>
-    Results
-    <button class="btn btn-xs btn-link" {{action "clickedAddResult" rule}}>
-      <span class="glyphicon glyphicon-plus-sign text-success"></span>
-      Add Result
-    </button>
-  </h4>
-  <ul class="rule-results list-unstyled form-inline">
-    {{#each activeResults as |result|}}
-      {{rule-result result=result allFields=allFields onDeleteClick=(action 'deleteResult' target=targetController)}}
-    {{else}}
-      No results
-    {{/each}}
-  </ul>
+    <!-- Rule Results -->
+    <h4>
+      Results
+      <button class="btn btn-xs btn-link" {{on "click" (fn this.clickedAddResult this.rule)}}>
+        <span class="glyphicon glyphicon-plus-sign text-success"></span>
+        Add Result
+      </button>
+    </h4>
+    <ul class="rule-results list-unstyled form-inline">
+      {{#each this.activeResults as |result|}}
+        <RuleResult @result={{result}} @onDeleteClick={{this.deleteResult}} />
+      {{else}}
+        No results
+      {{/each}}
+    </ul>
+  {{else}}
+    <div class="text-center">
+      Loading ...
+    </div>
+  {{/if}}
+
 </div>
