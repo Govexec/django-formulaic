@@ -1,4 +1,4 @@
-Django==1.8
+Django==4.0.9
 django-admin-ordering==0.13.1
 django-ckeditor==5.9.0
 django-filter==1.1.0
