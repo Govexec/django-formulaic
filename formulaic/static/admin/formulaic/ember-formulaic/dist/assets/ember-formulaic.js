@@ -1472,6 +1472,17 @@ define('ember-formulaic/router', ['exports', 'ember', 'ember-formulaic/config/en
             this.route('rules');
             this.route('submissions');
         });
+
+
+    this.route('form', {
+        path: '/:parent_id/:form_id/change/'
+    }, function () {
+            this.route('fields', function () {
+                //this.route('field', { path: '/fields/:field_id' });
+            });
+            this.route('rules');
+            this.route('submissions');
+        });
     });
 
     // var Router = Ember.Router.extend({
