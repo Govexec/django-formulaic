@@ -21,7 +21,6 @@ class PhoneInput(TextInput):
     """
     def __init__(self, attrs=None):
         super().__init__(attrs=attrs)
-
         self.attrs["autocomplete"] = "tel"
         self.attrs.setdefault("utilsScript", settings.STATIC_URL.rstrip("/") + "/formulaic/js/intTelInput_utils.js")
         self.attrs.setdefault("extensionPrefix", " ext. ")
