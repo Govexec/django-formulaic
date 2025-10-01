@@ -101,6 +101,9 @@ define('ember-formulaic/components/base-sortable', ['exports', 'ember'], functio
         }
     });
 });
+define('ember-formulaic/components/preview-basic-text', ['exports', 'ember'], function (exports, _ember) {
+  exports['default'] = _ember['default'].Component.extend({});
+});
 define('ember-formulaic/components/preview-checkbox-select-multiple', ['exports', 'ember'], function (exports, _ember) {
   exports['default'] = _ember['default'].Component.extend({});
 });
@@ -1077,7 +1080,7 @@ define('ember-formulaic/initializers/data-adapter', ['exports', 'ember'], functi
   /*
     This initializer is here to keep backwards compatibility with code depending
     on the `data-adapter` initializer (before Ember Data was an addon).
-
+  
     Should be removed for Ember Data 3.x
   */
 
@@ -1090,31 +1093,31 @@ define('ember-formulaic/initializers/data-adapter', ['exports', 'ember'], functi
 define('ember-formulaic/initializers/ember-data', ['exports', 'ember-data/setup-container', 'ember-data/index'], function (exports, _emberDataSetupContainer, _emberDataIndex) {
 
   /*
-
+  
     This code initializes Ember-Data onto an Ember application.
-
+  
     If an Ember.js developer defines a subclass of DS.Store on their application,
     as `App.StoreService` (or via a module system that resolves to `service:store`)
     this code will automatically instantiate it and make it available on the
     router.
-
+  
     Additionally, after an application's controllers have been injected, they will
     each have the store made available to them.
-
+  
     For example, imagine an Ember.js application with the following classes:
-
+  
     App.StoreService = DS.Store.extend({
       adapter: 'custom'
     });
-
+  
     App.PostsController = Ember.Controller.extend({
       // ...
     });
-
+  
     When the application is initialized, `App.ApplicationStore` will automatically be
     instantiated, and the instance of `App.PostsController` will have its `store`
     property set to that instance.
-
+  
     Note that this code will only be run if the `ember-application` package is
     loaded. If Ember Data is being used in an environment other than a
     typical application (e.g., node.js where only `ember-runtime` is available),
@@ -1177,7 +1180,7 @@ define('ember-formulaic/initializers/injectStore', ['exports', 'ember'], functio
   /*
     This initializer is here to keep backwards compatibility with code depending
     on the `injectStore` initializer (before Ember Data was an addon).
-
+  
     Should be removed for Ember Data 3.x
   */
 
@@ -1192,7 +1195,7 @@ define('ember-formulaic/initializers/store', ['exports', 'ember'], function (exp
   /*
     This initializer is here to keep backwards compatibility with code depending
     on the `store` initializer (before Ember Data was an addon).
-
+  
     Should be removed for Ember Data 3.x
   */
 
@@ -1249,7 +1252,7 @@ define('ember-formulaic/initializers/transforms', ['exports', 'ember'], function
   /*
     This initializer is here to keep backwards compatibility with code depending
     on the `transforms` initializer (before Ember Data was an addon).
-
+  
     Should be removed for Ember Data 3.x
   */
 
@@ -1473,10 +1476,9 @@ define('ember-formulaic/router', ['exports', 'ember', 'ember-formulaic/config/en
             this.route('submissions');
         });
 
-
-    this.route('form', {
-        path: '/:parent_id/:form_id/change/'
-    }, function () {
+        this.route('form', {
+            path: '/:parent_id/:form_id/change/'
+        }, function () {
             this.route('fields', function () {
                 //this.route('field', { path: '/fields/:field_id' });
             });
@@ -1665,7 +1667,7 @@ define('ember-formulaic/routes/form/fields', ['exports', 'ember'], function (exp
             },
 
             createTextField: function createTextField(subtype) {
-                if (["text", "textarea", "email", "phone_number", "integer", "full_name"].indexOf(subtype) === -1) {
+                if (["text", "textarea", "email", "phone_number", "integer", "full_name", "basic_text"].indexOf(subtype) === -1) {
                     // Raise exception: field subtype not implemented
                     throw new Error("Formulaic: text field subtype `" + subtype + "` not implemented");
                 }
@@ -2198,6 +2200,9 @@ define("ember-formulaic/templates/application", ["exports"], function (exports) 
 define("ember-formulaic/templates/components/base-sortable", ["exports"], function (exports) {
   exports["default"] = Ember.HTMLBars.template({ "id": "sC9Oupsa", "block": "{\"statements\":[[\"yield\",\"default\"],[\"text\",\"\\nbase-sortable.hbs\\n\"]],\"locals\":[],\"named\":[],\"yields\":[\"default\"],\"blocks\":[],\"hasPartials\":false}", "meta": { "moduleName": "ember-formulaic/templates/components/base-sortable.hbs" } });
 });
+define("ember-formulaic/templates/components/preview-basic-text", ["exports"], function (exports) {
+  exports["default"] = Ember.HTMLBars.template({ "id": "F4SJFYIj", "block": "{\"statements\":[[\"open-element\",\"div\",[]],[\"static-attr\",\"class\",\"form-control-static\"],[\"flush-element\"],[\"text\",\"\\n\"],[\"block\",[\"if\"],[[\"get\",[\"completeField\",\"help_text\"]]],null,1,0],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"blocks\":[{\"statements\":[[\"text\",\"    \"],[\"append\",[\"unknown\",[\"completeField\",\"display_name\"]],false],[\"text\",\"\\n\"]],\"locals\":[]},{\"statements\":[[\"text\",\"    \"],[\"append\",[\"unknown\",[\"completeField\",\"help_text\"]],true],[\"text\",\"\\n\"]],\"locals\":[]}],\"hasPartials\":false}", "meta": { "moduleName": "ember-formulaic/templates/components/preview-basic-text.hbs" } });
+});
 define("ember-formulaic/templates/components/preview-checkbox-select-multiple", ["exports"], function (exports) {
   exports["default"] = Ember.HTMLBars.template({ "id": "0Yd83vKV", "block": "{\"statements\":[[\"open-element\",\"div\",[]],[\"static-attr\",\"class\",\"checkbox\"],[\"flush-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"label\",[]],[\"flush-element\"],[\"text\",\"\\n    \"],[\"open-element\",\"input\",[]],[\"static-attr\",\"type\",\"checkbox\"],[\"static-attr\",\"value\",\"\"],[\"static-attr\",\"checked\",\"\"],[\"flush-element\"],[\"close-element\"],[\"text\",\"\\n    Lorem ipsum dolor sit amet, leo in, in vivamus.\\n  \"],[\"close-element\"],[\"text\",\"\\n\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"div\",[]],[\"static-attr\",\"class\",\"checkbox\"],[\"flush-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"label\",[]],[\"flush-element\"],[\"text\",\"\\n    \"],[\"open-element\",\"input\",[]],[\"static-attr\",\"type\",\"checkbox\"],[\"static-attr\",\"value\",\"\"],[\"static-attr\",\"checked\",\"\"],[\"flush-element\"],[\"close-element\"],[\"text\",\"\\n    Nec sapien ante.\\n  \"],[\"close-element\"],[\"text\",\"\\n\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"div\",[]],[\"static-attr\",\"class\",\"checkbox\"],[\"flush-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"label\",[]],[\"flush-element\"],[\"text\",\"\\n    \"],[\"open-element\",\"input\",[]],[\"static-attr\",\"type\",\"checkbox\"],[\"static-attr\",\"value\",\"\"],[\"flush-element\"],[\"close-element\"],[\"text\",\"\\n    Consequat sem ipsum.\\n  \"],[\"close-element\"],[\"text\",\"\\n\"],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"blocks\":[],\"hasPartials\":false}", "meta": { "moduleName": "ember-formulaic/templates/components/preview-checkbox-select-multiple.hbs" } });
 });
@@ -2279,7 +2284,7 @@ define("ember-formulaic/templates/form/fields/hiddenfield", ["exports"], functio
   exports["default"] = Ember.HTMLBars.template({ "id": "DdzXTurp", "block": "{\"statements\":[[\"open-element\",\"h2\",[]],[\"flush-element\"],[\"text\",\"Edit '\"],[\"append\",[\"unknown\",[\"subtypeName\"]],false],[\"text\",\"' field\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"div\",[]],[\"dynamic-attr\",\"class\",[\"concat\",[[\"helper\",[\"if\"],[[\"get\",[\"validator\",\"isDataNameInvalid\"]],\"has-error\"],null]]]],[\"flush-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"label\",[]],[\"static-attr\",\"class\",\"control-label\"],[\"flush-element\"],[\"text\",\"\\n    Data Column Name\\n    \"],[\"append\",[\"helper\",[\"input\"],null,[[\"type\",\"id\",\"placeholder\",\"value\",\"class\"],[\"text\",\"field-data-name\",\"(Data Column Name)\",[\"get\",[\"model\",\"data_name\"]],\"form-control input-sm\"]]],false],[\"text\",\"\\n  \"],[\"close-element\"],[\"text\",\"\\n\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"div\",[]],[\"dynamic-attr\",\"class\",[\"concat\",[[\"helper\",[\"if\"],[[\"get\",[\"validator\",\"isSlugInvalid\"]],\"has-error\"],null]]]],[\"flush-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"label\",[]],[\"static-attr\",\"class\",\"control-label\"],[\"flush-element\"],[\"text\",\"\\n    Slug\\n    \"],[\"append\",[\"helper\",[\"input\"],null,[[\"type\",\"id\",\"placeholder\",\"value\",\"class\"],[\"text\",\"field-slug\",\"(field-name)\",[\"get\",[\"autoSlug\"]],\"form-control input-sm\"]]],false],[\"text\",\"\\n  \"],[\"close-element\"],[\"text\",\"\\n\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"label\",[]],[\"flush-element\"],[\"text\",\"\\n  Value\\n    \"],[\"append\",[\"helper\",[\"input\"],null,[[\"type\",\"id\",\"placeholder\",\"value\",\"class\"],[\"text\",\"field-value\",\"\",[\"get\",[\"model\",\"value\"]],\"form-control input-sm\"]]],false],[\"text\",\"\\n\"],[\"close-element\"],[\"text\",\"\\n\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-primary\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"doneEditingField\"]],[\"flush-element\"],[\"text\",\"Done\"],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"blocks\":[],\"hasPartials\":false}", "meta": { "moduleName": "ember-formulaic/templates/form/fields/hiddenfield.hbs" } });
 });
 define("ember-formulaic/templates/form/fields/index", ["exports"], function (exports) {
-  exports["default"] = Ember.HTMLBars.template({ "id": "lvP6LD7b", "block": "{\"statements\":[[\"open-element\",\"h2\",[]],[\"flush-element\"],[\"text\",\"Add Fields\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"h3\",[]],[\"flush-element\"],[\"text\",\"Basic\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createTextField\",\"text\"]],[\"flush-element\"],[\"text\",\"Text (Single Line)\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createTextField\",\"textarea\"]],[\"flush-element\"],[\"text\",\"Text (Multi Line)\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createChoiceField\",\"select\"]],[\"flush-element\"],[\"text\",\"Dropdown List\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createChoiceField\",\"radio_select\"]],[\"flush-element\"],[\"text\",\"Radio List\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createChoiceField\",\"checkbox_select_multiple\"]],[\"flush-element\"],[\"text\",\"Checkbox List\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createBooleanField\",\"checkbox\"]],[\"flush-element\"],[\"text\",\"Checkbox\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createChoiceField\",\"select_multiple\"]],[\"flush-element\"],[\"text\",\"Multi-select List\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createHiddenField\",\"hidden\"]],[\"flush-element\"],[\"text\",\"Hidden Field\"],[\"close-element\"],[\"text\",\"\\n\\n\"],[\"open-element\",\"h3\",[]],[\"flush-element\"],[\"text\",\"Typed\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createTextField\",\"full_name\"]],[\"flush-element\"],[\"text\",\"Full Name\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createTextField\",\"email\"]],[\"flush-element\"],[\"text\",\"Email\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createTextField\",\"phone_number\"]],[\"flush-element\"],[\"text\",\"Phone Number\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createTextField\",\"integer\"]],[\"flush-element\"],[\"text\",\"Integer\"],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"blocks\":[],\"hasPartials\":false}", "meta": { "moduleName": "ember-formulaic/templates/form/fields/index.hbs" } });
+  exports["default"] = Ember.HTMLBars.template({ "id": "95O8Yv2U", "block": "{\"statements\":[[\"open-element\",\"h2\",[]],[\"flush-element\"],[\"text\",\"Add Fields\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"h3\",[]],[\"flush-element\"],[\"text\",\"Basic\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createTextField\",\"text\"]],[\"flush-element\"],[\"text\",\"Text (Single Line)\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createTextField\",\"textarea\"]],[\"flush-element\"],[\"text\",\"Text (Multi Line)\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createTextField\",\"basic_text\"]],[\"flush-element\"],[\"text\",\"Basic Text (Display Only)\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createChoiceField\",\"select\"]],[\"flush-element\"],[\"text\",\"Dropdown List\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createChoiceField\",\"radio_select\"]],[\"flush-element\"],[\"text\",\"Radio List\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createChoiceField\",\"checkbox_select_multiple\"]],[\"flush-element\"],[\"text\",\"Checkbox List\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createBooleanField\",\"checkbox\"]],[\"flush-element\"],[\"text\",\"Checkbox\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createChoiceField\",\"select_multiple\"]],[\"flush-element\"],[\"text\",\"Multi-select List\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createHiddenField\",\"hidden\"]],[\"flush-element\"],[\"text\",\"Hidden Field\"],[\"close-element\"],[\"text\",\"\\n\\n\"],[\"open-element\",\"h3\",[]],[\"flush-element\"],[\"text\",\"Typed\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createTextField\",\"full_name\"]],[\"flush-element\"],[\"text\",\"Full Name\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createTextField\",\"email\"]],[\"flush-element\"],[\"text\",\"Email\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createTextField\",\"phone_number\"]],[\"flush-element\"],[\"text\",\"Phone Number\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-default btn-block\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"createTextField\",\"integer\"]],[\"flush-element\"],[\"text\",\"Integer\"],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"blocks\":[],\"hasPartials\":false}", "meta": { "moduleName": "ember-formulaic/templates/form/fields/index.hbs" } });
 });
 define("ember-formulaic/templates/form/fields/textfield", ["exports"], function (exports) {
   exports["default"] = Ember.HTMLBars.template({ "id": "NMoJgGUi", "block": "{\"statements\":[[\"open-element\",\"h2\",[]],[\"flush-element\"],[\"text\",\"Edit '\"],[\"append\",[\"unknown\",[\"subtypeName\"]],false],[\"text\",\"' field\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"div\",[]],[\"dynamic-attr\",\"class\",[\"concat\",[\"textfield-container \",[\"helper\",[\"if\"],[[\"get\",[\"validator\",\"isDisplayNameInvalid\"]],\"has-error\"],null]]]],[\"flush-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-link wysiwyg-toggle\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"toggleDisplayNameWYSIWYG\"]],[\"flush-element\"],[\"text\",\"\\n\"],[\"block\",[\"if\"],[[\"get\",[\"isDisplayNameWYSIWYGEnabled\"]]],null,3,2],[\"text\",\"  \"],[\"close-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"label\",[]],[\"static-attr\",\"class\",\"control-label\"],[\"flush-element\"],[\"text\",\"\\n    Display Name\\n\"],[\"block\",[\"if\"],[[\"get\",[\"isDisplayNameWYSIWYGEnabled\"]]],null,1,0],[\"text\",\"  \"],[\"close-element\"],[\"text\",\"\\n\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"div\",[]],[\"dynamic-attr\",\"class\",[\"concat\",[[\"helper\",[\"if\"],[[\"get\",[\"validator\",\"isDataNameInvalid\"]],\"has-error\"],null]]]],[\"flush-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"label\",[]],[\"static-attr\",\"class\",\"control-label\"],[\"flush-element\"],[\"text\",\"\\n    Data Column Name\\n    \"],[\"append\",[\"helper\",[\"input\"],null,[[\"type\",\"id\",\"placeholder\",\"value\",\"class\"],[\"text\",\"field-data-name\",\"(Data Column Name)\",[\"get\",[\"model\",\"data_name\"]],\"form-control input-sm\"]]],false],[\"text\",\"\\n  \"],[\"close-element\"],[\"text\",\"\\n\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"div\",[]],[\"dynamic-attr\",\"class\",[\"concat\",[[\"helper\",[\"if\"],[[\"get\",[\"validator\",\"isSlugInvalid\"]],\"has-error\"],null]]]],[\"flush-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"label\",[]],[\"static-attr\",\"class\",\"control-label\"],[\"flush-element\"],[\"text\",\"\\n    Slug\\n    \"],[\"append\",[\"helper\",[\"input\"],null,[[\"type\",\"id\",\"placeholder\",\"value\",\"class\"],[\"text\",\"field-slug\",\"(field-name)\",[\"get\",[\"autoSlug\"]],\"form-control input-sm\"]]],false],[\"text\",\"\\n  \"],[\"close-element\"],[\"text\",\"\\n\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"label\",[]],[\"flush-element\"],[\"text\",\"\\n  \"],[\"append\",[\"helper\",[\"input\"],null,[[\"type\",\"id\",\"checked\"],[\"checkbox\",\"field-required\",[\"get\",[\"model\",\"required\"]]]]],false],[\"text\",\"\\n  Required\\n\"],[\"close-element\"],[\"text\",\"\\n\\n\"],[\"open-element\",\"div\",[]],[\"static-attr\",\"class\",\"extras\"],[\"flush-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"h4\",[]],[\"flush-element\"],[\"text\",\"Extras\"],[\"close-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"label\",[]],[\"flush-element\"],[\"text\",\"\\n    Help Text\\n    \"],[\"append\",[\"helper\",[\"input\"],null,[[\"type\",\"id\",\"placeholder\",\"value\",\"class\"],[\"text\",\"field-help-text\",\"\",[\"get\",[\"model\",\"help_text\"]],\"form-control input-sm\"]]],false],[\"text\",\"\\n  \"],[\"close-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"label\",[]],[\"flush-element\"],[\"text\",\"\\n    CSS Class\\n    \"],[\"append\",[\"helper\",[\"input\"],null,[[\"type\",\"id\",\"value\",\"class\"],[\"text\",\"field-css-class\",[\"get\",[\"model\",\"css_class\"]],\"form-control input-sm\"]]],false],[\"text\",\"\\n  \"],[\"close-element\"],[\"text\",\"\\n\"],[\"close-element\"],[\"text\",\"\\n\\n\"],[\"open-element\",\"button\",[]],[\"static-attr\",\"class\",\"btn btn-primary\"],[\"static-attr\",\"type\",\"submit\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"doneEditingField\"]],[\"flush-element\"],[\"text\",\"Done\"],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"blocks\":[{\"statements\":[[\"text\",\"      \"],[\"append\",[\"helper\",[\"input\"],null,[[\"type\",\"id\",\"placeholder\",\"value\",\"class\"],[\"text\",\"field-display-name\",\"(Display Name)\",[\"get\",[\"model\",\"display_name\"]],\"form-control input-sm\"]]],false],[\"text\",\"\\n\"]],\"locals\":[]},{\"statements\":[[\"text\",\"      \"],[\"append\",[\"helper\",[\"tinymce-editor\"],null,[[\"options\",\"value\"],[[\"get\",[\"editorOptions\"]],[\"get\",[\"model\",\"display_name\"]]]]],false],[\"text\",\"\\n\"]],\"locals\":[]},{\"statements\":[[\"text\",\"      WYSIWYG\\n\"]],\"locals\":[]},{\"statements\":[[\"text\",\"      TEXT\\n\"]],\"locals\":[]}],\"hasPartials\":false}", "meta": { "moduleName": "ember-formulaic/templates/form/fields/textfield.hbs" } });
@@ -2597,6 +2602,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("ember-formulaic/app")["default"].create({"API_HOST":"","API_NAMESPACE":"formulaic/api","name":"ember-formulaic","version":"0.0.0+6e1e43c8","API_ADD_TRAILING_SLASHES":true});
+  require("ember-formulaic/app")["default"].create({"API_HOST":"","API_NAMESPACE":"formulaic/api","name":"ember-formulaic","version":"0.0.0+38e2af51","API_ADD_TRAILING_SLASHES":true});
 }
 //# sourceMappingURL=ember-formulaic.map
