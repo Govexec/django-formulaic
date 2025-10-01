@@ -36,14 +36,7 @@ class PhoneInput(TextInput):
         suffix = self.attrs["fullSuffix"]
         full_number = data.get(name + suffix)
 
-        # Determine the extension. This gets stripped from the "full" phone
-        # number. Here we check for it, and add it on to the full number.
         formatted_number = data.get(name, "")
-        ext_pre = self.attrs["extensionPrefix"]
-        if ext_pre in formatted_number:
-            # Find the location of the extension, slice the string and add it
-            # to full_number
-            full_number += formatted_number[formatted_number.find(ext_pre):]
 
         return full_number or formatted_number
 
