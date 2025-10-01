@@ -15,7 +15,7 @@ from formulaic import fields as custom_fields
 from formulaic.auto_populate import attempt_kv_auto_populate
 from formulaic.signals import submission_complete
 from formulaic.validators import validate_mixed_content, validate_phone_number
-from formulaic.widgets import PhoneInput
+from formulaic.widgets import PhoneInput, StaticText
 
 
 @python_2_unicode_compatible
@@ -49,6 +49,9 @@ class Form(models.Model):
                     # handle multi-value fields
                     # todo: DRY
                     for sub_key, sub_value in iteritems(value):
+                        # skip empty values
+                        if sub_value in (None, "", [], {}):
+                            continue
                         # if None, use regular key
                         if sub_key:
                             final_sub_key = "{}[{}]".format(key, sub_key)
@@ -64,6 +67,9 @@ class Form(models.Model):
                 else:
                     # handle standard fields
                     # todo: DRY
+                    # skip empty values entirely (e.g., display-only fields)
+                    if value in (None, "", [], {}):
+                        continue
                     key_value = SubmissionKeyValue()
                     key_value.submission = submission
                     key_value.key = key
@@ -284,6 +290,7 @@ class TextField(Field):
     SUBTYPE_EMAIL = u"email"
     SUBTYPE_PHONE_NUMBER = u"phone_number"
     SUBTYPE_INTEGER = u"integer"
+    SUBTYPE_BASIC_TEXT = u"basic_text"
 
     SUBTYPES = {
         SUBTYPE_TEXT: {
@@ -311,6 +318,10 @@ class TextField(Field):
             u"field_class": custom_fields.FullNameField,
             u"widget_class": widgets.TextInput
         },
+        SUBTYPE_BASIC_TEXT: {
+            u"field_class": fields.CharField,
+            u"widget_class": StaticText
+        },
     }
 
     textarea_rows = models.PositiveIntegerField(blank=True, null=True)
@@ -325,6 +336,15 @@ class TextField(Field):
 
         if self.subtype == TextField.SUBTYPE_TEXTAREA:
             widget_attrs[u"rows"] = str(self.textarea_rows if self.textarea_rows else 4)
+
+        # Special handling for basic_text: render a display-only widget
+        if self.subtype == TextField.SUBTYPE_BASIC_TEXT:
+            widget = StaticText(text=self.help_text or self.display_name, attrs=widget_attrs)
+            return fields.CharField(
+                label="",
+                required=False,
+                widget=widget
+            )
 
         widget_class = subtype_options[u"widget_class"]
         widget = widget_class(attrs=widget_attrs)

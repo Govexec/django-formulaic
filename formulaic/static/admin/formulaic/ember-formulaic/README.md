@@ -23,21 +23,25 @@ You will need the following things properly installed on your computer.
 ## Running / Development
 
 * `nvm use`
-* `ember serve`
+* `npm start` (uses the local ember-cli)
 
 ### Code Generators
 
-Make use of the many generators for code, try `ember help generate` for more details
+Make use of the many generators for code, try `npx ember help generate` for more details (or `node ./node_modules/ember-cli/bin/ember help generate` if `npx` is not available)
 
-### Running Tests - TK
+### Running Tests
 
-* `ember test`
-* `ember test --server`
+Prefer using the npm script so the local ember-cli is used:
 
-### Building - TK: I generally don't differentiate the build created by `ember serve` from `ember build`
+* `npm test`
+* `npm run test -- --server`
 
-* `ember build` (development)
-* `ember build --environment production` (production)
+If you run `ember test` directly and see an error like `Error: spawn npx ENOENT`, it is because the global `ember` package is a placeholder that forwards to `npx`. Either install a Node version that includes `npx`, install `ember-cli` globally, or use the npm scripts above which always use the local ember-cli.
+
+### Building
+
+* `npm run build` (development)
+* `npm run build -- --environment production` (production)
 
 ### Deploying
 

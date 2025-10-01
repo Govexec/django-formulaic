@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.forms.widgets import MultiWidget
-from django.forms.widgets import TextInput
+from django.forms.widgets import TextInput, Widget
 
 
 class GroupedChoiceWidget(MultiWidget):
@@ -19,10 +19,14 @@ class PhoneInput(TextInput):
     """Phone input field built upon Jack O'Connor's intl-tel-input widget.
     https://github.com/jackocnr/intl-tel-input
     """
+
     def __init__(self, attrs=None):
         super().__init__(attrs=attrs)
         self.attrs["autocomplete"] = "tel"
-        self.attrs.setdefault("utilsScript", settings.STATIC_URL.rstrip("/") + "/formulaic/js/intTelInput_utils.js")
+        self.attrs.setdefault(
+            "utilsScript",
+            settings.STATIC_URL.rstrip("/") + "/formulaic/js/intTelInput_utils.js",
+        )
         self.attrs.setdefault("extensionPrefix", " ext. ")
         self.attrs.setdefault("fullSuffix", "_full")
 
@@ -42,7 +46,7 @@ class PhoneInput(TextInput):
         if ext_pre in formatted_number:
             # Find the location of the extension, slice the string and add it
             # to full_number
-            full_number += formatted_number[formatted_number.find(ext_pre):]
+            full_number += formatted_number[formatted_number.find(ext_pre) :]
 
         return full_number or formatted_number
 
@@ -52,7 +56,30 @@ class PhoneInput(TextInput):
             "formulaic/js/phoneNumber.js",
         )
         css = {
-            "all": (
-                "formulaic/css/intlTelInput.css",
-            ),
+            "all": ("formulaic/css/intlTelInput.css",),
         }
+
+
+class StaticText(Widget):
+    """A display-only widget that renders a block of text without any input element.
+    Useful for disclaimers or notes; it never contributes a value to form data.
+    """
+
+    is_hidden = False
+
+    def __init__(self, text, attrs=None):
+        super().__init__(attrs)
+        self.text = text or ""
+
+    def render(self, name, value, attrs=None, renderer=None):
+        # Render as a simple div; allow HTML in self.text (trusted from admin)
+        # Keep name off the markup so browsers don’t try to submit anything.
+        final_attrs = self.build_attrs(attrs or {})
+        css_class = final_attrs.get("class", "")
+        return '<div class="formulaic-static-text {css}">{text}</div>'.format(
+            css=css_class, text=self.text
+        )
+
+    def value_from_datadict(self, data, files, name):
+        # Always return None so this field is ignored in cleaned_data when empty
+        return None

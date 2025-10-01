@@ -20,6 +20,11 @@ define('ember-formulaic/tests/app.lint-test', ['exports'], function (exports) {
     assert.ok(true, 'components/base-sortable.js should pass ESLint\n\n');
   });
 
+  QUnit.test('components/preview-basic-text.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'components/preview-basic-text.js should pass ESLint\n\n');
+  });
+
   QUnit.test('components/preview-checkbox-select-multiple.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'components/preview-checkbox-select-multiple.js should pass ESLint\n\n');
@@ -501,6 +506,35 @@ define('ember-formulaic/tests/integration/components/base-sortable-test', ['expo
     assert.equal(this.$().text().trim(), 'template block text');
   });
 });
+define('ember-formulaic/tests/integration/components/preview-basic-text-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
+
+  (0, _emberQunit.moduleForComponent)('preview-basic-text', 'Integration | Component | preview basic text', {
+    integration: true
+  });
+
+  (0, _emberQunit.test)('it renders', function (assert) {
+
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+
+    this.render(Ember.HTMLBars.template({
+      'id': 'RSMsPsye',
+      'block': '{"statements":[["append",["unknown",["preview-basic-text"]],false]],"locals":[],"named":[],"yields":[],"blocks":[],"hasPartials":false}',
+      'meta': {}
+    }));
+
+    assert.equal(this.$().text().trim(), '');
+
+    // Template block usage:
+    this.render(Ember.HTMLBars.template({
+      'id': 'WzWsVOyi',
+      'block': '{"statements":[["text","\\n"],["block",["preview-basic-text"],null,null,0],["text","  "]],"locals":[],"named":[],"yields":[],"blocks":[{"statements":[["text","      template block text\\n"]],"locals":[]}],"hasPartials":false}',
+      'meta': {}
+    }));
+
+    assert.equal(this.$().text().trim(), 'template block text');
+  });
+});
 define('ember-formulaic/tests/integration/components/preview-checkbox-select-multiple-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
 
   (0, _emberQunit.moduleForComponent)('preview-checkbox-select-multiple', 'Integration | Component | preview checkbox select multiple', {
@@ -910,6 +944,11 @@ define('ember-formulaic/tests/tests.lint-test', ['exports'], function (exports) 
   QUnit.test('integration/components/base-sortable-test.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'integration/components/base-sortable-test.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('integration/components/preview-basic-text-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'integration/components/preview-basic-text-test.js should pass ESLint\n\n');
   });
 
   QUnit.test('integration/components/preview-checkbox-select-multiple-test.js', function (assert) {
