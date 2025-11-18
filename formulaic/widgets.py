@@ -59,21 +59,22 @@ class StaticText(Widget):
     """A display-only widget that renders a block of text without any input element.
     Useful for disclaimers or notes; it never contributes a value to form data.
     """
-
+    template_name = "formulaic/static_text.html"
     is_hidden = False
 
     def __init__(self, text, attrs=None):
         super().__init__(attrs)
         self.text = text or ""
 
-    def render(self, name, value, attrs=None, renderer=None):
-        # Render as a simple div; allow HTML in self.text (trusted from admin)
-        # Keep name off the markup so browsers don’t try to submit anything.
+    def get_context(self, name, value, attrs):
+
+        context = super().get_context(name, value, attrs)
+        context["text"] = self.text
+
         final_attrs = self.build_attrs(attrs or {})
-        css_class = final_attrs.get("class", "")
-        return '<div class="formulaic-static-text {css}">{text}</div>'.format(
-            css=css_class, text=self.text
-        )
+        context["final_attrs"] = final_attrs
+        return context
+
 
     def value_from_datadict(self, data, files, name):
         # Always return None so this field is ignored in cleaned_data when empty

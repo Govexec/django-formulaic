@@ -1,0 +1,2 @@
+<div class="formulaic-static-text {{final_attrs.class}}">{{ text }} {{ widget.type }} {{ widget.value }}</div>
+<input hidden type="{{ widget.type }}" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value|stringformat:'s' }}"{% endif %}{% include "django/forms/widgets/attrs.html" %}>
